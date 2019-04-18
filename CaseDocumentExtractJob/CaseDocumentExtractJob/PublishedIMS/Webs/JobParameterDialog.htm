@@ -1,0 +1,361 @@
+﻿<html xmlns:tyl>
+<head>
+
+  <!-- These two lines allow IE to create the behaviors -->
+  <object id="BehaviorFactory" classid="clsid:0D473317-55F7-4979-96CC-F78F767CFB78" VIEWASTEXT></object>
+  <?import namespace="tyl" implementation="#BehaviorFactory" />
+
+  <link rel="stylesheet" type="text/css" href="/Common/CSS/Odyssey.css">
+
+  <script language="VBScript" src="/Common/Scripts/TreeViewLoader.vbs"></script>
+  <script language="VBScript" src="/Common/Scripts/Validate.vbs"></script>
+  <Script language="VBScript" src="/Infrastructure/Load/Scripts/GLWrapper.vbs"></Script>
+  <script language="VBScript" src="/Common/Scripts/PostCallbackSetInitialFocus.vbs"></script>
+
+  <script language="VBScript">
+Option Explicit
+
+' TODO: Replace Job Task Name
+Const JOB_TASK_NAME = "CaseDocumentExtractJob"
+
+Dim g_sJobMode
+Dim g_oTaskXML
+
+Sub InitializePage()
+  Dim oTaskXML
+  external.MessageArea.doAttention = True
+  external.MessageArea.visible = False
+  Call external.ShellMessages.Clear()
+
+  Dim oStash
+  Set oStash = external.ProductStash.Item("JobParms").Children
+
+  If Not oStash.Item("Mode") Is Nothing Then
+    g_sJobMode = oStash.Item("Mode").value
+  End If
+
+  If Not oStash.Item("TaskXML") Is Nothing Then
+    Set g_oTaskXML = oStash.Item("TaskXML").value
+  End If
+
+  'comment this line to allow F5 refresh
+  'external.ProductStash.Remove("JobParms")
+
+  external.WaitWindow.text = "Please Wait"
+  external.WaitWindow.Show
+
+  Call LoadCache()
+End Sub
+
+Sub LoadCache()
+  Dim oTask : Set oTask = external.ShellTasks.Add
+
+  oTask.OnComplete = GetRef("OnTaskComplete")
+  oTask.OnError = GetRef("OnTaskError")
+
+  Dim Request : Set Request = oTask.AddCacheUpdateServiceRequest
+
+  Call oTask.Execute()
+End Sub
+
+Sub OnTaskError(oTask)
+
+End Sub
+
+Sub OnTaskComplete(oTask)
+  Select Case g_sJobMode
+    Case "VIEW"
+      Call SetupViewMode()
+    Case "EDIT"
+      Call SetupEditMode()
+    Case "ADD"
+      Call SetupAddMode()
+  End Select
+
+  divModalBody.style.display = "block"
+
+  Call external.WaitWindow.Close()
+
+  If g_sJobMode <> "VIEW" Then
+    Call SetPostCallbackFocusControl(txtCaseNumber)
+  End If
+End Sub
+
+Sub PopulateControls()
+  Dim oNode, oParmXML
+  Set oParmXML = g_oTaskXML
+
+  Set oNode = oParmXML.selectSingleNode("Params")
+
+  If Not oNode Is Nothing Then
+    txtCaseNumber.value = oNode.GetAttribute("CaseNumber") & vbNullString
+    txtNodeID.value = oNode.GetAttribute("NodeID") & vbNullString
+    txtDocumentPath.value = oNode.GetAttribute("DocumentPath") & vbNullString
+  End If
+End Sub
+
+Sub DisablePage()
+  txtCaseNumber.disabled = True
+  txtNodeID.disabled = True
+  txtDocumentPath.disabled = True
+End Sub
+
+Sub SetupAddMode()
+  divModalTitle.innerHTML = JOB_TASK_NAME
+
+  Call PopulateControlsFromRegistry()
+End Sub
+
+Sub SetupEditMode()
+  divModalTitle.innerHTML = "Modify " & JOB_TASK_NAME
+
+  Call PopulateControls()
+End Sub
+
+Sub SetupViewMode()
+  divModalTitle.innerHTML = "View " & JOB_TASK_NAME
+  btnFinish.style.display = "none"
+  btnCancel.style.display = "none"
+  btnExit.style.display = "inline"
+
+  Call PopulateControls()
+  Call DisablePage()
+End Sub
+
+Sub MeridianOnClose
+  Call btnCancelClick()
+End Sub
+
+Sub btnExitClick()
+  Call external.CloseDialog(0, 0)
+End Sub
+
+Sub btnCancelClick()
+  If IsDirty() Then
+    If External.InfoBox("Changes will NOT be saved." & vbCrLf & _
+                   "Do you want to continue?", _
+                   "Warning", _
+                   vbYesNo + vbDefaultButton2 + vbExclamation) = vbYes Then
+      Call external.CloseDialog(0, 0)
+    End If
+  Else
+    Call external.CloseDialog(0, 0)
+  End If
+End Sub
+
+Sub btnFinishClick()
+  external.MessageArea.doAttention = False
+  Call external.ShellMessages.Clear()
+  external.MessageArea.visible = False
+
+  If ValidateRequiredFields() Then
+    Call UpdateTaskXML(g_oTaskXML)
+
+    Call external.CloseDialog(0, 2)
+  End If
+End Sub
+
+Function IsDirty()
+  IsDirty = False
+
+  If Len(txtCaseNumber.value) > 0     Or _
+     Len(txtNodeID.value) > 0 Or _
+     Len(txtDocumentPath.value) > 0    Then
+     IsDirty = True
+  End If
+End Function
+
+Function ValidateRequiredFields()
+  Call txtCaseNumber.Validate(True)
+  Call txtNodeID.Validate(True)
+  Call txtDocumentPath.Validate(True)
+
+  'Show errors if they exist
+  If external.ShellMessages.count > 0 Then
+    external.ShellMessages.ResetAttention
+    external.MessageArea.doAttention = True
+    external.MessageArea.visible = True
+
+    ValidateRequiredFields = False
+  Else
+    ValidateRequiredFields = True
+  End If
+
+End Function
+
+Sub PopulateControlsFromRegistry()
+  Dim oNode, oParmXML, oRegXML, strRegXML
+  Set oParmXML = g_oTaskXML
+
+  If g_sJobMode = "ADD" and g_oTaskXML.childNodes.length = 0 Then
+    ' We are in add mode and there are currently no values in
+    ' the parameter xml.  So try to read the defaults from the registry.
+    strRegXML = vbNullString
+
+    On Error Resume Next
+      strRegXML = external.MOM.ShellRegistry.ReadValue(2, "Infrastructure\FileTransform", "FileTransform")
+    On Error Goto 0
+
+    If Len(strRegXML) > 0 Then
+      Set oRegXML             = CreateObject("MSXML2.DOMDocument")
+      oRegXML.async           = False
+      oRegXML.ValidateOnParse = False
+
+      If oRegXML.loadXML(strRegXML) Then
+        Set oParmXML = oRegXML.documentElement
+      End If
+    End If
+  End If
+
+  Set oNode = oParmXML.selectSingleNode("Params")
+
+  If Not oNode Is Nothing Then
+    txtCaseNumber.value = oNode.GetAttribute("CaseNumber") & vbNullString
+    txtNodeID.value = oNode.GetAttribute("NodeID") & vbNullString
+    txtDocumentPath.value = oNode.GetAttribute("EventCode") & vbNullString
+  End If
+End Sub
+
+Sub UpdateTaskXML(oTaskXML)
+  Dim oNode
+  Dim strRegXML
+
+  For Each oNode in oTaskXML.childNodes
+    oTaskXML.removeChild oNode
+  Next
+
+  Set oNode = oTaskXML.ownerDocument.createElement("Params")
+
+  If Not oNode is Nothing Then
+    Call oNode.SetAttribute("CaseNumber", txtCaseNumber.value)
+    Call oNode.SetAttribute("NodeID", txtNodeID.value)
+    Call oNode.SetAttribute("DocumentPath", txtDocumentPath.value)
+    Call oTaskXML.AppendChild( oNode )
+  End If
+
+  If oTaskXML.childNodes.length > 0 Then
+    strRegXML = "<Parms>"
+
+    For Each oNode in oTaskXML.childNodes
+      strRegXML = strRegXML & oNode.xml
+    Next
+
+    strRegXML = strRegXML & "</Parms>"
+  Else
+    strRegXML = ""
+  End If
+
+  Call external.MOM.ShellRegistry.WriteValue(2, "Infrastructure\FileTransform", "FileTransform", strRegXML)
+End Sub
+
+Function GetTaskXMLNode(sName)
+  Dim oNode
+  Set oNode = g_oTaskXML.SelectSingleNode(sName)
+
+  If oNode Is Nothing Then
+    Set oNode = g_oTaskXML.OwnerDocument.CreateElement(sName)
+
+    Call g_oTaskXML.AppendChild(oNode)
+  End If
+
+  Set GetTaskXMLNode = oNode
+End Function
+
+Sub MeridianOnMessageClick(oMessage)
+  Dim sFieldName
+  Dim aElements
+
+  If Not (oMessage Is Nothing) Then
+    sFieldName = Trim(oMessage.tagID)
+
+    If Len(sFieldName) > 0 Then
+      If InStr(sFieldName, "_") Then
+        aElements = Split(sFieldName, "_")
+
+        Call GiveFieldFocus(aElements(0))
+      Else
+        Call GiveFieldFocus(sFieldName)
+      End If
+    End If
+  End If
+End Sub
+
+Sub GiveFieldFocus(sFieldName)
+  On Error Resume Next
+
+  Dim oElt
+  Set oElt = document.GetElementById(sFieldName)
+
+  If Not oElt Is Nothing Then
+    oElt.Focus
+
+    If oElt.IsTextEdit Or oElt.TagName = "datebox" Then
+      oElt.Select
+    End If
+
+    Set oElt = Nothing
+  End If
+End Sub
+
+Function MeridianGetHelpContext()
+  MeridianGetHelpContext = ""
+End Function
+
+
+  </script>
+
+</head>
+<body class="ssDialogBody" tabindex="-1" onload="VBScript:Call InitializePage()">
+  <table id="tableDialogHeader" cellspacing="0" cellpadding="0" style="width: 100%">
+
+    <tr class="ssDialogHeader">
+      <td>
+        <div id="divModalTitle">FIle Transfrom Task</div>
+      </td>
+    </tr>
+
+  </table>
+
+  <div id="divModalBody" style="display: none; padding: 5px 12px;">
+    <table cellspacing="0" cellpadding="0">
+
+      <tr style="padding-bottom: 1px;">
+        <td class="ssLabel" style="padding-left: 25px;">Case Number</td>
+        <td>
+          <tyl:textbox id="txtCaseNumber" required="true" style="width: 290px" errorlabel="Case Number" errortag="txtCaseNumber" />
+        </td>
+      </tr>
+
+      <tr style="padding-bottom: 1px;">
+        <td class="ssLabel" style="padding-left: 25px;">Node ID</td>
+        <td>
+          <tyl:textbox id="txtNodeID" required="true" style="width: 290px" errorlabel="Node ID" errortag="txtNodeID" />
+        </td>
+      </tr>
+
+      <tr style="padding-bottom: 1px;">
+        <td class="ssLabel" style="padding-left: 25px;">Document Path</td>
+        <td>
+          <tyl:textbox id="txtDocumentPath" required="true" style="width: 290px" errorlabel="Event Code" errortag="txtDocumentPath" />
+        </td>
+      </tr>
+
+    </table>
+
+  </div>
+
+  <div id="divFooter" class="ssDialogFooter" style="position: absolute; top: expression(document.body.clientHeight - divFooter.offsetHeight)">
+    <table cellspacing="0" cellpadding="0" width="100%">
+
+      <tr style="vertical-align: middle;">
+        <td style="text-align: center;">
+          <button id="btnFinish" class="ssButton" onclick="VBScript: Call btnFinishClick()" onmouseover="me.className='ssButtonHover'" onmouseout="me.className='ssButton'" accessKey="fF" style="width: 70px;" tabindex="12"><u>F</u>inish</button>
+          <button id="btnCancel" class="ssButton" style="margin-left: 20px" onclick="VBScript: Call btnCancelClick()" onmouseover="me.className='ssButtonHover'" onmouseout="me.className='ssButton'" accessKey="cC" style="width: 70px;" tabindex="13"><u>C</u>ancel</button>
+          <button id="btnExit" class="ssButton" onclick="VBScript: Call btnExitClick()" onmouseover="me.className='ssButtonHover'" onmouseout="me.className='ssButton'" accessKey="xX" style="display: none; width: 70px;" tabindex="14">E<u>x</u>it</button>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+</body>
+</html>

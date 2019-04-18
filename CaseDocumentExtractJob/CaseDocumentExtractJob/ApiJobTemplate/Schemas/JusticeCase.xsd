@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ************************************************************************************* -->
+<!-- Copyright (c) 2007 by Tyler Technologies.                                             -->
+<!--                                                                                       -->
+<!-- This program code is furnished under a license and may be used and copied only in     -->
+<!-- accordance with the terms of such license and with the inclusion of the above         -->
+<!-- copyright notice.  This program code or any other copies thereof may not be provided  -->
+<!-- or otherwise made available to any other persons.                                     -->
+<!-- ************************************************************************************* -->
+<!--                                                                                       -->
+<!-- HISTORY                                                                               -->
+<!--                                                                                       -->
+<!-- 07/24/2007 - Neil De Wilde                                                            -->
+<!--   *  Initial Creation                                                                 -->
+<!--   *  This is the schema definition for the api Justice case elements.                 -->
+<!-- 06/01/2015 - Muhammad Zuhaib Khalid.                                                  -->
+<!--   *  P-9532. Changed 'Justice.Case.CasePartiesWithAttorneys' to                       -->
+<!--      'Justice.Case.CasePartiesWithAttorneys'.                                         -->
+<!--                                                                                       -->
+<!-- ************************************************************************************* -->
+<xs:schema  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+            elementFormDefault="qualified">
+  <xs:include schemaLocation="BaseTypes.xsd"/>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Case Status                                                          -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.CaseStatus">
+    <xs:sequence>
+      <xs:element name="Type"     type="BASE.USERCODE"            minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Date"     type="BASE.REQUIREDDATE"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Comment"  type="BASE.REQUIREDSTRING1000"  minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Cross Reference Numbers                                              -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.CrossReferences">
+    <xs:sequence>
+      <xs:element name="CrossReference" type="Justice.Case.CrossReference" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.CrossReference">
+    <xs:sequence>
+      <xs:element name="CrossReferenceNumber"     type="BASE.REQUIREDSTRING30"  minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CrossReferenceNumberType" type="BASE.USERCODE"          minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Case Flags                                                           -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.CaseFlags">
+    <xs:sequence>
+      <xs:element name="CaseFlag" type="Justice.Case.CaseFlag" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.CaseFlag">
+    <xs:sequence>
+      <xs:element name="CaseFlagType"    type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CaseFlagComment" type="BASE.REQUIREDSTRING" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- * Documents                                                             -->
+  <!-- *********************************************************************** -->
+  <xs:simpleType name="Justice.Case.DocumentType.Redaction.InitStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Original"/>
+      <xs:enumeration value="Redacted"/>
+      <xs:enumeration value="Redacted Original"/>
+      <xs:enumeration value="Original-No Redaction"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Justice.Case.DocumentType.Redaction.Result">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NotRedacted"/>
+      <xs:enumeration value="Redacted"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Party Group ID                                                       -->
+  <!-- *********************************************************************** -->
+
+  <xs:complexType name="Justice.Case.PartyGroupID">
+    <xs:sequence>
+      <xs:element name="Number"    type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Type"      type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Case Party                                                           -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.CaseParties">
+    <xs:sequence>
+      <xs:element name="CaseParty" type="Justice.Case.CaseParty" minOccurs="1" maxOccurs="unbounded">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.CaseParty">
+    <xs:sequence>
+      <xs:element name="PartyID"          type="BASE.PARTYID"             minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ConnectionType"   type="BASE.USERCODE"            minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="AddDate"          type="BASE.REQUIREDDATE"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PartyParticipant" type="BASE.PARTYPARTICIPANT"    minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Style"            type="BASE.REQUIREDSTRING1000"  minOccurs="0" maxOccurs="1"/>
+      <xs:element name="NameID"           type="BASE.REQUIREDPOSINT"      minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AddressID"        type="BASE.REQUIREDPOSINT"      minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Case Party with Attornys                                              -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.CasePartiesWithAttorneys">
+    <xs:sequence>
+      <xs:element name="CaseParty" type="Justice.Case.CasePartyWithAttorneys" minOccurs="1" maxOccurs="unbounded">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.CasePartyWithAttorneys">
+    <xs:sequence>
+      <xs:element name="PartyID"          type="BASE.PARTYID"                     minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ConnectionType"   type="BASE.USERCODE"                    minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="AddDate"          type="BASE.REQUIREDDATE"                minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PartyParticipant" type="BASE.PARTYPARTICIPANT"            minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Style"            type="BASE.REQUIREDSTRING1000"          minOccurs="0" maxOccurs="1"/>
+      <xs:element name="NameID"           type="BASE.REQUIREDPOSINT"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AddressID"        type="BASE.REQUIREDPOSINT"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Attorneys"        type="Justice.Case.CaseParty.Attorneys" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  CaseParty Attorneys                                                  -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.CaseParty.Attorneys">
+    <xs:sequence>
+      <xs:element name="Attorney"        type="Justice.Case.CaseParty.Attorney"             minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.CaseParty.Attorney">
+    <xs:sequence>
+      <xs:element name="ProSe"           type="BASE.REQUIREDTEXTBOOLMIXEDCASE"              minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AttorneyID"      type="BASE.PARTYID"                                minOccurs="0" maxOccurs="1"/>
+      <xs:element name="NameID"          type="BASE.REQUIREDPOSINT"                         minOccurs="0" maxOccurs="1"/> 
+      <xs:element name="ConnectionType"  type="BASE.USERCODE"                               minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AppointmentType" type="Justice.Case.CaseParty.Attorney.Appointment" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AddDate"         type="BASE.REQUIREDDATE"                           minOccurs="1" maxOccurs="1"/>
+      <xs:element name="RemoveDate"      type="BASE.REQUIREDDATE"                           minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Reason"          type="BASE.USERCODE"                               minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Comment"         type="BASE.REQUIREDSTRING8000"                     minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Lead"            type="BASE.REQUIREDTEXTBOOLMIXEDCASE"              minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.CaseParty.Attorney.Appointment">
+    <xs:choice minOccurs="1" maxOccurs="1">
+      <xs:element name="CourtAppointed" type="Justice.Case.CaseParty.Attorney.Appointment.CourtAppointed"/>
+      <xs:element name="PublicDefender" type="BASE.REQUIREDTEXTBOOLMIXEDCASETRUE"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.CaseParty.Attorney.Appointment.CourtAppointed">
+    <xs:sequence>
+      <xs:element name="Judge" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Attorney                                                             -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.Attorney">
+    <xs:sequence>
+      <xs:element name="PartyID"         type="BASE.PARTYID"                   minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AttorneyType"    type="BASE.REQUIREDSTRING10"          minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AttorneyAddDate" type="BASE.REQUIREDDATE"              minOccurs="1" maxOccurs="1"/>
+      <xs:element name="NameID"          type="BASE.REQUIREDPOSINT"            minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Appointment"     type="Justice.Case.Appointment"       minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.Appointment">
+    <xs:choice>
+      <xs:element name="None" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CourtAppointed" type="Justice.Case.CourtAppointed" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PublicDefender" minOccurs="0" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.CourtAppointed">
+    <xs:sequence>
+      <xs:element name="Judge" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Party Name                                                           -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.PartyName">
+    <xs:sequence>
+      <xs:element name="NameType" type="BASE.REQUIREDSTRING5" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Case ReAssignment                                                    -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.CaseReAssignment">
+    <xs:sequence>
+      <xs:element name="CaseNumber" type="BASE.REQUIREDSTRING30" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="NodeID"     type="BASE.REQUIREDPOSINT"   minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Judge Assignment / ReAssignment                                      -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.JudgeAssignment">
+    <xs:choice>
+      <xs:element name="ManualAssignment" type="Justice.Case.ManualJudgeAssignment" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="SystemAssignment" type="Justice.Case.SystemJudgeAssignment" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.JudgeReAssignment">
+    <xs:sequence>
+      <xs:element name="JudicialNotice" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>      
+      <xs:choice>
+        <xs:element name="ManualAssignment" type="Justice.Case.ManualJudgeAssignment" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="SystemAssignment" type="Justice.Case.SystemJudgeAssignment" minOccurs="1" maxOccurs="1"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.ManualJudgeAssignment">
+    <xs:choice>
+      <xs:element name="Judge" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="NoJudge" type="BASE.REQUIREDTEXTBOOLMIXEDCASETRUE" minOccurs="1" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.SystemJudgeAssignment">
+    <xs:sequence>
+      <xs:element name="JudgePool" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- * Judgments                                                             -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.Judgments">
+    <xs:sequence>
+      <xs:element name="Judgment" type="Justice.Case.Judgment" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.Judgment">
+    <!-- We are explicitly not validating any child nodes of the Judgment Element. This is -->
+    <!-- because the wrapper code for the IN Tax Warrant interface passes internal xml for the IN Monetary Award  -->
+    <!-- judgment component in as a CompInts node. This is not how we want to process judgment components -->
+    <!-- long term. But we can't start prohibiting the CompInsts node because we would break the IN interface. -->
+    <!-- Eventually there will probably be individual API message for each judgment component. But that design is -->
+    <!-- still in the works. -->
+    <!--<xs:sequence>
+      <xs:any processContents="skip" />
+    </xs:sequence>
+    <xs:anyAttribute processContents="skip" />-->
+    <!-- causeofaction-->
+    <xs:sequence>
+       <xs:element name="CauseOfActions" type="Justice.Case.Judgment.CauseOfActions" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- *********************************************************************** -->
+  <!-- *  Cause of Action                                                      -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Case.Judgment.CauseOfActions">
+    <xs:sequence>
+      <xs:element name="CauseOfAction" type="Justice.Case.Judgment.CauseOfAction" minOccurs="1" maxOccurs="unbounded">
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.Judgment.CauseOfAction">
+    <xs:sequence>
+      <xs:element name="CauseID"          type="BASE.REQUIREDPOSINT"      minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.Case.CompInsts">
+    <xs:sequence>
+      <xs:any processContents="skip" />
+      </xs:sequence>
+   </xs:complexType>
+
+    <!-- *********************************************************************** -->
+    <!-- * SaveOptions                                                           -->
+    <!-- *********************************************************************** -->
+
+    <xs:complexType name="Justice.Case.SaveOptions">
+        <xs:sequence>
+            <xs:element name="AutoAssess" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+

@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6628D833-07BF-44A9-8787-4D0F9FBD78A1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CaseDocumentExtractJob</RootNamespace>
+    <AssemblyName>CaseDocumentExtractJob</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\PublishedIMS\Binary\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\PublishedIMS\Binary\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>CaseDocumentExtractJob.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.MSXML3, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bbf02ce0e5cb6c3f">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tyler.Integration.Framework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=388dabfae945cdc1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\..\Odyssey\Production\Binary\Integration\Tyler.Integration.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Tyler.Integration.General, Version=1.0.0.0, Culture=neutral, PublicKeyToken=78f17ea07cea66f5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\..\Odyssey\Production\Binary\Integration\Tyler.Integration.General.dll</HintPath>
+    </Reference>
+    <Reference Include="Tyler.Odyssey.API.Shared.APIEntities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9b41fe659b900f91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\..\Odyssey\Production\Binary\Odyssey\API\Shared\Tyler.Odyssey.API.Shared.APIEntities.dll</HintPath>
+    </Reference>
+    <Reference Include="Tyler.Odyssey.Common, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a0fea4f153f3d2aa, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Odyssey\Production\Binary\Odyssey\Non-Configured Managed Components\Tyler.Odyssey.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Tyler.Odyssey.JobProcessing.BaseTask, Version=1.0.0.0, Culture=neutral, PublicKeyToken=700cfdbd6f6e4730, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Odyssey\Production\Binary\Odyssey\Odyssey Job Processing\BaseTask\Tyler.Odyssey.JobProcessing.BaseTask.dll</HintPath>
+    </Reference>
+    <Reference Include="Tyler.Odyssey.JobProcessing.JobProcessingInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8472a218a32f1cce, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Odyssey\Production\Binary\Odyssey\Odyssey Job Processing\JobProcessingInterface\Tyler.Odyssey.JobProcessing.JobProcessingInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="Tyler.Odyssey.Utils, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ed762be088cc7185, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Odyssey\Production\Binary\Odyssey\Non-Configured Managed Components\Tyler.Odyssey.Utils.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\AddCaseEventEntity.cs" />
+    <Compile Include="Entities\AddCaseEventResultEntity.cs" />
+    <Compile Include="Entities\FindCaseByCaseNumber.cs" />
+    <Compile Include="Entities\FindCaseByCaseNumberEntity.cs" />
+    <Compile Include="Entities\FindCaseByCaseNumberResultEntity.cs" />
+    <Compile Include="Entities\GetDocument.cs" />
+    <Compile Include="Entities\GetDocumentInfoByEntity.cs" />
+    <Compile Include="Entities\GetDocumentInfoByEntityResult.cs" />
+    <Compile Include="Entities\GetDocumentResult.cs" />
+    <Compile Include="Exceptions\BaseCustomException.cs" />
+    <Compile Include="Helpers\Constants.cs" />
+    <Compile Include="Helpers\Context.cs" />
+    <Compile Include="DataProcessor.cs" />
+    <Compile Include="JobTask.cs" />
+    <Compile Include="Helpers\Parameters.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="CaseDocumentExtractJob.snk" />
+    <None Include="Schemas\AddCaseEvent.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\AddCaseEventResult.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\BaseTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\FindCaseByCaseNumber.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\FindCaseByCaseNumberResult.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\Justice.Event.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\JusticeCase.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\JusticeCharges.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\JusticeJailing.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\JusticeParty.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

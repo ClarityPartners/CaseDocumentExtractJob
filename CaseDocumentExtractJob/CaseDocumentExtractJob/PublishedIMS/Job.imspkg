@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package name="CaseDocumentExtractJob-APP" version="1.0.0.0" priority="32000" xmlns:com="com" xmlns:gac="gac" xmlns:iis="iis" xmlns:atlas="atlas">
+  <script>
+    ComponentRegistrar.UninstallAssembly("CaseDocumentExtractJob.dll", "");
+  </script>
+  <!-- Deploy .dll to server -->
+  <com:server>
+    <asset source="Binary\CaseDocumentExtractJob.dll"
+           target="\CustomExtensions\Binary\JobProcessing\CaseDocumentExtractJob.dll"
+           name="CaseDocumentExtractJob"
+           version="1.0.0.0"/>
+  </com:server>
+
+  <!-- Web Files -->
+  <asset source="Webs\JobParameterDialog.htm"
+         target="\CustomExtensions\Webs\Infrastructure\JobProcessing\ParamModals\APITransformTemplate.htm"
+         name="APITransformTemplate"
+         version="1.0.0.0"/>
+</package>

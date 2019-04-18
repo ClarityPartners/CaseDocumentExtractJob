@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ************************************************************************************* -->
+<!-- Copyright (c) 2007 by Tyler Technologies.                                             -->
+<!--                                                                                       -->
+<!-- This program code is furnished under a license and may be used and copied only in     -->
+<!-- accordance with the terms of such license and with the inclusion of the above         -->
+<!-- copyright notice.  This program code or any other copies thereof may not be provided  -->
+<!-- or otherwise made available to any other persons.                                     -->
+<!-- ************************************************************************************* -->
+<!--                                                                                       -->
+<!-- HISTORY                                                                               -->
+<!--                                                                                       -->
+<!-- 10/02/2007 - Neil De Wilde                                                            -->
+<!--   *  Initial Creation                                                                 -->
+<!--   *  This is the schema definition for the api Justice Event elements.                -->
+<!--                                                                                       -->
+<!-- ************************************************************************************* -->
+<xs:schema  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+            elementFormDefault="qualified">
+	<xs:include schemaLocation="BaseTypes.xsd"/>
+
+	<!-- *********************************************************************** -->
+	<!-- *                 Common Elements not including CaseID                  -->
+	<!-- *********************************************************************** -->
+  <xs:group name="Justice.Event.Common">
+    <xs:sequence>
+                <xs:element name="CaseEventType"    type="BASE.USERCODE"                  minOccurs="1" maxOccurs="1"/>
+                <xs:element name="Date"             type="BASE.REQUIREDDATE"              minOccurs="1" maxOccurs="1"/>
+                <xs:element name="Time"             type="BASE.REQUIREDTIME"              minOccurs="0" maxOccurs="1"/>
+                <xs:element name="Date2"            type="BASE.REQUIREDDATE"              minOccurs="0" maxOccurs="1"/>
+                <xs:element name="Comment"          type="BASE.REQUIREDSTRING"            minOccurs="0" maxOccurs="1"/>
+                <xs:element name="DocketableFlag"   type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="IncludeOnAppeal"  type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="LogBook"          type="Justice.Event.LOGBOOK"          minOccurs="0" maxOccurs="1" />
+                <xs:element name="InstrumentNumber" type="BASE.REQUIREDSTRING255"         minOccurs="0" maxOccurs="1"/>
+                <xs:element name="Party1"           type="Justice.Event.PartyType"        minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="Party2"           type="Justice.Event.PartyType"        minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="Judge"            type="BASE.USERCODE"                  minOccurs="0" maxOccurs="1"/>
+                <xs:element name="DueDate"          type="BASE.REQUIREDDATE"              minOccurs="0" maxOccurs="1"/>
+                <xs:element name="CompletedDate"    type="BASE.REQUIREDDATE"              minOccurs="0" maxOccurs="1"/>
+                <xs:element name="HearingDate"      type="BASE.REQUIREDDATE"              minOccurs="0" maxOccurs="1"/>
+                <xs:element name="HearingTime"      type="BASE.REQUIREDTIME"              minOccurs="0" maxOccurs="1"/>
+                <xs:element name="HearingNodeID"    type="BASE.REQUIREDPOSINT"            minOccurs="0" maxOccurs="1"/>
+                <xs:element name="ChargeID"         type="BASE.REQUIREDPOSINT"            minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="CauseOfActionID"  type="BASE.REQUIREDPOSINT"            minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="Amount"           type="BASE.REQUIREDMONEYCENTS"        minOccurs="0" maxOccurs="1"/>
+                <xs:element name="Plea"             type="BASE.USERCODE"                  minOccurs="0" maxOccurs="1"/>
+                <xs:element name="AgingClock"       type="Justice.Event.AgingClock"       minOccurs="0" maxOccurs="1"/>
+                <xs:element name="AssessFees"       type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="RecordingNeeded"  type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="CaseEventStatus"  type="Justice.Event.Status"           minOccurs="0" maxOccurs="1"/>
+                <xs:element name="LinkDocuments"    type="Justice.LinkDocuments"          minOccurs="0" maxOccurs="1"/>
+                <xs:element name="Number"           type="BASE.REQUIREDINT"               minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:complexType name="Justice.LinkDocuments">
+    <xs:sequence>
+      <xs:element name="LinkDocument"               type="Justice.LinkDocument"           minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Justice.LinkDocument">
+    <xs:sequence>
+      <xs:element name="LinkDocumentID"             type="BASE.REQUIREDPOSINT"            minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:group name="Justice.Event.Common.Result">
+    <xs:sequence>
+        <xs:element name="CaseEventID"        type="BASE.REQUIREDPOSINT"  minOccurs="1" maxOccurs="1"/>
+	<xs:element name="CaseEventStatusID"  type="BASE.REQUIREDPOSINT"  minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:group>
+
+	<!-- *********************************************************************** -->
+	<!-- *                            Log Book                                   -->
+	<!-- *********************************************************************** -->
+	<xs:complexType name="Justice.Event.LOGBOOK">
+		<xs:sequence>
+			<xs:element name="Volume"        type="BASE.REQUIREDSTRING100" minOccurs="0" maxOccurs="1" />
+			<xs:element name="Page"          type="BASE.REQUIREDSTRING100" minOccurs="0" maxOccurs="1" />
+			<xs:element name="NumberOfPages" type="BASE.REQUIREDSTRING100" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- *********************************************************************** -->
+	<!-- *                            Party Type                                 -->
+	<!-- *********************************************************************** -->
+	<xs:complexType name="Justice.Event.PartyType">
+		<xs:sequence>
+			<xs:element name="PartyID" type="BASE.PARTYID" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- *********************************************************************** -->
+	<!-- *                           Aging Clock                                 -->
+	<!-- *********************************************************************** -->
+	<xs:simpleType name="Justice.Event.AgingClock">
+		<xs:restriction base="BASE.STRING">
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="SR"/>
+			<xs:enumeration value="SP"/>
+			<xs:enumeration value="R"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- *********************************************************************** -->
+	<!-- *                            Event Status                               -->
+	<!-- *********************************************************************** -->
+    <xs:complexType name="Justice.Event.Status">
+      <xs:sequence>
+        <xs:element name="Date"     type="BASE.REQUIREDDATE"    minOccurs="1" maxOccurs="1"/>
+        <xs:element name="Status"   type="BASE.USERCODE"        minOccurs="1" maxOccurs="1"/>
+        <xs:element name="Comment"  type="BASE.REQUIREDSTRING"  minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+

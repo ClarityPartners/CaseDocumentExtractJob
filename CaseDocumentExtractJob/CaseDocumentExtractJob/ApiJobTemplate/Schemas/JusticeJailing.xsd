@@ -1,0 +1,147 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" elementFormDefault="qualified">
+	<xs:annotation>
+		<xs:documentation>
+      ****************************************************************************************
+      * Copyright (c) 2008 by Tyler Technologies.                                            *
+      *                                                                                      *
+      * This program code is furnished under a license and may be used and copied only in    *
+      * accordance with the terms of such license and with the inclusion of the above        *
+      * copyright notice.  This program code or any other copies thereof may not be provided *
+      * or otherwise made available to any other persons.                                    *
+      ****************************************************************************************
+      * Author: David Snedecor     Date: 06/04/2008                                          *
+      *                                                                                      *
+      * Defines custom types related to Jailing entities.                                    *
+      *                                                                                      *
+      * ------------------------------------------------------------------------------------ *
+      * Change Log:                                                                          *
+      * ------------------------------------------------------------------------------------ *
+      * Date        Who  Description                                                         *
+      * ----------  ---  ------------------------------------------------------------------- *
+      * 06/04/2008  DAS  Created.                                                            *
+      * 03/17/2010  BM   Proj. 4801 - Added CodeID and  ReferenceID attribute to             *
+      *                  Offense Code element                                                *
+      * 12/17/2012  MP   Added ChargeID, WarrantID, and WarrantType to Charge                *
+      ****************************************************************************************
+    </xs:documentation>
+	</xs:annotation>
+	<!-- *************************************************************************** -->
+	<!-- * Schema Includes                                                         * -->
+	<!-- *************************************************************************** -->
+	<xs:include schemaLocation="BaseTypes.xsd"/>
+	<!-- *************************************************************************** -->
+	<!-- * Arrest Charges                                                          * -->
+	<!-- *************************************************************************** -->
+	<xs:complexType name="Jailing.Arrest.Charges">
+		<xs:sequence>
+			<xs:element name="Charge" type="Jailing.Arrest.Charge" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Jailing.Arrest.Charge">
+		<xs:sequence>
+			<xs:element name="ChargeID" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="WarrantID" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="HoldReason" type="Jailing.Arrest.Charge.HoldReason" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="WarrantType" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="WarrantRefNumber" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="IssuingAuth" type="BASE.REQUIREDSTRING50" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDate" type="BASE.DATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTime" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="IncidentCaseNumber" type="BASE.REQUIREDSTRING30" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="Jailing.Arrest.Charge.Offense" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bonds" type="Jailing.Arrest.Charge.Bonds" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="NonDisclosed" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="Jailing.Arrest.Charge.HoldReason">
+		<xs:restriction base="BASE.REQUIREDSTRING">
+			<xs:enumeration value="CIT"/>
+			<xs:enumeration value="CS"/>
+			<xs:enumeration value="LW"/>
+			<xs:enumeration value="OAH"/>
+			<xs:enumeration value="OV"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Jailing.Arrest.Charge.Offense">
+		<xs:sequence>
+			<xs:element name="Code" type="BASE.USERCODE.WITHIDANDREFERENCEID" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Description" type="BASE.REQUIREDSTRING100" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Degree" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Statute" type="BASE.REQUIREDSTRING40" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="GOC" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Jailing.Arrest.Charge.Bonds">
+		<xs:choice minOccurs="1" maxOccurs="1">
+			<xs:element name="Set" type="Jailing.Arrest.Charge.Bonds.Bond"/>
+			<xs:element name="Recommended" type="Jailing.Arrest.Charge.Bonds.Bond"/>
+			<xs:element name="NotSet" type="LOCAL.TRUEONLY"/>
+			<xs:element name="NoBond" type="LOCAL.TRUEONLY"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:simpleType name="LOCAL.TRUEONLY">
+		<xs:restriction base="BASE.REQUIREDSTRING">
+			<xs:enumeration value="True"/>
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="TRUE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Jailing.Arrest.Charge.Bonds.Bond">
+		<xs:sequence>
+			<xs:element name="Primary" type="Jailing.Arrest.Charge.Bonds.BondDesignation" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Alternative" type="Jailing.Arrest.Charge.Bonds.BondDesignation" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Jailing.Arrest.Charge.Bonds.BondDesignation">
+		<xs:sequence>
+			<xs:element name="Amount" type="Jailing.Arrest.Charge.Bonds.Amount" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Type" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *************************************************************************** -->
+	<!-- * Bond Amount                                                             * -->
+	<!-- *************************************************************************** -->
+	<xs:simpleType name="Jailing.Arrest.Charge.Bonds.Amount">
+		<xs:restriction base="BASE.REQUIREDMONEYCENTS">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="99999999.99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- *************************************************************************** -->
+	<!-- * Emergency Contact Phone Number                                          * -->
+	<!-- *************************************************************************** -->
+	<xs:simpleType name="Jailing.Arrest.NOKPhone">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{3}-[0-9]{3}-[0-9]{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- *************************************************************************** -->
+	<!-- * Cell Assignment                                                         * -->
+	<!-- *************************************************************************** -->
+	<xs:complexType name="Jailing.CellAssignment">
+		<xs:sequence>
+			<xs:element name="Date" type="BASE.REQUIREDDATE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Time" type="BASE.REQUIREDTIME" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Cell" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *************************************************************************** -->
+	<!-- * Existing Jailing                                                        * -->
+	<!-- *************************************************************************** -->
+	<xs:simpleType name="Jailing.ExistingJailing">
+		<xs:restriction base="BASE.REQUIREDSTRING">
+			<xs:enumeration value="Add"/>
+			<xs:enumeration value="Reject"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- *************************************************************************** -->
+	<!-- * Booking Number                                                          * -->
+	<!-- *************************************************************************** -->
+	<xs:complexType name="Jailing.BookingNumber">
+		<xs:sequence>
+			<xs:element name="Number" type="BASE.REQUIREDSTRING30" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="AllowDuplicate" type="BASE.REQUIREDTEXTBOOL" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

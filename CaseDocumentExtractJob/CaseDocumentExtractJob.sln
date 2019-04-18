@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PublishedIMS", "CaseDocumentExtractJob\PublishedIMS\", "{A07BBF54-768C-4821-84E9-77026F20CD87}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
+		ProjectReferences = "{6628d833-07bf-44a9-8787-4d0f9fbd78a1}|CaseDocumentExtractJob.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_62202"
+		Debug.AspNetCompiler.PhysicalPath = "CaseDocumentExtractJob\PublishedIMS\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62202\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_62202"
+		Release.AspNetCompiler.PhysicalPath = "CaseDocumentExtractJob\PublishedIMS\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_62202\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "62202"
+		SlnRelativePath = "CaseDocumentExtractJob\PublishedIMS\"
+		DefaultWebSiteLanguage = "Visual Basic"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_TestHarness", "CaseDocumentExtractJob\_TestHarness\_TestHarness.csproj", "{32197C5D-FB69-4935-B8D2-CFF709FAA84E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaseDocumentExtractJob", "CaseDocumentExtractJob\ApiJobTemplate\CaseDocumentExtractJob.csproj", "{6628D833-07BF-44A9-8787-4D0F9FBD78A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A07BBF54-768C-4821-84E9-77026F20CD87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A07BBF54-768C-4821-84E9-77026F20CD87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A07BBF54-768C-4821-84E9-77026F20CD87}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{A07BBF54-768C-4821-84E9-77026F20CD87}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{32197C5D-FB69-4935-B8D2-CFF709FAA84E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32197C5D-FB69-4935-B8D2-CFF709FAA84E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32197C5D-FB69-4935-B8D2-CFF709FAA84E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32197C5D-FB69-4935-B8D2-CFF709FAA84E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6628D833-07BF-44A9-8787-4D0F9FBD78A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6628D833-07BF-44A9-8787-4D0F9FBD78A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6628D833-07BF-44A9-8787-4D0F9FBD78A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6628D833-07BF-44A9-8787-4D0F9FBD78A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

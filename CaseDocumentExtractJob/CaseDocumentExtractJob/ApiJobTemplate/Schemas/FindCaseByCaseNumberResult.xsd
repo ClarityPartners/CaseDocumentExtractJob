@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- ************************************************************************************* -->
+<!-- Copyright (c) 2007 by Tyler Technologies.                                             -->
+<!--                                                                                       -->
+<!-- This program code is furnished under a license and may be used and copied only in     -->
+<!-- accordance with the terms of such license and with the inclusion of the above         -->
+<!-- copyright notice.  This program code or any other copies thereof may not be provided  -->
+<!-- or otherwise made available to any other persons.                                     -->
+<!-- ************************************************************************************* -->
+<xs:schema  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+            elementFormDefault="qualified">
+  <xs:include schemaLocation="BaseTypes.xsd" />
+
+  <xs:element name="Result" block="#all" final="#all">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="NodeID"             type="BASE.REQUIREDPOSINT"      minOccurs="1" maxOccurs="1"/>
+        <xs:element name="CaseID"             type="BASE.REQUIREDPOSINT"      minOccurs="1" maxOccurs="1"/>
+        <xs:element name="CaseNumber"         type="BASE.REQUIREDSTRING30"    minOccurs="1" maxOccurs="1"/>
+        <xs:element name="CaseStyle"          type="BASE.REQUIREDSTRING5000"  minOccurs="0" maxOccurs="1"/>
+        <xs:element name="CaseStatus"         type="BASE.USERCODE"            minOccurs="1" maxOccurs="1"/>
+        <xs:element name="CaseType"           type="BASE.USERCODE"            minOccurs="1" maxOccurs="1"/>
+        <xs:element name="CaseSecurityGroup"  type="BASE.USERCODE"            minOccurs="0" maxOccurs="1"/>
+        <xs:element name="CaseConsolidation"  type="LOCAL.CASECONSOLIDATION"  minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:complexType name="LOCAL.CASECONSOLIDATION">
+    <xs:sequence>
+      <xs:element name="LeadCase"           type="LOCAL.LEADCASE"           minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LOCAL.LEADCASE">
+    <xs:sequence>
+      <xs:element name="CaseID"             type="BASE.REQUIREDPOSINT"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CaseNumber"         type="BASE.REQUIREDSTRING"      minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+</xs:schema>

@@ -1,0 +1,2554 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ************************************************************************************* -->
+<!-- Copyright (c) 2007 by Tyler Technologies.                                             -->
+<!--                                                                                       -->
+<!-- This program code is furnished under a license and may be used and copied only in     -->
+<!-- accordance with the terms of such license and with the inclusion of the above         -->
+<!-- copyright notice.  This program code or any other copies thereof may not be provided  -->
+<!-- or otherwise made available to any other persons.                                     -->
+<!-- ************************************************************************************* -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+           elementFormDefault="qualified"
+           attributeFormDefault="qualified"
+           id="BaseTypesSchema">
+           
+           
+  <!-- ************************** -->
+  <!-- * Non-Element Base Types * -->
+  <!-- ************************** -->
+  <xs:simpleType name="BASE.INTEGRATIONID">
+    <xs:restriction base="xs:integer">
+      <xs:pattern value="-?[0]*[1-9]{1}\d*" />
+      <xs:maxInclusive value="2147483647" />
+      <!-- Integer values except 0-->
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.PARTYID">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="2147483647" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.PARTYIDSUBSTITUTION">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(-?[0]*[1-9]{1}\d*)|(#\|[a-zA-Z0-9]+\|#)" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.PARTYPARTICIPANT">
+    <xs:restriction base="BASE.STRING">
+      <xs:pattern value="[Pp][Aa][Rr][Tt][Yy]" />
+      <xs:pattern value="[Pp][Aa][Rr][Tt][Ii][Cc][Ii][Pp][Aa][Nn][Tt]" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.SSN">
+    <!-- Nine digit number with no dashes -->
+    <xs:restriction base="xs:integer">
+      <xs:pattern value="[0-9]{9}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.ZIP">
+    <xs:restriction base="BASE.STRING">
+      <xs:pattern value="[0-9]{5}(-[0-9]{4})?" />
+      <!-- ZIP Code - 5 digits plus optional 4 digits -->
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDDATE">
+    <xs:restriction base="BASE.STRING">
+      <xs:minLength value="1" />
+      <!-- Odyssey Format MM/DD/YYYY -->
+      <xs:pattern value="(((10|12|0?[13578])([/])(3[01]|[12][0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((11|0?[469])([/])(30|[12][0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((0?2)([/])(2[0-8]|1[0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((0?2)([/])(29)([/])([2468][048]00))|((0?2)([/])(29)([/])([3579][26]00))|((0?2)([/])(29)([/])([1][89][0][48]))|((0?2)([/])(29)([/])([2-9][0-9][0][48]))|((0?2)([/])(29)([/])([1][89][2468][048]))|((0?2)([/])(29)([/])([2-9][0-9][2468][048]))|((0?2)([/])(29)([/])([1][89][13579][26]))|((0?2)([/])(29)([/])([2-9][0-9][13579][26])))" />
+      <!-- MN Format: YYYY-MM-DD -->
+      <xs:pattern value="((((1[8-9]\d{2})|([2-9]\d{3}))([\-])(10|12|0?[13578])([\-])(3[01]|[12][0-9]|0?[1-9]))|(((1[8-9]\d{2})|([2-9]\d{3}))([\-])(11|0?[469])([\-])(30|[12][0-9]|0?[1-9]))|(((1[8-9]\d{2})|([2-9]\d{3}))([\-])(0?2)([\-])(2[0-8]|1[0-9]|0?[1-9]))|(([2468][048]00)([\-])(0?2)([\-])(29))|(([3579][26]00)([\-])(0?2)([\-])(29))|(([1][89][0][48])([\-])(0?2)([\-])(29))|(([2-9][0-9][0][48])([\-])(0?2)([\-])(29))|(([1][89][2468][048])([\-])(0?2)([\-])(29))|(([2-9][0-9][2468][048])([\-])(0?2)([\-])(29))|(([1][89][13579][26])([\-])(0?2)([\-])(29))|(([2-9][0-9][13579][26])([\-])(0?2)([\-])(29)))" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.DATE">
+    <xs:restriction base="BASE.STRING">
+      <!-- Odyssey Format MM/DD/YYYY -->
+      <xs:pattern value="(((10|12|0?[13578])([/])(3[01]|[12][0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((11|0?[469])([/])(30|[12][0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((0?2)([/])(2[0-8]|1[0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((0?2)([/])(29)([/])([2468][048]00))|((0?2)([/])(29)([/])([3579][26]00))|((0?2)([/])(29)([/])([1][89][0][48]))|((0?2)([/])(29)([/])([2-9][0-9][0][48]))|((0?2)([/])(29)([/])([1][89][2468][048]))|((0?2)([/])(29)([/])([2-9][0-9][2468][048]))|((0?2)([/])(29)([/])([1][89][13579][26]))|((0?2)([/])(29)([/])([2-9][0-9][13579][26])))" />
+      <!-- MN Format: YYYY-MM-DD -->
+      <xs:pattern value="((((1[8-9]\d{2})|([2-9]\d{3}))([\-])(10|12|0?[13578])([\-])(3[01]|[12][0-9]|0?[1-9]))|(((1[8-9]\d{2})|([2-9]\d{3}))([\-])(11|0?[469])([\-])(30|[12][0-9]|0?[1-9]))|(((1[8-9]\d{2})|([2-9]\d{3}))([\-])(0?2)([\-])(2[0-8]|1[0-9]|0?[1-9]))|(([2468][048]00)([\-])(0?2)([\-])(29))|(([3579][26]00)([\-])(0?2)([\-])(29))|(([1][89][0][48])([\-])(0?2)([\-])(29))|(([2-9][0-9][0][48])([\-])(0?2)([\-])(29))|(([1][89][2468][048])([\-])(0?2)([\-])(29))|(([2-9][0-9][2468][048])([\-])(0?2)([\-])(29))|(([1][89][13579][26])([\-])(0?2)([\-])(29))|(([2-9][0-9][13579][26])([\-])(0?2)([\-])(29)))" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDTIME">
+    <xs:restriction base="BASE.STRING">
+      <xs:minLength value="1" />
+      <xs:pattern value="((([0]?[1-9]|1[0-2])(:|\.)[0-5][0-9]((:|\.)[0-5][0-9])?( )?(AM|am|aM|Am|PM|pm|pM|Pm))|(([0]?[0-9]|1[0-9]|2[0-3])(:|\.)[0-5][0-9]((:|\.)[0-5][0-9]((:|\.)[0-9]{3})?)?))" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.TIME">
+    <xs:restriction base="BASE.STRING">
+      <xs:pattern value="((([0]?[1-9]|1[0-2])(:|\.)[0-5][0-9]((:|\.)[0-5][0-9])?( )?(AM|am|aM|Am|PM|pm|pM|Pm))|(([0]?[0-9]|1[0-9]|2[0-3])(:|\.)[0-5][0-9]((:|\.)[0-5][0-9]((:|\.)[0-9]{3})?)?))?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDZERO">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDINT">
+    <xs:restriction base="xs:integer">
+      <xs:pattern value="-?\d+" />
+      <xs:minInclusive value="-2147483648" />
+      <xs:maxInclusive value="2147483647" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.OPTIONALPOSINT">
+    <xs:restriction base="xs:integer">
+      <xs:pattern value="-?\d+" />
+      <xs:maxInclusive value="2147483647" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.OPTIONALPOSINT3">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="999" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.OPTIONALPOSINT4">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="9999" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.VEHICLEYEAR">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1900" />
+      <xs:maxInclusive value="2100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.OPTIONALFEET">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="5279" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.OPTIONALPOSINT5">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="99999" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDDECIMAL">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="-?\d*(\.\d+)?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDPOSINT">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="2147483647" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDPOSINT1">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="9" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDPOSINT3">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="999" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDPOSINT5">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="99999" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDNONNEGINT">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="2147483647" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDNONNEGINT3">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="999" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDNONNEGINT9">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="999999999" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDNEGINT">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="-2147483648" />
+      <xs:maxInclusive value="-1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDNONNEGTINYINT">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="255" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDDAYOFWEEKNUMBER">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="7" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDDAYOFMONTHNUMBER">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="31" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDMONEYCENTS">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="-?\d*\.\d?\d?" />
+      <xs:minInclusive value="-922337203685477.58" />
+      <xs:maxInclusive value="922337203685477.58" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDNONNEGMONEYCENTS">
+    <xs:restriction base="BASE.REQUIREDMONEYCENTS">
+      <xs:minInclusive value="0.0000" />
+      <xs:maxInclusive value="922337203685477.58" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDBAC">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="\d?\.?\d?\d?\d?" />
+      <xs:minInclusive value="0.000" />
+      <xs:maxInclusive value="1.000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDPERCENT">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="(0|1)?\d{0,2}(\.\d{0,2})?" />
+      <xs:minInclusive value="0.00" />
+      <xs:maxInclusive value="100.00" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDTEXTBOOL">
+    <xs:restriction base="BASE.REQUIREDNORMALIZEDSTRING">
+      <xs:enumeration value="true" />
+      <xs:enumeration value="false" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDTEXTBOOLMIXEDCASE">
+    <xs:restriction base="BASE.REQUIREDNORMALIZEDSTRING">
+      <xs:pattern value="([Tt][Rr][Uu][Ee])|([Ff][Aa][Ll][Ss][Ee])" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDTEXTBOOLMIXEDCASETRUE">
+    <xs:restriction base="BASE.REQUIREDNORMALIZEDSTRING">
+      <xs:pattern value="([Tt][Rr][Uu][Ee])" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDTRUEBOOL">
+    <xs:restriction base="BASE.REQUIREDTEXTBOOL">
+      <xs:enumeration value="true" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDINTBOOL">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0" />
+      <xs:enumeration value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDMIXEDBOOL">
+    <xs:union memberTypes="BASE.REQUIREDTEXTBOOL BASE.REQUIREDINTBOOL" />
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDMIXEDBOOLMIXEDCASE">
+    <xs:union memberTypes="BASE.REQUIREDTEXTBOOLMIXEDCASE BASE.REQUIREDINTBOOL" />
+  </xs:simpleType>
+  <xs:simpleType name="BASE.MALEFEMALE">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Male" />
+      <xs:enumeration value="Female" />
+      <xs:enumeration value="" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- String Types -->
+  <xs:simpleType name="BASE.STRING">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING1">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING3">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="3" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING10">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="10" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING20">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="20" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING30">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="30" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING60">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="60" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING80">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="80" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING100">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING160">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="160" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING255">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="255" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING500">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="500" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING5000">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="5000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING7000">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="7000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING8000">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="8000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.STRING1000">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="1000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING0">
+    <xs:restriction base="BASE.STRING">
+      <xs:maxLength value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING">
+    <xs:restriction base="BASE.STRING">
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDNORMALIZEDSTRING">
+    <xs:restriction base="xs:normalizedString">
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING1">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING2">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="2" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING3">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="3" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING5">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="5" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING8">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="8" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING10">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="10" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING12">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="12" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING17">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="17" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING20">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="20" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING30">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="30" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING34">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="34" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING40">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="40" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING50">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="50" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING60">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="60" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING64">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="64" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING80">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="80" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING100">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING120">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="120" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING160">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="160" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING173">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="173" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING200">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="200" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING250">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="250" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING255">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="255" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING500">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="500" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING512">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="512" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING800">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="800"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING1000">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="1000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING3500">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="3500" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING5000">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="5000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING7000">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="7000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDSTRING8000">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:maxLength value="8000" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.EMAILADDRESS">
+    <xs:restriction base="BASE.REQUIREDSTRING100">
+      <xs:pattern value="[a-zA-Z0-9!#$%&amp;&#39;*+/=?^_`{|}~-]+(\.[a-zA-Z0-9!#$%&amp;&#39;*+/=?^_`{|}~-]+)*@([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.REQUIREDGUID">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:pattern value="^[0-9a-fA-F]{8}[-]([0-9a-fA-F]{4}[-]){3}[0-9a-fA-F]{12}$" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!--*******************************************************-->
+  <!--*Base type for user codes that require a code lookup. *-->
+  <!--*******************************************************-->
+  <xs:simpleType name="BASE.USERCODE">
+    <xs:restriction base="BASE.REQUIREDSTRING20">
+      <xs:pattern value="^[a-zA-Z0-9_\*\./\s\-()]+$" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- This type allows a Code element to also (optionally) specify the CodeID as an attribute -->
+  <xs:complexType name="BASE.USERCODE.WITHID">
+    <xs:simpleContent>
+      <xs:extension base="BASE.USERCODE">
+        <xs:attribute name="CodeID"
+                      type="BASE.REQUIREDPOSINT"
+                      use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- This type allows a Code element to also (optionally) specify the CodeID and the ReferenceID as an attribute -->
+  <xs:complexType name="BASE.USERCODE.WITHIDANDREFERENCEID">
+    <xs:simpleContent>
+      <xs:extension base="BASE.USERCODE">
+        <xs:attribute name="CodeID"
+                      type="BASE.REQUIREDPOSINT"
+                      use="optional" />
+        <xs:attribute name="ReferenceID"
+                      type="BASE.REQUIREDSTRING50"
+                      use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!-- Enumerations from Database Tables -->
+  <!-- Data Source: Justice.dbo.NameTitles -->
+  <xs:simpleType name="BASE.NAMETITLE.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING40">
+      <xs:enumeration value="Agt" />
+      <xs:enumeration value="Dep" />
+      <xs:enumeration value="Det" />
+      <xs:enumeration value="Dr" />
+      <xs:enumeration value="Hon" />
+      <xs:enumeration value="Miss" />
+      <xs:enumeration value="Mr" />
+      <xs:enumeration value="Mrs" />
+      <xs:enumeration value="Ms" />
+      <xs:enumeration value="Off" />
+      <xs:enumeration value="Rev" />
+      <xs:enumeration value="Tpr" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Data Source: Justice.dbo.sDirection -->
+  <xs:simpleType name="BASE.DIRECTION.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="E" />
+      <xs:enumeration value="N" />
+      <xs:enumeration value="NE" />
+      <xs:enumeration value="NW" />
+      <xs:enumeration value="S" />
+      <xs:enumeration value="SE" />
+      <xs:enumeration value="SW" />
+      <xs:enumeration value="W" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Data Source: Justice.dbo.sRdSuffix -->
+  <xs:simpleType name="BASE.RDSUFFIX.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="ALY"/>
+      <xs:enumeration value="ANX"/>
+      <xs:enumeration value="ARC"/>
+      <xs:enumeration value="AVE"/>
+      <xs:enumeration value="BYU"/>
+      <xs:enumeration value="BCH"/>
+      <xs:enumeration value="BND"/>
+      <xs:enumeration value="BLF"/>
+      <xs:enumeration value="BLFS"/>
+      <xs:enumeration value="BTM"/>
+      <xs:enumeration value="BLVD"/>
+      <xs:enumeration value="BR"/>
+      <xs:enumeration value="BRG"/>
+      <xs:enumeration value="BRK"/>
+      <xs:enumeration value="BRKS"/>
+      <xs:enumeration value="BG"/>
+      <xs:enumeration value="BGS"/>
+      <xs:enumeration value="BYP"/>
+      <xs:enumeration value="CP"/>
+      <xs:enumeration value="CYN"/>
+      <xs:enumeration value="CPE"/>
+      <xs:enumeration value="CSWY"/>
+      <xs:enumeration value="CTR"/>
+      <xs:enumeration value="CTRS"/>
+      <xs:enumeration value="CIR"/>
+      <xs:enumeration value="CIRS"/>
+      <xs:enumeration value="CLF"/>
+      <xs:enumeration value="CLFS"/>
+      <xs:enumeration value="CLB"/>
+      <xs:enumeration value="CMN"/>
+      <xs:enumeration value="CONN"/>
+      <xs:enumeration value="COR"/>
+      <xs:enumeration value="CORS"/>
+      <xs:enumeration value="CRSE"/>
+      <xs:enumeration value="CT"/>
+      <xs:enumeration value="CTS"/>
+      <xs:enumeration value="CV"/>
+      <xs:enumeration value="CVS"/>
+      <xs:enumeration value="CRK"/>
+      <xs:enumeration value="CRES"/>
+      <xs:enumeration value="CRST"/>
+      <xs:enumeration value="XING"/>
+      <xs:enumeration value="XRD"/>
+      <xs:enumeration value="CURV"/>
+      <xs:enumeration value="DL"/>
+      <xs:enumeration value="DM"/>
+      <xs:enumeration value="DV"/>
+      <xs:enumeration value="DR"/>
+      <xs:enumeration value="DRS"/>
+      <xs:enumeration value="EST"/>
+      <xs:enumeration value="ESTS"/>
+      <xs:enumeration value="EXPY"/>
+      <xs:enumeration value="EXT"/>
+      <xs:enumeration value="EXTS"/>
+      <xs:enumeration value="FALL"/>
+      <xs:enumeration value="FLS"/>
+      <xs:enumeration value="FRY"/>
+      <xs:enumeration value="FLD"/>
+      <xs:enumeration value="FLDS"/>
+      <xs:enumeration value="FLT"/>
+      <xs:enumeration value="FLTS"/>
+      <xs:enumeration value="FRD"/>
+      <xs:enumeration value="FRDS"/>
+      <xs:enumeration value="FRST"/>
+      <xs:enumeration value="FRG"/>
+      <xs:enumeration value="FRGS"/>
+      <xs:enumeration value="FRK"/>
+      <xs:enumeration value="FRKS"/>
+      <xs:enumeration value="FT"/>
+      <xs:enumeration value="FWY"/>
+      <xs:enumeration value="GDN"/>
+      <xs:enumeration value="GDNS"/>
+      <xs:enumeration value="GTWY"/>
+      <xs:enumeration value="GLN"/>
+      <xs:enumeration value="GLNS"/>
+      <xs:enumeration value="GRN"/>
+      <xs:enumeration value="GRNS"/>
+      <xs:enumeration value="GRV"/>
+      <xs:enumeration value="GRVS"/>
+      <xs:enumeration value="HBR"/>
+      <xs:enumeration value="HBRS"/>
+      <xs:enumeration value="HVN"/>
+      <xs:enumeration value="HTS"/>
+      <xs:enumeration value="HWY"/>
+      <xs:enumeration value="HL"/>
+      <xs:enumeration value="HLS"/>
+      <xs:enumeration value="HOLW"/>
+      <xs:enumeration value="INLT"/>
+      <xs:enumeration value="IS"/>
+      <xs:enumeration value="ISS"/>
+      <xs:enumeration value="ISLE"/>
+      <xs:enumeration value="JCT"/>
+      <xs:enumeration value="JCTS"/>
+      <xs:enumeration value="KY"/>
+      <xs:enumeration value="KYS"/>
+      <xs:enumeration value="KNL"/>
+      <xs:enumeration value="KNLS"/>
+      <xs:enumeration value="LK"/>
+      <xs:enumeration value="LKS"/>
+      <xs:enumeration value="LAND"/>
+      <xs:enumeration value="LNDG"/>
+      <xs:enumeration value="LN"/>
+      <xs:enumeration value="LGT"/>
+      <xs:enumeration value="LGTS"/>
+      <xs:enumeration value="LF"/>
+      <xs:enumeration value="LCK"/>
+      <xs:enumeration value="LCKS"/>
+      <xs:enumeration value="LDG"/>
+      <xs:enumeration value="LOOP"/>
+      <xs:enumeration value="MALL"/>
+      <xs:enumeration value="MNR"/>
+      <xs:enumeration value="MNRS"/>
+      <xs:enumeration value="MDW"/>
+      <xs:enumeration value="MDWS"/>
+      <xs:enumeration value="MEWS"/>
+      <xs:enumeration value="ML"/>
+      <xs:enumeration value="MTWY"/>
+      <xs:enumeration value="MLS"/>
+      <xs:enumeration value="MSN"/>
+      <xs:enumeration value="MTWY"/>
+      <xs:enumeration value="MT"/>
+      <xs:enumeration value="MTN"/>
+      <xs:enumeration value="MTNS"/>
+      <xs:enumeration value="NCK"/>
+      <xs:enumeration value="ORCH"/>
+      <xs:enumeration value="OVAL"/>
+      <xs:enumeration value="OPAS"/>
+      <xs:enumeration value="PARK"/>   
+      <xs:enumeration value="PKWY"/>    
+      <xs:enumeration value="PASS"/>
+      <xs:enumeration value="PSGE"/>
+      <xs:enumeration value="PATH"/>
+      <xs:enumeration value="PIKE"/>
+      <xs:enumeration value="PNE"/>
+      <xs:enumeration value="PNES"/>
+      <xs:enumeration value="PL"/>
+      <xs:enumeration value="PLN"/>
+      <xs:enumeration value="PLNS"/>
+      <xs:enumeration value="PLZ"/>
+      <xs:enumeration value="PT"/>
+      <xs:enumeration value="PTS"/>
+      <xs:enumeration value="PRT"/>
+      <xs:enumeration value="PRTS"/>
+      <xs:enumeration value="PR"/>
+      <xs:enumeration value="RADL"/>
+      <xs:enumeration value="RAMP"/>
+      <xs:enumeration value="RNCH"/>
+      <xs:enumeration value="RPD"/>
+      <xs:enumeration value="RPDS"/>
+      <xs:enumeration value="RST"/>
+      <xs:enumeration value="RDG"/>
+      <xs:enumeration value="RDGS"/>
+      <xs:enumeration value="RIV"/>
+      <xs:enumeration value="RD"/>
+      <xs:enumeration value="RDS"/>
+      <xs:enumeration value="RTE"/>
+      <xs:enumeration value="ROW"/>
+      <xs:enumeration value="RUE"/>
+      <xs:enumeration value="RUN"/>
+      <xs:enumeration value="SHL"/>
+      <xs:enumeration value="SHLS"/>
+      <xs:enumeration value="SHR"/>
+      <xs:enumeration value="SHRS"/>
+      <xs:enumeration value="SKWY"/>
+      <xs:enumeration value="SPG"/>
+      <xs:enumeration value="SPGS"/>
+      <xs:enumeration value="SPUR"/>    
+      <xs:enumeration value="SQ"/>
+      <xs:enumeration value="SQS"/>
+      <xs:enumeration value="STA"/>
+      <xs:enumeration value="STRA"/>
+      <xs:enumeration value="STRM"/>
+      <xs:enumeration value="ST"/>
+      <xs:enumeration value="STS"/>
+      <xs:enumeration value="SMT"/>
+      <xs:enumeration value="TER"/>
+      <xs:enumeration value="TRWY"/>
+      <xs:enumeration value="TRCE"/>
+      <xs:enumeration value="TRAK"/>
+      <xs:enumeration value="TRFY"/>
+      <xs:enumeration value="TRL"/>
+      <xs:enumeration value="TUNL"/>
+      <xs:enumeration value="TPKE"/>
+      <xs:enumeration value="UPAS"/>
+      <xs:enumeration value="UN"/>
+      <xs:enumeration value="UNS"/>
+      <xs:enumeration value="VLY"/>
+      <xs:enumeration value="VLYS"/>
+      <xs:enumeration value="VIA"/>
+      <xs:enumeration value="VW"/>
+      <xs:enumeration value="VWS"/>
+      <xs:enumeration value="VLG"/>
+      <xs:enumeration value="VLGS"/>
+      <xs:enumeration value="VL"/>
+      <xs:enumeration value="VIS"/>
+      <xs:enumeration value="WALK"/>    
+      <xs:enumeration value="WALL"/>
+      <xs:enumeration value="WAY"/>
+      <xs:enumeration value="WAYS"/>
+      <xs:enumeration value="WL"/>
+      <xs:enumeration value="WLS"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Data Source: Justice.dbo.sState -->
+  <xs:simpleType name="BASE.STATE.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="AA"/>
+      <xs:enumeration value="AE"/>
+      <xs:enumeration value="AK"/>
+      <xs:enumeration value="AL"/>
+      <xs:enumeration value="AP"/>
+      <xs:enumeration value="AR"/>
+      <xs:enumeration value="AS"/>
+      <xs:enumeration value="AZ"/>
+      <xs:enumeration value="CA"/>
+	  <xs:enumeration value="CD"/>
+      <xs:enumeration value="CO"/>
+      <xs:enumeration value="CT"/>
+      <xs:enumeration value="DC"/>
+      <xs:enumeration value="DE"/>
+      <xs:enumeration value="FL"/>
+      <xs:enumeration value="FM"/>
+      <xs:enumeration value="GA"/>
+      <xs:enumeration value="GU"/>
+      <xs:enumeration value="HI"/>
+      <xs:enumeration value="IA"/>
+      <xs:enumeration value="ID"/>
+      <xs:enumeration value="IL"/>
+      <xs:enumeration value="IN"/>
+      <xs:enumeration value="KS"/>
+      <xs:enumeration value="KY"/>
+      <xs:enumeration value="LA"/>
+      <xs:enumeration value="MA"/>
+      <xs:enumeration value="MD"/>
+      <xs:enumeration value="ME"/>
+      <xs:enumeration value="MH"/>
+      <xs:enumeration value="MI"/>
+	  <xs:enumeration value="MM"/>
+      <xs:enumeration value="MN"/>
+      <xs:enumeration value="MO"/>
+      <xs:enumeration value="MP"/>
+      <xs:enumeration value="MS"/>
+      <xs:enumeration value="MT"/>
+	  <xs:enumeration value="MX"/>
+      <xs:enumeration value="NC"/>
+      <xs:enumeration value="ND"/>
+      <xs:enumeration value="NE"/>
+      <xs:enumeration value="NH"/>
+      <xs:enumeration value="NJ"/>
+      <xs:enumeration value="NM"/>
+      <xs:enumeration value="NV"/>
+      <xs:enumeration value="NY"/>
+      <xs:enumeration value="OA"/>
+      <xs:enumeration value="OH"/>
+      <xs:enumeration value="OK"/>
+      <xs:enumeration value="OR"/>
+      <xs:enumeration value="PA"/>
+      <xs:enumeration value="PR"/>
+      <xs:enumeration value="RI"/>
+      <xs:enumeration value="SC"/>
+      <xs:enumeration value="SD"/>
+      <xs:enumeration value="TN"/>
+      <xs:enumeration value="TX"/>
+      <xs:enumeration value="UT"/>
+      <xs:enumeration value="VA"/>
+      <xs:enumeration value="VI"/>
+      <xs:enumeration value="VT"/>
+      <xs:enumeration value="WA"/>
+      <xs:enumeration value="WI"/>
+      <xs:enumeration value="WV"/>
+      <xs:enumeration value="WY"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Data Source: Justice.dbo.sCountry -->
+  <xs:simpleType name="BASE.COUNTRY.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="AA" />
+      <xs:enumeration value="AD" />
+      <xs:enumeration value="AE" />
+      <xs:enumeration value="AF" />
+      <xs:enumeration value="AG" />
+      <xs:enumeration value="AI" />
+      <xs:enumeration value="AL" />
+      <xs:enumeration value="AM" />
+      <xs:enumeration value="AN" />
+      <xs:enumeration value="AO" />
+      <xs:enumeration value="AQ" />
+      <xs:enumeration value="AR" />
+      <xs:enumeration value="AS" />
+      <xs:enumeration value="AT" />
+      <xs:enumeration value="AU" />
+      <xs:enumeration value="AW" />
+      <xs:enumeration value="AZ" />
+      <xs:enumeration value="BA" />
+      <xs:enumeration value="BB" />
+      <xs:enumeration value="BC" />
+      <xs:enumeration value="BD" />
+      <xs:enumeration value="BE" />
+      <xs:enumeration value="BF" />
+      <xs:enumeration value="BG" />
+      <xs:enumeration value="BH" />
+      <xs:enumeration value="BI" />
+      <xs:enumeration value="BJ" />
+      <xs:enumeration value="BM" />
+      <xs:enumeration value="BN" />
+      <xs:enumeration value="BO" />
+      <xs:enumeration value="BR" />
+      <xs:enumeration value="BS" />
+      <xs:enumeration value="BT" />
+      <xs:enumeration value="BV" />
+      <xs:enumeration value="BW" />
+      <xs:enumeration value="BY" />
+      <xs:enumeration value="BZ" />
+      <xs:enumeration value="CA" />
+      <xs:enumeration value="CC" />
+      <xs:enumeration value="CD" />
+      <xs:enumeration value="CE" />
+      <xs:enumeration value="CF" />
+      <xs:enumeration value="CG" />
+      <xs:enumeration value="CH" />
+      <xs:enumeration value="CI" />
+      <xs:enumeration value="CK" />
+      <xs:enumeration value="CL" />
+      <xs:enumeration value="CM" />
+      <xs:enumeration value="CN" />
+      <xs:enumeration value="CO" />
+      <xs:enumeration value="CR" />
+      <xs:enumeration value="CS" />
+      <xs:enumeration value="CU" />
+      <xs:enumeration value="CV" />
+      <xs:enumeration value="CX" />
+      <xs:enumeration value="CY" />
+      <xs:enumeration value="CZ" />
+      <xs:enumeration value="DE" />
+      <xs:enumeration value="DH" />
+      <xs:enumeration value="DJ" />
+      <xs:enumeration value="DK" />
+      <xs:enumeration value="DM" />
+      <xs:enumeration value="DO" />
+      <xs:enumeration value="DZ" />
+      <xs:enumeration value="EC" />
+      <xs:enumeration value="EE" />
+      <xs:enumeration value="EG" />
+      <xs:enumeration value="EH" />
+      <xs:enumeration value="EN" />
+      <xs:enumeration value="ER" />
+      <xs:enumeration value="ES" />
+      <xs:enumeration value="ET" />
+      <xs:enumeration value="FG" />
+      <xs:enumeration value="FI" />
+      <xs:enumeration value="FJ" />
+      <xs:enumeration value="FK" />
+      <xs:enumeration value="FM" />
+      <xs:enumeration value="FO" />
+      <xs:enumeration value="FP" />
+      <xs:enumeration value="FR" />
+      <xs:enumeration value="FX" />
+      <xs:enumeration value="GA" />
+      <xs:enumeration value="GB" />
+      <xs:enumeration value="GD" />
+      <xs:enumeration value="GE" />
+      <xs:enumeration value="GF" />
+      <xs:enumeration value="GH" />
+      <xs:enumeration value="GI" />
+      <xs:enumeration value="GL" />
+      <xs:enumeration value="GM" />
+      <xs:enumeration value="GN" />
+      <xs:enumeration value="GOV" />
+      <xs:enumeration value="GP" />
+      <xs:enumeration value="GQ" />
+      <xs:enumeration value="GR" />
+      <xs:enumeration value="GS" />
+      <xs:enumeration value="GT" />
+      <xs:enumeration value="GU" />
+      <xs:enumeration value="GW" />
+      <xs:enumeration value="GY" />
+      <xs:enumeration value="HK" />
+      <xs:enumeration value="HL" />
+      <xs:enumeration value="HM" />
+      <xs:enumeration value="HN" />
+      <xs:enumeration value="HR" />
+      <xs:enumeration value="HT" />
+      <xs:enumeration value="HU" />
+      <xs:enumeration value="ID" />
+      <xs:enumeration value="IE" />
+      <xs:enumeration value="IL" />
+      <xs:enumeration value="IN" />
+      <xs:enumeration value="IO" />
+      <xs:enumeration value="IQ" />
+      <xs:enumeration value="IR" />
+      <xs:enumeration value="IS" />
+      <xs:enumeration value="IT" />
+      <xs:enumeration value="JM" />
+      <xs:enumeration value="JO" />
+      <xs:enumeration value="JP" />
+      <xs:enumeration value="KB" />
+      <xs:enumeration value="KE" />
+      <xs:enumeration value="KG" />
+      <xs:enumeration value="KH" />
+      <xs:enumeration value="KI" />
+      <xs:enumeration value="KM" />
+      <xs:enumeration value="KN" />
+      <xs:enumeration value="KO" />
+      <xs:enumeration value="KP" />
+      <xs:enumeration value="KR" />
+      <xs:enumeration value="KW" />
+      <xs:enumeration value="KY" />
+      <xs:enumeration value="KZ" />
+      <xs:enumeration value="LA" />
+      <xs:enumeration value="LB" />
+      <xs:enumeration value="LC" />
+      <xs:enumeration value="LI" />
+      <xs:enumeration value="LK" />
+      <xs:enumeration value="LR" />
+      <xs:enumeration value="LS" />
+      <xs:enumeration value="LT" />
+      <xs:enumeration value="LU" />
+      <xs:enumeration value="LV" />
+      <xs:enumeration value="LY" />
+      <xs:enumeration value="MA" />
+      <xs:enumeration value="MB" />
+      <xs:enumeration value="MC" />
+      <xs:enumeration value="MD" />
+      <xs:enumeration value="ME" />
+      <xs:enumeration value="MG" />
+      <xs:enumeration value="MH" />
+      <xs:enumeration value="MI" />
+      <xs:enumeration value="MIL" />
+      <xs:enumeration value="MK" />
+      <xs:enumeration value="ML" />
+      <xs:enumeration value="MM" />
+      <xs:enumeration value="MN" />
+      <xs:enumeration value="MO" />
+      <xs:enumeration value="MP" />
+      <xs:enumeration value="MQ" />
+      <xs:enumeration value="MR" />
+      <xs:enumeration value="MS" />
+      <xs:enumeration value="MT" />
+      <xs:enumeration value="MU" />
+      <xs:enumeration value="MV" />
+      <xs:enumeration value="MW" />
+      <xs:enumeration value="MX" />
+      <xs:enumeration value="MY" />
+      <xs:enumeration value="MZ" />
+      <xs:enumeration value="NA" />
+      <xs:enumeration value="NC" />
+      <xs:enumeration value="ND" />
+      <xs:enumeration value="NE" />
+      <xs:enumeration value="NET" />
+      <xs:enumeration value="NF" />
+      <xs:enumeration value="NG" />
+      <xs:enumeration value="NH" />
+      <xs:enumeration value="NI" />
+      <xs:enumeration value="NL" />
+      <xs:enumeration value="NN" />
+      <xs:enumeration value="NO" />
+      <xs:enumeration value="NP" />
+      <xs:enumeration value="NR" />
+      <xs:enumeration value="NT" />
+      <xs:enumeration value="NU" />
+      <xs:enumeration value="NV" />
+      <xs:enumeration value="NZ" />
+      <xs:enumeration value="OM" />
+      <xs:enumeration value="PA" />
+      <xs:enumeration value="PE" />
+      <xs:enumeration value="PF" />
+      <xs:enumeration value="PG" />
+      <xs:enumeration value="PH" />
+      <xs:enumeration value="PK" />
+      <xs:enumeration value="PL" />
+      <xs:enumeration value="PM" />
+      <xs:enumeration value="PN" />
+      <xs:enumeration value="PO" />
+      <xs:enumeration value="PR" />
+      <xs:enumeration value="PU" />
+      <xs:enumeration value="PT" />
+      <xs:enumeration value="PW" />
+      <xs:enumeration value="PY" />
+      <xs:enumeration value="QA" />
+      <xs:enumeration value="RA" />
+      <xs:enumeration value="RE" />
+      <xs:enumeration value="RH" />
+      <xs:enumeration value="RO" />
+      <xs:enumeration value="RU" />
+      <xs:enumeration value="RW" />
+      <xs:enumeration value="SA" />
+      <xs:enumeration value="SB" />
+      <xs:enumeration value="SC" />
+      <xs:enumeration value="SCT" />
+      <xs:enumeration value="SD" />
+      <xs:enumeration value="SE" />
+      <xs:enumeration value="SF" />
+      <xs:enumeration value="SG" />
+      <xs:enumeration value="SH" />
+      <xs:enumeration value="SI" />
+      <xs:enumeration value="SJ" />
+      <xs:enumeration value="SK" />
+      <xs:enumeration value="SKM" />
+      <xs:enumeration value="SKN" />
+      <xs:enumeration value="SL" />
+      <xs:enumeration value="SM" />
+      <xs:enumeration value="SN" />
+      <xs:enumeration value="SO" />
+      <xs:enumeration value="SR" />
+      <xs:enumeration value="SS" />
+      <xs:enumeration value="ST" />
+      <xs:enumeration value="SU" />
+      <xs:enumeration value="SV" />
+      <xs:enumeration value="SVT" />
+      <xs:enumeration value="SVU" />
+      <xs:enumeration value="SY" />
+      <xs:enumeration value="SYM" />
+      <xs:enumeration value="SZ" />
+      <xs:enumeration value="TC" />
+      <xs:enumeration value="TD" />
+      <xs:enumeration value="TF" />
+      <xs:enumeration value="TG" />
+      <xs:enumeration value="TH" />
+      <xs:enumeration value="TJ" />
+      <xs:enumeration value="TK" />
+      <xs:enumeration value="TM" />
+      <xs:enumeration value="TN" />
+      <xs:enumeration value="TO" />
+      <xs:enumeration value="TP" />
+      <xs:enumeration value="TR" />
+      <xs:enumeration value="TT" />
+      <xs:enumeration value="TV" />
+      <xs:enumeration value="TW" />
+      <xs:enumeration value="TZ" />
+      <xs:enumeration value="UA" />
+      <xs:enumeration value="UG" />
+      <xs:enumeration value="UK" />
+      <xs:enumeration value="UM" />
+      <xs:enumeration value="UN" />
+      <xs:enumeration value="UR" />
+      <xs:enumeration value="US" />
+      <xs:enumeration value="UV" />
+      <xs:enumeration value="UY" />
+      <xs:enumeration value="UZ" />
+      <xs:enumeration value="VA" />
+      <xs:enumeration value="VC" />
+      <xs:enumeration value="VE" />
+      <xs:enumeration value="VG" />
+      <xs:enumeration value="VI" />
+      <xs:enumeration value="VN" />
+      <xs:enumeration value="VU" />
+      <xs:enumeration value="WA" />
+      <xs:enumeration value="WF" />
+      <xs:enumeration value="WI" />
+      <xs:enumeration value="WS" />
+      <xs:enumeration value="YE" />
+      <xs:enumeration value="YT" />
+      <xs:enumeration value="YU" />
+      <xs:enumeration value="ZA" />
+      <xs:enumeration value="ZM" />
+      <xs:enumeration value="ZR" />
+      <xs:enumeration value="ZW" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Data Source: Justice.dbo.sUnitType -->
+  <xs:simpleType name="BASE.UNITTYPE.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="APT" />
+      <xs:enumeration value="BLDG" />
+      <xs:enumeration value="DEPT" />
+      <xs:enumeration value="FL" />
+      <xs:enumeration value="LOT" />
+      <xs:enumeration value="RM" />
+      <xs:enumeration value="STE" />
+      <xs:enumeration value="TRLR" />
+      <xs:enumeration value="UNIT" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Data Source: Justice.dbo.sGender -->
+  <xs:simpleType name="BASE.GENDER.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="M" />
+      <xs:enumeration value="F" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Data Source: Justice.dbo.sEthnic -->
+  <xs:simpleType name="BASE.ETHNIC.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="H" />
+      <xs:enumeration value="NH" />
+      <xs:enumeration value="R" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.RACE.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="A" />
+      <xs:enumeration value="B" />
+      <xs:enumeration value="C" />
+      <xs:enumeration value="D" />
+      <xs:enumeration value="E" />
+      <xs:enumeration value="F" />
+      <xs:enumeration value="G" />
+      <xs:enumeration value="H" />
+      <xs:enumeration value="I" />
+      <xs:enumeration value="J" />
+      <xs:enumeration value="K" />
+      <xs:enumeration value="L" />
+      <xs:enumeration value="M" />
+      <xs:enumeration value="N" />
+      <xs:enumeration value="O" />
+      <xs:enumeration value="P" />
+      <xs:enumeration value="Q" />
+      <xs:enumeration value="R" />
+      <xs:enumeration value="S" />
+      <xs:enumeration value="T" />
+      <xs:enumeration value="U" />
+      <xs:enumeration value="UNK" />
+      <xs:enumeration value="V" />
+      <xs:enumeration value="W" />
+      <xs:enumeration value="Z" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="BASE.ServerType">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="Local" />
+      <xs:enumeration value="NonLocal" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BASE.ADDRESS">
+    <xs:choice>
+      <xs:element name="StandardAddress"
+                  type="BASE.STANDARDADDRESS" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="BASE.STANDARDADDRESS">
+    <xs:sequence>
+      <xs:element name="AddressLine1"
+                  type="BASE.REQUIREDSTRING64" />
+      <xs:element name="City"
+                  type="BASE.REQUIREDSTRING40" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ADDRESS GROUP -->
+  <xs:complexType name="BASE.ADDRESSGROUP">
+    <xs:sequence>
+      <xs:choice minOccurs="1"
+                 maxOccurs="1">
+        <xs:element name="StandardUS"
+                    type="BASE.STANDARDUS" />
+        <xs:element name="StandardUSwithAttn"
+                    type="BASE.STANDARDUSWITHATTN" />
+        <xs:element name="NonStandardUS"
+                    type="BASE.NONSTANDARDUS" />
+        <xs:element name="Foreign"
+                    type="BASE.FOREIGN" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- UNIT IN STANDARD ADDRESS -->
+  <xs:complexType name="BASE.UNIT">
+    <xs:sequence>
+      <xs:element name="UnitType"
+                  type="BASE.UNITTYPE.CODE"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="UnitNumber"
+                  type="BASE.REQUIREDSTRING10"
+                  minOccurs="1"
+                  maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- STANDARD US ADDRESS -->
+  <xs:complexType name="BASE.STANDARDUS">
+    <xs:sequence>
+      <xs:element name="StreetNumber"
+                  type="BASE.REQUIREDSTRING20"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="PreDirection"
+                  type="BASE.DIRECTION.CODE"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="StreetName"
+                  type="BASE.REQUIREDSTRING80"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="StreetType"
+                  type="BASE.RDSUFFIX.CODE"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="PostDirection"
+                  type="BASE.DIRECTION.CODE"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="Unit"
+                  type="BASE.UNIT"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="City"
+                  type="BASE.REQUIREDSTRING40"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="State"
+                  type="BASE.STATE.CODE"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="Zip"
+                  type="BASE.ZIP"
+                  minOccurs="1"
+                  maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- STANDARD US ADDRESS WITH ATTENTION -->
+  <xs:complexType name="BASE.STANDARDUSWITHATTN">
+    <xs:sequence>
+      <xs:element name="Attention"
+                  type="BASE.REQUIREDSTRING120"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="StreetNumber"
+                  type="BASE.REQUIREDSTRING20"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="PreDirection"
+                  type="BASE.DIRECTION.CODE"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="StreetName"
+                  type="BASE.REQUIREDSTRING80"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="StreetType"
+                  type="BASE.RDSUFFIX.CODE"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="PostDirection"
+                  type="BASE.DIRECTION.CODE"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="Unit"
+                  type="BASE.UNIT"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="City"
+                  type="BASE.REQUIREDSTRING40"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="State"
+                  type="BASE.STATE.CODE"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="Zip"
+                  type="BASE.ZIP"
+                  minOccurs="1"
+                  maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- NON-STANDARD US ADDRESS -->
+  <xs:complexType name="BASE.NONSTANDARDUS">
+    <xs:sequence>
+      <xs:element name="Line1"
+                  type="BASE.REQUIREDSTRING64"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="Line2"
+                  type="BASE.REQUIREDSTRING64"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="Line3"
+                  type="BASE.REQUIREDSTRING64"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="City"
+                  type="BASE.REQUIREDSTRING40"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="State"
+                  type="BASE.STATE.CODE"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="Zip"
+                  type="BASE.ZIP"
+                  minOccurs="1"
+                  maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- FOREIGN ADDRESS -->
+  <xs:complexType name="BASE.FOREIGN">
+    <xs:sequence>
+      <xs:element name="Line1"
+                  type="BASE.REQUIREDSTRING64"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="Line2"
+                  type="BASE.REQUIREDSTRING64"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="Line3"
+                  type="BASE.REQUIREDSTRING64"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="Line4"
+                  type="BASE.REQUIREDSTRING64"
+                  minOccurs="0"
+                  maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- PHONE NUMBER -->
+  <xs:complexType name="BASE.PHONE">
+    <xs:sequence>
+      <xs:element name="Type"
+                  type="BASE.PHONE.TYPE"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="Number"
+                  type="BASE.REQUIREDSTRING20"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="Extension"
+                  type="BASE.REQUIREDSTRING10"
+                  minOccurs="0"
+                  maxOccurs="1" />
+      <xs:element name="Start"      
+                  type="BASE.REQUIREDDATE"      
+                  minOccurs="0" 
+                  maxOccurs="1"/>
+      <xs:element name="End"        
+                  type="BASE.REQUIREDDATE"      
+                  minOccurs="0" 
+                  maxOccurs="1"/>
+      <xs:element name="PhoneFlags"        
+                  type="BASE.PHONE.FLAGS"      
+                  minOccurs="0" 
+                  maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="BASE.PHONE.TYPE">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:enumeration value="Home" />
+      <xs:enumeration value="Work" />
+      <xs:enumeration value="Fax" />
+      <xs:enumeration value="Cell" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BASE.PHONE.FLAGS">
+    <xs:all>
+      <xs:element name="Invalid"              type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CurrentKnown"         type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Confidential"         type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <!-- HAIR TYPE -->
+  <xs:simpleType name="BASE.HAIRTYPE">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:enumeration value="BLD" />
+      <xs:enumeration value="BLK" />
+      <xs:enumeration value="BLN" />
+      <xs:enumeration value="BLU" />
+      <xs:enumeration value="BRO" />
+      <xs:enumeration value="GRN" />
+      <xs:enumeration value="GRY" />
+      <xs:enumeration value="ONG" />
+      <xs:enumeration value="PLE" />
+      <xs:enumeration value="PNK" />
+      <xs:enumeration value="RED" />
+      <xs:enumeration value="SDY" />
+      <xs:enumeration value="WHI" />
+      <xs:enumeration value="XXX" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- EYE COLOR -->
+  <xs:simpleType name="BASE.EYECOLOR">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:enumeration value="BLK" />
+      <xs:enumeration value="BLU" />
+      <xs:enumeration value="BRO" />
+      <xs:enumeration value="GRN" />
+      <xs:enumeration value="GRY" />
+      <xs:enumeration value="HAZ" />
+      <xs:enumeration value="MAR" />
+      <xs:enumeration value="MUL" />
+      <xs:enumeration value="PNK" />
+      <xs:enumeration value="XXX" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- CASE PARTY -->
+  <xs:complexType name="BASE.CASEPARTY">
+    <xs:sequence>
+      <xs:element name="CaseID"
+                  type="BASE.REQUIREDPOSINT"
+                  minOccurs="1"
+                  maxOccurs="1" />
+      <xs:element name="PartyID"
+                  type="BASE.REQUIREDPOSINT"
+                  minOccurs="1"
+                  maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- PAYMENT PLAN -->
+  <xs:complexType name="BASE.PAYMENTPLAN">
+    <xs:sequence>
+      <xs:element name="PaymentPlanID"
+                  type="BASE.REQUIREDPOSINT"
+                  minOccurs="1"
+                  maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- OWNER TYPE -->
+  <xs:complexType name="BASE.OWNERTYPE">
+    <xs:choice>
+      <xs:element name="CaseParty"
+                  type="BASE.CASEPARTY" />
+      <xs:element name="PaymentPlan"
+                  type="BASE.PAYMENTPLAN" />
+    </xs:choice>
+  </xs:complexType>
+  <!-- Data Source: Justice.dbo.sSMT -->
+  <xs:simpleType name="BASE.SCARMARKTATTOO.CODE">
+    <xs:restriction base="BASE.REQUIREDSTRING10">
+      <xs:enumeration value="ART.ELBOW" />
+      <xs:enumeration value="ART.HIP" />
+      <xs:enumeration value="ART.KNEE" />
+      <xs:enumeration value="ART.L.ARM" />
+      <xs:enumeration value="ART.L.EYE" />
+      <xs:enumeration value="ART.L.FT" />
+      <xs:enumeration value="ART.L.HND" />
+      <xs:enumeration value="ART.L.LEG" />
+      <xs:enumeration value="ART.LARYNX" />
+      <xs:enumeration value="ART.R.ARM" />
+      <xs:enumeration value="ART.R.EYE" />
+      <xs:enumeration value="ART.R.FT" />
+      <xs:enumeration value="ART.R.HND" />
+      <xs:enumeration value="ART.R.LEG" />
+      <xs:enumeration value="ART.SHLD" />
+      <xs:enumeration value="BALD" />
+      <xs:enumeration value="BLIND" />
+      <xs:enumeration value="BLND.L.EYE" />
+      <xs:enumeration value="BLND.R.EYE" />
+      <xs:enumeration value="BRAC.L.ARM" />
+      <xs:enumeration value="BRAC.L.LEG" />
+      <xs:enumeration value="BRAC.R.ARM" />
+      <xs:enumeration value="BRAC.R.LEG" />
+      <xs:enumeration value="BRAC.TEETH" />
+      <xs:enumeration value="BRACE.BACK" />
+      <xs:enumeration value="BRACE.NECK" />
+      <xs:enumeration value="CARD.PACEM" />
+      <xs:enumeration value="CATA.L.EYE" />
+      <xs:enumeration value="CATA.R.EYE" />
+      <xs:enumeration value="CAUL.L.EAR" />
+      <xs:enumeration value="CAUL.R.EAR" />
+      <xs:enumeration value="CLEFT.CHIN" />
+      <xs:enumeration value="CLEFT.PAL" />
+      <xs:enumeration value="COLOST.APP" />
+      <xs:enumeration value="CON.LENSES" />
+      <xs:enumeration value="CRIP.L.ARM" />
+      <xs:enumeration value="CRIP.L.FGR" />
+      <xs:enumeration value="CRIP.L.FT" />
+      <xs:enumeration value="CRIP.L.HND" />
+      <xs:enumeration value="CRIP.L.LEG" />
+      <xs:enumeration value="CRIP.R.ARM" />
+      <xs:enumeration value="CRIP.R.FGR" />
+      <xs:enumeration value="CRIP.R.FT" />
+      <xs:enumeration value="CRIP.R.HND" />
+      <xs:enumeration value="CRIP.R.LEG" />
+      <xs:enumeration value="CROSSEYED" />
+      <xs:enumeration value="DEAF" />
+      <xs:enumeration value="DEAF.L.EAR" />
+      <xs:enumeration value="DEAF.MUTE" />
+      <xs:enumeration value="DEAF.R.EAR" />
+      <xs:enumeration value="DENT.LOW" />
+      <xs:enumeration value="DENT.UP" />
+      <xs:enumeration value="DENT.UP.LO" />
+      <xs:enumeration value="DEV.SEPTUM" />
+      <xs:enumeration value="DISC.ABDOM" />
+      <xs:enumeration value="DISC.BACK" />
+      <xs:enumeration value="DISC.BUTTK" />
+      <xs:enumeration value="DISC.CHEST" />
+      <xs:enumeration value="DISC.CHIN" />
+      <xs:enumeration value="DISC.FHD" />
+      <xs:enumeration value="DISC.L.ANK" />
+      <xs:enumeration value="DISC.L.ARM" />
+      <xs:enumeration value="DISC.L.BUT" />
+      <xs:enumeration value="DISC.L.CHK" />
+      <xs:enumeration value="DISC.L.EAR" />
+      <xs:enumeration value="DISC.L.EYE" />
+      <xs:enumeration value="DISC.L.FGR" />
+      <xs:enumeration value="DISC.L.FT" />
+      <xs:enumeration value="DISC.L.HND" />
+      <xs:enumeration value="DISC.L.LEG" />
+      <xs:enumeration value="DISC.L.LIP" />
+      <xs:enumeration value="DISC.L.WRS" />
+      <xs:enumeration value="DISC.NECK" />
+      <xs:enumeration value="DISC.NOSE" />
+      <xs:enumeration value="DISC.R.ANK" />
+      <xs:enumeration value="DISC.R.ARM" />
+      <xs:enumeration value="DISC.R.BUT" />
+      <xs:enumeration value="DISC.R.CHK" />
+      <xs:enumeration value="DISC.R.EAR" />
+      <xs:enumeration value="DISC.R.EYE" />
+      <xs:enumeration value="DISC.R.FGR" />
+      <xs:enumeration value="DISC.R.FT" />
+      <xs:enumeration value="DISC.R.HND" />
+      <xs:enumeration value="DISC.R.LEG" />
+      <xs:enumeration value="DISC.R.WRS" />
+      <xs:enumeration value="DISC.U.LIP" />
+      <xs:enumeration value="EAR" />
+      <xs:enumeration value="EAR.TUBES" />
+      <xs:enumeration value="EXTR.L.FGR" />
+      <xs:enumeration value="EXTR.R.FGR" />
+      <xs:enumeration value="FRC.ANKL" />
+      <xs:enumeration value="FRC.ARM" />
+      <xs:enumeration value="FRC.BACK" />
+      <xs:enumeration value="FRC.CLAVIC" />
+      <xs:enumeration value="FRC.FGR" />
+      <xs:enumeration value="FRC.FOOT" />
+      <xs:enumeration value="FRC.HAND" />
+      <xs:enumeration value="FRC.JAW" />
+      <xs:enumeration value="FRC.L.ANKL" />
+      <xs:enumeration value="FRC.L.FGR" />
+      <xs:enumeration value="FRC.L.FOOT" />
+      <xs:enumeration value="FRC.L.HAND" />
+      <xs:enumeration value="FRC.L.RIB" />
+      <xs:enumeration value="FRC.L.TOE" />
+      <xs:enumeration value="FRC.L.WRST" />
+      <xs:enumeration value="FRC.LCLAVI" />
+      <xs:enumeration value="FRC.LEG" />
+      <xs:enumeration value="FRC.LL.ARM" />
+      <xs:enumeration value="FRC.LL.JAW" />
+      <xs:enumeration value="FRC.LL.LEG" />
+      <xs:enumeration value="FRC.LPELVI" />
+      <xs:enumeration value="FRC.LR.ARM" />
+      <xs:enumeration value="FRC.LR.JAW" />
+      <xs:enumeration value="FRC.LR.LEG" />
+      <xs:enumeration value="FRC.NECK" />
+      <xs:enumeration value="FRC.NOSE" />
+      <xs:enumeration value="FRC.PELVIS" />
+      <xs:enumeration value="FRC.R.ANKL" />
+      <xs:enumeration value="FRC.R.FGR" />
+      <xs:enumeration value="FRC.R.FOOT" />
+      <xs:enumeration value="FRC.R.HAND" />
+      <xs:enumeration value="FRC.R.RIB" />
+      <xs:enumeration value="FRC.R.TOE" />
+      <xs:enumeration value="FRC.R.WRST" />
+      <xs:enumeration value="FRC.RCLAVI" />
+      <xs:enumeration value="FRC.RIBS" />
+      <xs:enumeration value="FRC.RPELVI" />
+      <xs:enumeration value="FRC.SKULL" />
+      <xs:enumeration value="FRC.SPINE" />
+      <xs:enumeration value="FRC.STERN" />
+      <xs:enumeration value="FRC.TOE" />
+      <xs:enumeration value="FRC.UL.ARM" />
+      <xs:enumeration value="FRC.UL.JAW" />
+      <xs:enumeration value="FRC.UL.LEG" />
+      <xs:enumeration value="FRC.UR.ARM" />
+      <xs:enumeration value="FRC.UR.JAW" />
+      <xs:enumeration value="FRC.UR.LEG" />
+      <xs:enumeration value="FRC.WRIST" />
+      <xs:enumeration value="FRECKLES" />
+      <xs:enumeration value="GLASSES" />
+      <xs:enumeration value="HAIR.IMPL" />
+      <xs:enumeration value="HARELIP" />
+      <xs:enumeration value="HEAR.AID" />
+      <xs:enumeration value="HUMPBACKED" />
+      <xs:enumeration value="INTRA.ROD" />
+      <xs:enumeration value="IUD" />
+      <xs:enumeration value="MISS.ADND" />
+      <xs:enumeration value="MISS.APPNX" />
+      <xs:enumeration value="MISS.BRSTS" />
+      <xs:enumeration value="MISS.GALL" />
+      <xs:enumeration value="MISS.INTES" />
+      <xs:enumeration value="MISS.L.ARM" />
+      <xs:enumeration value="MISS.L.EAR" />
+      <xs:enumeration value="MISS.L.EYE" />
+      <xs:enumeration value="MISS.L.FGR" />
+      <xs:enumeration value="MISS.L.FJT" />
+      <xs:enumeration value="MISS.L.FT" />
+      <xs:enumeration value="MISS.L.HND" />
+      <xs:enumeration value="MISS.L.KID" />
+      <xs:enumeration value="MISS.L.LEG" />
+      <xs:enumeration value="MISS.L.TES" />
+      <xs:enumeration value="MISS.L.TOE" />
+      <xs:enumeration value="MISS.LBRST" />
+      <xs:enumeration value="MISS.LLARM" />
+      <xs:enumeration value="MISS.LLLEG" />
+      <xs:enumeration value="MISS.LLUNG" />
+      <xs:enumeration value="MISS.LOVAR" />
+      <xs:enumeration value="MISS.LRARM" />
+      <xs:enumeration value="MISS.LRLEG" />
+      <xs:enumeration value="MISS.LRYNX" />
+      <xs:enumeration value="MISS.NOSE" />
+      <xs:enumeration value="MISS.OVARS" />
+      <xs:enumeration value="MISS.PANCR" />
+      <xs:enumeration value="MISS.R.ARM" />
+      <xs:enumeration value="MISS.R.EAR" />
+      <xs:enumeration value="MISS.R.EYE" />
+      <xs:enumeration value="MISS.R.FGR" />
+      <xs:enumeration value="MISS.R.FJT" />
+      <xs:enumeration value="MISS.R.FT" />
+      <xs:enumeration value="MISS.R.HND" />
+      <xs:enumeration value="MISS.R.KID" />
+      <xs:enumeration value="MISS.R.LEG" />
+      <xs:enumeration value="MISS.R.TES" />
+      <xs:enumeration value="MISS.R.TOE" />
+      <xs:enumeration value="MISS.RBRST" />
+      <xs:enumeration value="MISS.RLUNG" />
+      <xs:enumeration value="MISS.ROVAR" />
+      <xs:enumeration value="MISS.SPLEN" />
+      <xs:enumeration value="MISS.STOMA" />
+      <xs:enumeration value="MISS.THYRD" />
+      <xs:enumeration value="MISS.TONSL" />
+      <xs:enumeration value="MISS.UTRUS" />
+      <xs:enumeration value="MOLE.BUTTK" />
+      <xs:enumeration value="MOLE.CHIN" />
+      <xs:enumeration value="MOLE.FHD" />
+      <xs:enumeration value="MOLE.L.ARM" />
+      <xs:enumeration value="MOLE.L.BUT" />
+      <xs:enumeration value="MOLE.L.CHK" />
+      <xs:enumeration value="MOLE.L.EAR" />
+      <xs:enumeration value="MOLE.L.EYE" />
+      <xs:enumeration value="MOLE.L.FGR" />
+      <xs:enumeration value="MOLE.L.HND" />
+      <xs:enumeration value="MOLE.L.LIP" />
+      <xs:enumeration value="MOLE.L.WRS" />
+      <xs:enumeration value="MOLE.NECK" />
+      <xs:enumeration value="MOLE.NOSE" />
+      <xs:enumeration value="MOLE.R.ARM" />
+      <xs:enumeration value="MOLE.R.BUT" />
+      <xs:enumeration value="MOLE.R.CHK" />
+      <xs:enumeration value="MOLE.R.EAR" />
+      <xs:enumeration value="MOLE.R.EYE" />
+      <xs:enumeration value="MOLE.R.FGR" />
+      <xs:enumeration value="MOLE.R.HND" />
+      <xs:enumeration value="MOLE.R.WRS" />
+      <xs:enumeration value="MOLE.U.LIP" />
+      <xs:enumeration value="MUTE" />
+      <xs:enumeration value="NM.L.ARM" />
+      <xs:enumeration value="NM.L.BUTTK" />
+      <xs:enumeration value="NM.L.FGR" />
+      <xs:enumeration value="NM.L.FOOT" />
+      <xs:enumeration value="NM.L.HND" />
+      <xs:enumeration value="NM.L.LEG" />
+      <xs:enumeration value="NM.L.THIGH" />
+      <xs:enumeration value="NM.L.WRIST" />
+      <xs:enumeration value="NM.R.ARM" />
+      <xs:enumeration value="NM.R.BUTTK" />
+      <xs:enumeration value="NM.R.FGR" />
+      <xs:enumeration value="NM.R.FOOT" />
+      <xs:enumeration value="NM.R.HND" />
+      <xs:enumeration value="NM.R.LEG" />
+      <xs:enumeration value="NM.R.THIGH" />
+      <xs:enumeration value="NM.R.WRIST" />
+      <xs:enumeration value="ORTH.NAIL" />
+      <xs:enumeration value="ORTH.PLATE" />
+      <xs:enumeration value="ORTH.SCREW" />
+      <xs:enumeration value="POCKMARKS" />
+      <xs:enumeration value="PRCD.EARS" />
+      <xs:enumeration value="PRCD.L.EAR" />
+      <xs:enumeration value="PRCD.NOSE" />
+      <xs:enumeration value="PRCD.R.EAR" />
+      <xs:enumeration value="PROT.L.JAW" />
+      <xs:enumeration value="PROT.U.JAW" />
+      <xs:enumeration value="SC.ABDOM" />
+      <xs:enumeration value="SC.BACK" />
+      <xs:enumeration value="SC.BREAST" />
+      <xs:enumeration value="SC.BUTTK" />
+      <xs:enumeration value="SC.CHEST" />
+      <xs:enumeration value="SC.CHIN" />
+      <xs:enumeration value="SC.FACE" />
+      <xs:enumeration value="SC.FHD" />
+      <xs:enumeration value="SC.HEAD" />
+      <xs:enumeration value="SC.L.ANKL" />
+      <xs:enumeration value="SC.L.ARM" />
+      <xs:enumeration value="SC.L.BUTTK" />
+      <xs:enumeration value="SC.L.CALF" />
+      <xs:enumeration value="SC.L.CHK" />
+      <xs:enumeration value="SC.L.EAR" />
+      <xs:enumeration value="SC.L.ELB" />
+      <xs:enumeration value="SC.L.EYE" />
+      <xs:enumeration value="SC.L.FGR" />
+      <xs:enumeration value="SC.L.FT" />
+      <xs:enumeration value="SC.L.HND" />
+      <xs:enumeration value="SC.L.KNEE" />
+      <xs:enumeration value="SC.L.LEG" />
+      <xs:enumeration value="SC.L.SHLD" />
+      <xs:enumeration value="SC.L.THGH" />
+      <xs:enumeration value="SC.L.WRIST" />
+      <xs:enumeration value="SC.LF.ARM" />
+      <xs:enumeration value="SC.LOW.LIP" />
+      <xs:enumeration value="SC.NECK" />
+      <xs:enumeration value="SC.NOSE" />
+      <xs:enumeration value="SC.R.ANKL" />
+      <xs:enumeration value="SC.R.ARM" />
+      <xs:enumeration value="SC.R.BUTTK" />
+      <xs:enumeration value="SC.R.CALF" />
+      <xs:enumeration value="SC.R.CHK" />
+      <xs:enumeration value="SC.R.EAR" />
+      <xs:enumeration value="SC.R.ELB" />
+      <xs:enumeration value="SC.R.EYE" />
+      <xs:enumeration value="SC.R.FGR" />
+      <xs:enumeration value="SC.R.FT" />
+      <xs:enumeration value="SC.R.HND" />
+      <xs:enumeration value="SC.R.KNEE" />
+      <xs:enumeration value="SC.R.LEG" />
+      <xs:enumeration value="SC.R.SHLD" />
+      <xs:enumeration value="SC.R.THGH" />
+      <xs:enumeration value="SC.R.WRIST" />
+      <xs:enumeration value="SC.RF.ARM" />
+      <xs:enumeration value="SC.UL.ARM" />
+      <xs:enumeration value="SC.UP.LIP" />
+      <xs:enumeration value="SC.UR.ARM" />
+      <xs:enumeration value="SHRT.L.LEG" />
+      <xs:enumeration value="SHRT.R.LEG" />
+      <xs:enumeration value="SHUNT.ART" />
+      <xs:enumeration value="SHUNT.CERB" />
+      <xs:enumeration value="SKL.PLATE" />
+      <xs:enumeration value="STAPLES" />
+      <xs:enumeration value="TAT.ABDOM" />
+      <xs:enumeration value="TAT.BACK" />
+      <xs:enumeration value="TAT.BREAST" />
+      <xs:enumeration value="TAT.BUTTK" />
+      <xs:enumeration value="TAT.CHEST" />
+      <xs:enumeration value="TAT.CHIN" />
+      <xs:enumeration value="TAT.FACE" />
+      <xs:enumeration value="TAT.FHD" />
+      <xs:enumeration value="TAT.GROIN" />
+      <xs:enumeration value="TAT.HEAD" />
+      <xs:enumeration value="TAT.L.ANKL" />
+      <xs:enumeration value="TAT.L.ARM" />
+      <xs:enumeration value="TAT.L.BRST" />
+      <xs:enumeration value="TAT.L.CALF" />
+      <xs:enumeration value="TAT.L.CHK" />
+      <xs:enumeration value="TAT.L.EAR" />
+      <xs:enumeration value="TAT.L.FGR" />
+      <xs:enumeration value="TAT.L.HND" />
+      <xs:enumeration value="TAT.L.KNEE" />
+      <xs:enumeration value="TAT.L.LEG" />
+      <xs:enumeration value="TAT.L.SHLD" />
+      <xs:enumeration value="TAT.L.THGH" />
+      <xs:enumeration value="TAT.L.WRS" />
+      <xs:enumeration value="TAT.L.BUTK" />
+      <xs:enumeration value="TAT.LF.ARM" />
+      <xs:enumeration value="TAT.NECK" />
+      <xs:enumeration value="TAT.NOSE" />
+      <xs:enumeration value="TAT.R.ANKL" />
+      <xs:enumeration value="TAT.R.ARM" />
+      <xs:enumeration value="TAT.R.BRST" />
+      <xs:enumeration value="TAT.R.CALF" />
+      <xs:enumeration value="TAT.R.CHK" />
+      <xs:enumeration value="TAT.R.EAR" />
+      <xs:enumeration value="TAT.R.FGR" />
+      <xs:enumeration value="TAT.R.HND" />
+      <xs:enumeration value="TAT.R.KNEE" />
+      <xs:enumeration value="TAT.R.LEG" />
+      <xs:enumeration value="TAT.R.SHLD" />
+      <xs:enumeration value="TAT.R.THGH" />
+      <xs:enumeration value="TAT.R.WRS" />
+      <xs:enumeration value="TAT.R.BUTK" />
+      <xs:enumeration value="TAT.RF.ARM" />
+      <xs:enumeration value="TAT.UL.ARM" />
+      <xs:enumeration value="TAT.UR.ARM" />
+      <xs:enumeration value="TUBE.L.EAR" />
+      <xs:enumeration value="TUBE.R.EAR" />
+      <xs:enumeration value="VASC.PROTH" />
+      <xs:enumeration value="WIRE.SUTUR" />
+      <xs:enumeration value="ART.ARM" />
+      <xs:enumeration value="ART.BRSTS" />
+      <xs:enumeration value="ART.L.BRST" />
+      <xs:enumeration value="ART.L.EAR" />
+      <xs:enumeration value="ART.R.BRST" />
+      <xs:enumeration value="ART.R.EAR" />
+      <xs:enumeration value="BLND.EYE" />
+      <xs:enumeration value="BRA.LR.ARM" />
+      <xs:enumeration value="BRA.LR.LEG" />
+      <xs:enumeration value="BRAC.ARM" />
+      <xs:enumeration value="BRAC.LEG" />
+      <xs:enumeration value="CANE" />
+      <xs:enumeration value="CATARACT" />
+      <xs:enumeration value="CL.LIP" />
+      <xs:enumeration value="CRIP.L.TOE" />
+      <xs:enumeration value="CRIP.R.TOE" />
+      <xs:enumeration value="CRUTCHES" />
+      <xs:enumeration value="DA.ALCOHOL" />
+      <xs:enumeration value="DA.AMPHETA" />
+      <xs:enumeration value="DA.BARBITU" />
+      <xs:enumeration value="DA.COCAINE" />
+      <xs:enumeration value="DA.GLUE" />
+      <xs:enumeration value="DA.HALLUCI" />
+      <xs:enumeration value="DA.MARIJUA" />
+      <xs:enumeration value="DA.NARCOTI" />
+      <xs:enumeration value="DA.OTHER" />
+      <xs:enumeration value="DA.PAINT" />
+      <xs:enumeration value="DA.RITALIN" />
+      <xs:enumeration value="DA.ROHYPNL" />
+      <xs:enumeration value="DEAF.EAR" />
+      <xs:enumeration value="DIMP.CHIN" />
+      <xs:enumeration value="DIMP.L.CHK" />
+      <xs:enumeration value="DIMP.R.CHK" />
+      <xs:enumeration value="DISC.ANKL" />
+      <xs:enumeration value="DISC.ARM" />
+      <xs:enumeration value="DISC.BRST" />
+      <xs:enumeration value="DISC.CHEEK" />
+      <xs:enumeration value="DISC.EAR" />
+      <xs:enumeration value="DISC.EYE" />
+      <xs:enumeration value="DISC.FACE" />
+      <xs:enumeration value="DISC.FGR" />
+      <xs:enumeration value="DISC.FOOT" />
+      <xs:enumeration value="DISC.HEAD" />
+      <xs:enumeration value="DISC.HIP" />
+      <xs:enumeration value="DISC.KNEE" />
+      <xs:enumeration value="DISC.L.BRS" />
+      <xs:enumeration value="DISC.L.HIP" />
+      <xs:enumeration value="DISC.LEG" />
+      <xs:enumeration value="DISC.LIP" />
+      <xs:enumeration value="DISC.LKNEE" />
+      <xs:enumeration value="DISC.LSHLD" />
+      <xs:enumeration value="DISC.LTHGH" />
+      <xs:enumeration value="DISC.PENIS" />
+      <xs:enumeration value="DISC.R.BRS" />
+      <xs:enumeration value="DISC.R.HIP" />
+      <xs:enumeration value="DISC.RKNEE" />
+      <xs:enumeration value="DISC.RSHLD" />
+      <xs:enumeration value="DISC.RTHGH" />
+      <xs:enumeration value="DISC.SHLD" />
+      <xs:enumeration value="DISC.THGH" />
+      <xs:enumeration value="DISC.WRIST" />
+      <xs:enumeration value="EXTR.BRST" />
+      <xs:enumeration value="EXTR.C.NIP" />
+      <xs:enumeration value="EXTR.C.VRT" />
+      <xs:enumeration value="EXTR.CBRST" />
+      <xs:enumeration value="EXTR.L.NIP" />
+      <xs:enumeration value="EXTR.L.TOE" />
+      <xs:enumeration value="EXTR.L.TTH" />
+      <xs:enumeration value="EXTR.L.VRT" />
+      <xs:enumeration value="EXTR.LBRST" />
+      <xs:enumeration value="EXTR.NIP" />
+      <xs:enumeration value="EXTR.R.NIP" />
+      <xs:enumeration value="EXTR.R.TOE" />
+      <xs:enumeration value="EXTR.RBRST" />
+      <xs:enumeration value="EXTR.U.TTH" />
+      <xs:enumeration value="EXTR.VRT" />
+      <xs:enumeration value="FRC.KNEE" />
+      <xs:enumeration value="FRC.L.KNEE" />
+      <xs:enumeration value="FRC.L.SHLD" />
+      <xs:enumeration value="FRC.R.KNEE" />
+      <xs:enumeration value="FRC.R.SHLD" />
+      <xs:enumeration value="FRC.SHLD" />
+      <xs:enumeration value="GLAUCOMA" />
+      <xs:enumeration value="GOLD.TOOTH" />
+      <xs:enumeration value="HFR.ANKL" />
+      <xs:enumeration value="HFR.ARM" />
+      <xs:enumeration value="HFR.BACK" />
+      <xs:enumeration value="HFR.CLAVIC" />
+      <xs:enumeration value="HFR.FGR" />
+      <xs:enumeration value="HFR.FOOT" />
+      <xs:enumeration value="HFR.HAND" />
+      <xs:enumeration value="HFR.JAW" />
+      <xs:enumeration value="HFR.KNEE" />
+      <xs:enumeration value="HFR.L.ANKL" />
+      <xs:enumeration value="HFR.L.FGR" />
+      <xs:enumeration value="HFR.L.FOOT" />
+      <xs:enumeration value="HFR.L.HAND" />
+      <xs:enumeration value="HFR.L.KNEE" />
+      <xs:enumeration value="HFR.L.RIB" />
+      <xs:enumeration value="HFR.L.SHLD" />
+      <xs:enumeration value="HFR.L.TOE" />
+      <xs:enumeration value="HFR.L.WRST" />
+      <xs:enumeration value="HFR.LCLAVI" />
+      <xs:enumeration value="HFR.LEG" />
+      <xs:enumeration value="HFR.LL.ARM" />
+      <xs:enumeration value="HFR.LL.JAW" />
+      <xs:enumeration value="HFR.LL.LEG" />
+      <xs:enumeration value="HFR.LPELVI" />
+      <xs:enumeration value="HFR.LR.ARM" />
+      <xs:enumeration value="HFR.LR.JAW" />
+      <xs:enumeration value="HFR.LR.LEG" />
+      <xs:enumeration value="HFR.NECK" />
+      <xs:enumeration value="HFR.NOSE" />
+      <xs:enumeration value="HFR.PELVIS" />
+      <xs:enumeration value="HFR.R.ANKL" />
+      <xs:enumeration value="HFR.R.FGR" />
+      <xs:enumeration value="HFR.R.FOOT" />
+      <xs:enumeration value="HFR.R.HAND" />
+      <xs:enumeration value="HFR.R.KNEE" />
+      <xs:enumeration value="HFR.R.RIB" />
+      <xs:enumeration value="HFR.R.SHLD" />
+      <xs:enumeration value="HFR.R.TOE" />
+      <xs:enumeration value="HFR.R.WRST" />
+      <xs:enumeration value="HFR.RCLAVI" />
+      <xs:enumeration value="HFR.RIBS" />
+      <xs:enumeration value="HFR.RPELVI" />
+      <xs:enumeration value="HFR.SHLD" />
+      <xs:enumeration value="HFR.SKULL" />
+      <xs:enumeration value="HFR.SPINE" />
+      <xs:enumeration value="HFR.STERN" />
+      <xs:enumeration value="HFR.TOE" />
+      <xs:enumeration value="HFR.UL.ARM" />
+      <xs:enumeration value="HFR.UL.JAW" />
+      <xs:enumeration value="HFR.UL.LEG" />
+      <xs:enumeration value="HFR.UR.ARM" />
+      <xs:enumeration value="HFR.UR.JAW" />
+      <xs:enumeration value="HFR.UR.LEG" />
+      <xs:enumeration value="HFR.WRIST" />
+      <xs:enumeration value="IMPL.PENIS" />
+      <xs:enumeration value="MC.ACNE" />
+      <xs:enumeration value="MC.ADD" />
+      <xs:enumeration value="MC.ALCOHOL" />
+      <xs:enumeration value="MC.ALLERGY" />
+      <xs:enumeration value="MC.ALZHMRS" />
+      <xs:enumeration value="MC.ARTHRTS" />
+      <xs:enumeration value="MC.BEHAVIO" />
+      <xs:enumeration value="MC.BLOOD" />
+      <xs:enumeration value="MC.CANCER" />
+      <xs:enumeration value="MC.DIABTIC" />
+      <xs:enumeration value="MC.DOWNSYN" />
+      <xs:enumeration value="MC.DRUGAB" />
+      <xs:enumeration value="MC.EATDIS" />
+      <xs:enumeration value="MC.HEART" />
+      <xs:enumeration value="MC.KIDNEY" />
+      <xs:enumeration value="MC.LIVER" />
+      <xs:enumeration value="MC.NERVOUS" />
+      <xs:enumeration value="MC.NRLGCAL" />
+      <xs:enumeration value="MC.OTHER" />
+      <xs:enumeration value="MC.PARPLGC" />
+      <xs:enumeration value="MC.PASTPRE" />
+      <xs:enumeration value="MC.PLMNARY" />
+      <xs:enumeration value="MC.PREGNAN" />
+      <xs:enumeration value="MC.QUADPLG" />
+      <xs:enumeration value="MC.SKIN" />
+      <xs:enumeration value="MC.TB" />
+      <xs:enumeration value="MC.THYROID" />
+      <xs:enumeration value="MC.TOURETE" />
+      <xs:enumeration value="MISS.C.VRT" />
+      <xs:enumeration value="MISS.L.VRT" />
+      <xs:enumeration value="MISS.PENIS" />
+      <xs:enumeration value="MISS.PROST" />
+      <xs:enumeration value="MISS.TONG" />
+      <xs:enumeration value="MISS.VRT" />
+      <xs:enumeration value="MOLE.ABDOM" />
+      <xs:enumeration value="MOLE.ANKL" />
+      <xs:enumeration value="MOLE.BACK" />
+      <xs:enumeration value="MOLE.BRST" />
+      <xs:enumeration value="MOLE.CHEST" />
+      <xs:enumeration value="MOLE.CHK" />
+      <xs:enumeration value="MOLE.EAR" />
+      <xs:enumeration value="MOLE.FGR" />
+      <xs:enumeration value="MOLE.FOOT" />
+      <xs:enumeration value="MOLE.GROIN" />
+      <xs:enumeration value="MOLE.HAND" />
+      <xs:enumeration value="MOLE.HEAD" />
+      <xs:enumeration value="MOLE.HIP" />
+      <xs:enumeration value="MOLE.KNEE" />
+      <xs:enumeration value="MOLE.L.ANK" />
+      <xs:enumeration value="MOLE.L.FT" />
+      <xs:enumeration value="MOLE.L.HIP" />
+      <xs:enumeration value="MOLE.L.KNE" />
+      <xs:enumeration value="MOLE.L.LEG" />
+      <xs:enumeration value="MOLE.L.SHD" />
+      <xs:enumeration value="MOLE.L.THG" />
+      <xs:enumeration value="MOLE.LBRST" />
+      <xs:enumeration value="MOLE.LEG" />
+      <xs:enumeration value="MOLE.LIP" />
+      <xs:enumeration value="MOLE.PENIS" />
+      <xs:enumeration value="MOLE.R.ANK" />
+      <xs:enumeration value="MOLE.R.FT" />
+      <xs:enumeration value="MOLE.R.HIP" />
+      <xs:enumeration value="MOLE.R.KNE" />
+      <xs:enumeration value="MOLE.R.LEG" />
+      <xs:enumeration value="MOLE.R.SHD" />
+      <xs:enumeration value="MOLE.R.THG" />
+      <xs:enumeration value="MOLE.RBRST" />
+      <xs:enumeration value="MOLE.SHLD" />
+      <xs:enumeration value="MOLE.THGH" />
+      <xs:enumeration value="PRCD.ABDMN" />
+      <xs:enumeration value="PRCD.BACK" />
+      <xs:enumeration value="PRCD.EAR" />
+      <xs:enumeration value="PRCD.EYE" />
+      <xs:enumeration value="PRCD.GNTLS" />
+      <xs:enumeration value="PRCD.L.EYE" />
+      <xs:enumeration value="PRCD.L.NIP" />
+      <xs:enumeration value="PRCD.LIP" />
+      <xs:enumeration value="PRCD.LLIP" />
+      <xs:enumeration value="PRCD.NIPPL" />
+      <xs:enumeration value="PRCD.R.EYE" />
+      <xs:enumeration value="PRCD.R.NIP" />
+      <xs:enumeration value="PRCD.TONGU" />
+      <xs:enumeration value="PRCD.ULIP" />
+      <xs:enumeration value="RTAT.ABDM" />
+      <xs:enumeration value="RTAT.ANKL" />
+      <xs:enumeration value="RTAT.ARM" />
+      <xs:enumeration value="RTAT.BACK" />
+      <xs:enumeration value="RTAT.BRST" />
+      <xs:enumeration value="RTAT.BUTTK" />
+      <xs:enumeration value="RTAT.CALF" />
+      <xs:enumeration value="RTAT.CHEEK" />
+      <xs:enumeration value="RTAT.CHEST" />
+      <xs:enumeration value="RTAT.CHIN" />
+      <xs:enumeration value="RTAT.EAR" />
+      <xs:enumeration value="RTAT.ELBOW" />
+      <xs:enumeration value="RTAT.FACE" />
+      <xs:enumeration value="RTAT.FARM" />
+      <xs:enumeration value="RTAT.FHD" />
+      <xs:enumeration value="RTAT.FLBOD" />
+      <xs:enumeration value="RTAT.FNGR" />
+      <xs:enumeration value="RTAT.FOOT" />
+      <xs:enumeration value="RTAT.GROIN" />
+      <xs:enumeration value="RTAT.HAND" />
+      <xs:enumeration value="RTAT.HEAD" />
+      <xs:enumeration value="RTAT.HIP" />
+      <xs:enumeration value="RTAT.KNEE" />
+      <xs:enumeration value="RTAT.L.ARM" />
+      <xs:enumeration value="RTAT.L.CHK" />
+      <xs:enumeration value="RTAT.L.EAR" />
+      <xs:enumeration value="RTAT.L.ELB" />
+      <xs:enumeration value="RTAT.L.FGR" />
+      <xs:enumeration value="RTAT.L.HIP" />
+      <xs:enumeration value="RTAT.L.HND" />
+      <xs:enumeration value="RTAT.L.LEG" />
+      <xs:enumeration value="RTAT.LANKL" />
+      <xs:enumeration value="RTAT.LBRST" />
+      <xs:enumeration value="RTAT.LBUTK" />
+      <xs:enumeration value="RTAT.LCALF" />
+      <xs:enumeration value="RTAT.LEG" />
+      <xs:enumeration value="RTAT.LFARM" />
+      <xs:enumeration value="RTAT.LFOOT" />
+      <xs:enumeration value="RTAT.LIP" />
+      <xs:enumeration value="RTAT.LKNEE" />
+      <xs:enumeration value="RTAT.LSHLD" />
+      <xs:enumeration value="RTAT.LTHGH" />
+      <xs:enumeration value="RTAT.LWLIP" />
+      <xs:enumeration value="RTAT.LWRS" />
+      <xs:enumeration value="RTAT.NECK" />
+      <xs:enumeration value="RTAT.NOSE" />
+      <xs:enumeration value="RTAT.PENIS" />
+      <xs:enumeration value="RTAT.R.ARM" />
+      <xs:enumeration value="RTAT.R.CHK" />
+      <xs:enumeration value="RTAT.R.EAR" />
+      <xs:enumeration value="RTAT.R.ELB" />
+      <xs:enumeration value="RTAT.R.FGR" />
+      <xs:enumeration value="RTAT.R.HIP" />
+      <xs:enumeration value="RTAT.R.HND" />
+      <xs:enumeration value="RTAT.R.LEG" />
+      <xs:enumeration value="RTAT.RANKL" />
+      <xs:enumeration value="RTAT.RBRST" />
+      <xs:enumeration value="RTAT.RBUTK" />
+      <xs:enumeration value="RTAT.RCALF" />
+      <xs:enumeration value="RTAT.RFARM" />
+      <xs:enumeration value="RTAT.RFOOT" />
+      <xs:enumeration value="RTAT.RKNEE" />
+      <xs:enumeration value="RTAT.RSHLD" />
+      <xs:enumeration value="RTAT.RTHGH" />
+      <xs:enumeration value="RTAT.RWRS" />
+      <xs:enumeration value="RTAT.SHLD" />
+      <xs:enumeration value="RTAT.THGH" />
+      <xs:enumeration value="RTAT.ULARM" />
+      <xs:enumeration value="RTAT.UPLIP" />
+      <xs:enumeration value="RTAT.URARM" />
+      <xs:enumeration value="RTAT.WRS" />
+      <xs:enumeration value="SC.ANKL" />
+      <xs:enumeration value="SC.ARM" />
+      <xs:enumeration value="SC.CALF" />
+      <xs:enumeration value="SC.CHK" />
+      <xs:enumeration value="SC.EAR" />
+      <xs:enumeration value="SC.ELBOW" />
+      <xs:enumeration value="SC.EYE" />
+      <xs:enumeration value="SC.F.ARM" />
+      <xs:enumeration value="SC.FGR" />
+      <xs:enumeration value="SC.FOOT" />
+      <xs:enumeration value="SC.GROIN" />
+      <xs:enumeration value="SC.HAND" />
+      <xs:enumeration value="SC.HIP" />
+      <xs:enumeration value="SC.KNEE" />
+      <xs:enumeration value="SC.L.BRST" />
+      <xs:enumeration value="SC.L.HIP" />
+      <xs:enumeration value="SC.LEG" />
+      <xs:enumeration value="SC.LIP" />
+      <xs:enumeration value="SC.PENIS" />
+      <xs:enumeration value="SC.R.BRST" />
+      <xs:enumeration value="SC.R.HIP" />
+      <xs:enumeration value="SC.SHLD" />
+      <xs:enumeration value="SC.THGH" />
+      <xs:enumeration value="SC.WRIST" />
+      <xs:enumeration value="SLVR.TOOTH" />
+      <xs:enumeration value="STUTTERS" />
+      <xs:enumeration value="TAT.ANKL" />
+      <xs:enumeration value="TAT.ARM" />
+      <xs:enumeration value="TAT.CALF" />
+      <xs:enumeration value="TAT.CHEEK" />
+      <xs:enumeration value="TAT.EAR" />
+      <xs:enumeration value="TAT.ELBOW" />
+      <xs:enumeration value="TAT.FARM" />
+      <xs:enumeration value="TAT.FLBODY" />
+      <xs:enumeration value="TAT.FNGR" />
+      <xs:enumeration value="TAT.FOOT" />
+      <xs:enumeration value="TAT.HAND" />
+      <xs:enumeration value="TAT.HIP" />
+      <xs:enumeration value="TAT.KNEE" />
+      <xs:enumeration value="TAT.L.FOOT" />
+      <xs:enumeration value="TAT.L.HIP" />
+      <xs:enumeration value="TAT.LEG" />
+      <xs:enumeration value="TAT.LELBOW" />
+      <xs:enumeration value="TAT.LIP" />
+      <xs:enumeration value="TAT.LW.LIP" />
+      <xs:enumeration value="TAT.PENIS" />
+      <xs:enumeration value="TAT.R.FOOT" />
+      <xs:enumeration value="TAT.R.HIP" />
+      <xs:enumeration value="TAT.RELBOW" />
+      <xs:enumeration value="TAT.SHLD" />
+      <xs:enumeration value="TAT.THGH" />
+      <xs:enumeration value="TAT.UP.LIP" />
+      <xs:enumeration value="TAT.WRS" />
+      <xs:enumeration value="TD.ACONVUL" />
+      <xs:enumeration value="TD.ADEPRES" />
+      <xs:enumeration value="TD.ANALGES" />
+      <xs:enumeration value="TD.ANTBTCS" />
+      <xs:enumeration value="TD.ANTINFL" />
+      <xs:enumeration value="TD.CARDIAC" />
+      <xs:enumeration value="TD.HYPNOTI" />
+      <xs:enumeration value="TD.INSULIN" />
+      <xs:enumeration value="TD.OTHER" />
+      <xs:enumeration value="TD.RITALIN" />
+      <xs:enumeration value="TD.TRANQUI" />
+      <xs:enumeration value="TDBRNCHDL" />
+      <xs:enumeration value="TRANSSXL" />
+      <xs:enumeration value="TRANSVST" />
+      <xs:enumeration value="WHEELCHAIR" />
+      <xs:enumeration value="TAT.BUTTK" />
+      <xs:enumeration value="MOLE.ABDOM" />
+      <xs:enumeration value="MOLE.ANKL" />
+      <xs:enumeration value="MOLE.BACK" />
+      <xs:enumeration value="MOLE.BRST" />
+      <xs:enumeration value="MOLE.BUTTK" />
+      <xs:enumeration value="MOLE.CHEST" />
+      <xs:enumeration value="MOLE.CHIN" />
+      <xs:enumeration value="MOLE.CHK" />
+      <xs:enumeration value="MOLE.EAR" />
+      <xs:enumeration value="MOLE.FGR" />
+      <xs:enumeration value="MOLE.FHD" />
+      <xs:enumeration value="MOLE.FOOT" />
+      <xs:enumeration value="MOLE.GROIN" />
+      <xs:enumeration value="MOLE.HAND" />
+      <xs:enumeration value="MOLE.HEAD" />
+      <xs:enumeration value="MOLE.HIP" />
+      <xs:enumeration value="MOLE.KNEE" />
+      <xs:enumeration value="MOLE.L.ANK" />
+      <xs:enumeration value="MOLE.L.ARM" />
+      <xs:enumeration value="MOLE.L.BUT" />
+      <xs:enumeration value="MOLE.L.CHK" />
+      <xs:enumeration value="MOLE.L.EAR" />
+      <xs:enumeration value="MOLE.L.EYE" />
+      <xs:enumeration value="MOLE.L.FGR" />
+      <xs:enumeration value="MOLE.L.FT" />
+      <xs:enumeration value="MOLE.L.HIP" />
+      <xs:enumeration value="MOLE.L.HND" />
+      <xs:enumeration value="MOLE.L.KNE" />
+      <xs:enumeration value="MOLE.L.LEG" />
+      <xs:enumeration value="MOLE.L.LIP" />
+      <xs:enumeration value="MOLE.L.SHD" />
+      <xs:enumeration value="MOLE.L.THG" />
+      <xs:enumeration value="MOLE.L.WRS" />
+      <xs:enumeration value="MOLE.LBRST" />
+      <xs:enumeration value="MOLE.LEG" />
+      <xs:enumeration value="MOLE.LIP" />
+      <xs:enumeration value="MOLE.NECK" />
+      <xs:enumeration value="MOLE.NOSE" />
+      <xs:enumeration value="MOLE.PENIS" />
+      <xs:enumeration value="MOLE.R.ANK" />
+      <xs:enumeration value="MOLE.R.ARM" />
+      <xs:enumeration value="MOLE.R.BUT" />
+      <xs:enumeration value="MOLE.R.CHK" />
+      <xs:enumeration value="MOLE.R.EAR" />
+      <xs:enumeration value="MOLE.R.EYE" />
+      <xs:enumeration value="MOLE.R.FGR" />
+      <xs:enumeration value="MOLE.R.FT" />
+      <xs:enumeration value="MOLE.R.HIP" />
+      <xs:enumeration value="MOLE.R.HND" />
+      <xs:enumeration value="MOLE.R.KNE" />
+      <xs:enumeration value="MOLE.R.LEG" />
+      <xs:enumeration value="MOLE.R.SHD" />
+      <xs:enumeration value="MOLE.R.THG" />
+      <xs:enumeration value="MOLE.R.WRS" />
+      <xs:enumeration value="MOLE.RBRST" />
+      <xs:enumeration value="MOLE.SHLD" />
+      <xs:enumeration value="MOLE.THGH" />
+      <xs:enumeration value="MOLE.U.LIP" />
+      <xs:enumeration value="NM.L.ARM" />
+      <xs:enumeration value="NM.L.BUTTK" />
+      <xs:enumeration value="NM.L.FGR" />
+      <xs:enumeration value="NM.L.FOOT" />
+      <xs:enumeration value="NM.L.HND" />
+      <xs:enumeration value="NM.L.LEG" />
+      <xs:enumeration value="NM.L.THIGH" />
+      <xs:enumeration value="NM.L.WRIST" />
+      <xs:enumeration value="NM.R.ARM" />
+      <xs:enumeration value="NM.R.BUTTK" />
+      <xs:enumeration value="NM.R.FGR" />
+      <xs:enumeration value="NM.R.FOOT" />
+      <xs:enumeration value="NM.R.HND" />
+      <xs:enumeration value="NM.R.LEG" />
+      <xs:enumeration value="NM.R.THIGH" />
+      <xs:enumeration value="NM.R.WRIST" />
+      <xs:enumeration value="POCKMARKS" />
+      <xs:enumeration value="RTAT.ABDM" />
+      <xs:enumeration value="RTAT.ANKL" />
+      <xs:enumeration value="RTAT.ARM" />
+      <xs:enumeration value="RTAT.BACK" />
+      <xs:enumeration value="RTAT.BRST" />
+      <xs:enumeration value="RTAT.BUTTK" />
+      <xs:enumeration value="RTAT.CALF" />
+      <xs:enumeration value="RTAT.CHEEK" />
+      <xs:enumeration value="RTAT.CHEST" />
+      <xs:enumeration value="RTAT.CHIN" />
+      <xs:enumeration value="RTAT.EAR" />
+      <xs:enumeration value="RTAT.ELBOW" />
+      <xs:enumeration value="RTAT.FARM" />
+      <xs:enumeration value="RTAT.FHD" />
+      <xs:enumeration value="RTAT.FLBOD" />
+      <xs:enumeration value="RTAT.FNGR" />
+      <xs:enumeration value="RTAT.FOOT" />
+      <xs:enumeration value="RTAT.GROIN" />
+      <xs:enumeration value="RTAT.HAND" />
+      <xs:enumeration value="RTAT.HEAD" />
+      <xs:enumeration value="RTAT.HIP" />
+      <xs:enumeration value="RTAT.KNEE" />
+      <xs:enumeration value="RTAT.L.ARM" />
+      <xs:enumeration value="RTAT.L.CHK" />
+      <xs:enumeration value="RTAT.L.EAR" />
+      <xs:enumeration value="RTAT.L.ELB" />
+      <xs:enumeration value="RTAT.L.FGR" />
+      <xs:enumeration value="RTAT.L.HIP" />
+      <xs:enumeration value="RTAT.L.HND" />
+      <xs:enumeration value="RTAT.L.LEG" />
+      <xs:enumeration value="RTAT.LANKL" />
+      <xs:enumeration value="RTAT.LBRST" />
+      <xs:enumeration value="RTAT.LBUTK" />
+      <xs:enumeration value="RTAT.LCALF" />
+      <xs:enumeration value="RTAT.LEG" />
+      <xs:enumeration value="RTAT.LFARM" />
+      <xs:enumeration value="RTAT.LFOOT" />
+      <xs:enumeration value="RTAT.LIP" />
+      <xs:enumeration value="RTAT.LKNEE" />
+      <xs:enumeration value="RTAT.LSHLD" />
+      <xs:enumeration value="RTAT.LTHGH" />
+      <xs:enumeration value="RTAT.LWLIP" />
+      <xs:enumeration value="RTAT.LWRS" />
+      <xs:enumeration value="RTAT.NECK" />
+      <xs:enumeration value="RTAT.NOSE" />
+      <xs:enumeration value="RTAT.PENIS" />
+      <xs:enumeration value="RTAT.R.ARM" />
+      <xs:enumeration value="RTAT.R.CHK" />
+      <xs:enumeration value="RTAT.R.EAR" />
+      <xs:enumeration value="RTAT.R.ELB" />
+      <xs:enumeration value="RTAT.R.FGR" />
+      <xs:enumeration value="RTAT.R.HIP" />
+      <xs:enumeration value="RTAT.R.HND" />
+      <xs:enumeration value="RTAT.R.LEG" />
+      <xs:enumeration value="RTAT.FACE" />
+      <xs:enumeration value="RTAT.RANKL" />
+      <xs:enumeration value="RTAT.RBRST" />
+      <xs:enumeration value="RTAT.RBUTK" />
+      <xs:enumeration value="RTAT.RCALF" />
+      <xs:enumeration value="RTAT.RFARM" />
+      <xs:enumeration value="RTAT.RFOOT" />
+      <xs:enumeration value="RTAT.RKNEE" />
+      <xs:enumeration value="RTAT.RSHLD" />
+      <xs:enumeration value="RTAT.RTHGH" />
+      <xs:enumeration value="RTAT.RWRS" />
+      <xs:enumeration value="RTAT.SHLD" />
+      <xs:enumeration value="RTAT.THGH" />
+      <xs:enumeration value="RTAT.ULARM" />
+      <xs:enumeration value="RTAT.UPLIP" />
+      <xs:enumeration value="RTAT.URARM" />
+      <xs:enumeration value="RTAT.WRS" />
+      <xs:enumeration value="SC.ABDOM" />
+      <xs:enumeration value="SC.ANKL" />
+      <xs:enumeration value="SC.ARM" />
+      <xs:enumeration value="SC.BACK" />
+      <xs:enumeration value="SC.BREAST" />
+      <xs:enumeration value="SC.BUTTK" />
+      <xs:enumeration value="SC.CALF" />
+      <xs:enumeration value="SC.CHEST" />
+      <xs:enumeration value="SC.CHIN" />
+      <xs:enumeration value="SC.CHK" />
+      <xs:enumeration value="SC.EAR" />
+      <xs:enumeration value="SC.ELBOW" />
+      <xs:enumeration value="SC.EYE" />
+      <xs:enumeration value="SC.F.ARM" />
+      <xs:enumeration value="SC.FACE" />
+      <xs:enumeration value="SC.FGR" />
+      <xs:enumeration value="SC.FHD" />
+      <xs:enumeration value="SC.FOOT" />
+      <xs:enumeration value="SC.GROIN" />
+      <xs:enumeration value="SC.HAND" />
+      <xs:enumeration value="SC.HEAD" />
+      <xs:enumeration value="SC.HIP" />
+      <xs:enumeration value="SC.KNEE" />
+      <xs:enumeration value="SC.L.ANKL" />
+      <xs:enumeration value="SC.L.ARM" />
+      <xs:enumeration value="SC.L.BRST" />
+      <xs:enumeration value="SC.L.BUTTK" />
+      <xs:enumeration value="SC.L.CALF" />
+      <xs:enumeration value="SC.L.CHK" />
+      <xs:enumeration value="SC.L.EAR" />
+      <xs:enumeration value="SC.L.ELB" />
+      <xs:enumeration value="SC.L.EYE" />
+      <xs:enumeration value="SC.L.FGR" />
+      <xs:enumeration value="SC.L.FT" />
+      <xs:enumeration value="SC.L.HIP" />
+      <xs:enumeration value="SC.L.HND" />
+      <xs:enumeration value="SC.L.KNEE" />
+      <xs:enumeration value="SC.L.LEG" />
+      <xs:enumeration value="SC.L.SHLD" />
+      <xs:enumeration value="SC.L.THGH" />
+      <xs:enumeration value="SC.L.WRIST" />
+      <xs:enumeration value="SC.LEG" />
+      <xs:enumeration value="SC.LF.ARM" />
+      <xs:enumeration value="SC.LIP" />
+      <xs:enumeration value="SC.LOW.LIP" />
+      <xs:enumeration value="SC.NECK" />
+      <xs:enumeration value="SC.NOSE" />
+      <xs:enumeration value="SC.PENIS" />
+      <xs:enumeration value="SC.R.ANKL" />
+      <xs:enumeration value="SC.R.ARM" />
+      <xs:enumeration value="SC.R.BRST" />
+      <xs:enumeration value="SC.R.BUTTK" />
+      <xs:enumeration value="SC.R.CALF" />
+      <xs:enumeration value="SC.R.CHK" />
+      <xs:enumeration value="SC.R.EAR" />
+      <xs:enumeration value="SC.R.ELB" />
+      <xs:enumeration value="SC.R.EYE" />
+      <xs:enumeration value="SC.R.FGR" />
+      <xs:enumeration value="SC.R.FT" />
+      <xs:enumeration value="SC.R.HIP" />
+      <xs:enumeration value="SC.R.HND" />
+      <xs:enumeration value="SC.R.KNEE" />
+      <xs:enumeration value="SC.R.LEG" />
+      <xs:enumeration value="SC.R.SHLD" />
+      <xs:enumeration value="SC.R.THGH" />
+      <xs:enumeration value="SC.R.WRIST" />
+      <xs:enumeration value="SC.RF.ARM" />
+      <xs:enumeration value="SC.SHLD" />
+      <xs:enumeration value="SC.THGH" />
+      <xs:enumeration value="SC.UL.ARM" />
+      <xs:enumeration value="SC.UP.LIP" />
+      <xs:enumeration value="SC.UR.ARM" />
+      <xs:enumeration value="SC.WRIST" />
+      <xs:enumeration value="TAT.ABDOM" />
+      <xs:enumeration value="TAT.ANKL" />
+      <xs:enumeration value="TAT.ARM" />
+      <xs:enumeration value="TAT.BACK" />
+      <xs:enumeration value="TAT.BREAST" />
+      <xs:enumeration value="TAT.CALF" />
+      <xs:enumeration value="TAT.CHEEK" />
+      <xs:enumeration value="TAT.CHEST" />
+      <xs:enumeration value="TAT.CHIN" />
+      <xs:enumeration value="TAT.EAR" />
+      <xs:enumeration value="TAT.ELBOW" />
+      <xs:enumeration value="TAT.FACE" />
+      <xs:enumeration value="TAT.FARM" />
+      <xs:enumeration value="TAT.FHD" />
+      <xs:enumeration value="TAT.FLBODY" />
+      <xs:enumeration value="TAT.FNGR" />
+      <xs:enumeration value="TAT.FOOT" />
+      <xs:enumeration value="TAT.GROIN" />
+      <xs:enumeration value="TAT.HAND" />
+      <xs:enumeration value="TAT.HEAD" />
+      <xs:enumeration value="TAT.HIP" />
+      <xs:enumeration value="TAT.KNEE" />
+      <xs:enumeration value="TAT.L.ANKL" />
+      <xs:enumeration value="TAT.L.ARM" />
+      <xs:enumeration value="TAT.L.BRST" />
+      <xs:enumeration value="TAT.L.BUTK" />
+      <xs:enumeration value="TAT.L.CALF" />
+      <xs:enumeration value="TAT.L.CHK" />
+      <xs:enumeration value="TAT.L.EAR" />
+      <xs:enumeration value="TAT.L.FGR" />
+      <xs:enumeration value="TAT.L.FOOT" />
+      <xs:enumeration value="TAT.L.HIP" />
+      <xs:enumeration value="TAT.L.HND" />
+      <xs:enumeration value="TAT.L.KNEE" />
+      <xs:enumeration value="TAT.L.LEG" />
+      <xs:enumeration value="TAT.L.SHLD" />
+      <xs:enumeration value="TAT.L.THGH" />
+      <xs:enumeration value="TAT.L.WRS" />
+      <xs:enumeration value="TAT.LEG" />
+      <xs:enumeration value="TAT.LELBOW" />
+      <xs:enumeration value="TAT.LF.ARM" />
+      <xs:enumeration value="TAT.LIP" />
+      <xs:enumeration value="TAT.LW.LIP" />
+      <xs:enumeration value="TAT.NECK" />
+      <xs:enumeration value="TAT.NOSE" />
+      <xs:enumeration value="TAT.PENIS" />
+      <xs:enumeration value="TAT.R.ANKL" />
+      <xs:enumeration value="TAT.R.ARM" />
+      <xs:enumeration value="TAT.R.BRST" />
+      <xs:enumeration value="TAT.R.BUTK" />
+      <xs:enumeration value="TAT.R.CALF" />
+      <xs:enumeration value="TAT.R.CHK" />
+      <xs:enumeration value="TAT.R.EAR" />
+      <xs:enumeration value="TAT.R.FGR" />
+      <xs:enumeration value="TAT.R.FOOT" />
+      <xs:enumeration value="TAT.R.HIP" />
+      <xs:enumeration value="TAT.R.HND" />
+      <xs:enumeration value="TAT.R.KNEE" />
+      <xs:enumeration value="TAT.R.LEG" />
+      <xs:enumeration value="TAT.R.SHLD" />
+      <xs:enumeration value="TAT.R.THGH" />
+      <xs:enumeration value="TAT.R.WRS" />
+      <xs:enumeration value="TAT.RELBOW" />
+      <xs:enumeration value="TAT.RF.ARM" />
+      <xs:enumeration value="TAT.SHLD" />
+      <xs:enumeration value="TAT.THGH" />
+      <xs:enumeration value="TAT.UL.ARM" />
+      <xs:enumeration value="TAT.UP.LIP" />
+      <xs:enumeration value="TAT.UR.ARM" />
+      <xs:enumeration value="TAT.WRS" />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- PARTY TYPE -->
+  <xs:simpleType name="BASE.PARTYTYPE">
+    <xs:restriction base="BASE.REQUIREDSTRING">
+      <xs:enumeration value="CivDef" />
+      <xs:enumeration value="CivPl" />
+      <xs:enumeration value="CRDef" />
+      <xs:enumeration value="JuvDef" />
+      <xs:enumeration value="PRDef" />
+      <xs:enumeration value="PRPl" />
+      <xs:enumeration value="FamDef" />
+      <xs:enumeration value="FamPl" />
+      <xs:enumeration value="Atty" />
+      <xs:enumeration value="Victim" />
+      <xs:enumeration value="Witness" />
+      <xs:enumeration value="Dcdnt" />
+      <xs:enumeration value="Ward" />
+      <xs:enumeration value="Judge" />
+      <xs:enumeration value="Ofcr" />
+      <xs:enumeration value="BndCo" />
+      <xs:enumeration value="CtRptr" />
+      <xs:enumeration value="Employer" />
+      <xs:enumeration value="School" />
+      <xs:enumeration value="FamMem" />
+      <xs:enumeration value="Mediator" />
+      <xs:enumeration value="Guardian" />
+      <xs:enumeration value="Other" />
+      <xs:enumeration value="Recip" />
+      <xs:enumeration value="BndInsCo" />
+      <xs:enumeration value="Merchant" />
+      <xs:enumeration value="Complainant" />
+      <xs:enumeration value="Bndmn" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="BASE.CIRCUMVENTBUSINESSRULES">
+    <xs:sequence>
+      <xs:element name="CBRFeature" type="BASE.CIRCUMVENTCBRFEATURE" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BASE.CIRCUMVENTCBRFEATURE">
+    <xs:choice minOccurs="1" maxOccurs="1">
+      <xs:element name="FeatureID" type="BASE.OPTIONALPOSINT" />
+      <xs:element name="FeatureGUID" type="BASE.REQUIREDGUID" />
+    </xs:choice>
+  </xs:complexType>
+</xs:schema>

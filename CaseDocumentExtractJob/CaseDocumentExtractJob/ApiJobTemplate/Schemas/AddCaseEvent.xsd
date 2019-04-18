@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Classification: Case Manager -->
+<!-- ************************************************************************************* -->
+<!-- Copyright (c) 2007 by Tyler Technologies.                                             -->
+<!--                                                                                       -->
+<!-- This program code is furnished under a license and may be used and copied only in     -->
+<!-- accordance with the terms of such license and with the inclusion of the above         -->
+<!-- copyright notice.  This program code or any other copies thereof may not be provided  -->
+<!-- or otherwise made available to any other persons.                                     -->
+<!-- ************************************************************************************* -->
+<!--                                                                                       -->
+<!-- HISTORY                                                                               -->
+<!--                                                                                       -->
+<!-- 10/02/2007 - Neil De Wilde                                                            -->
+<!--   *  Enhancements to existing code.                                                   -->
+<!--                                                                                       -->
+<!-- ************************************************************************************* -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" elementFormDefault="qualified">
+	<xs:include schemaLocation="BaseTypes.xsd"/>
+	<xs:include schemaLocation="Justice.Event.xsd"/>
+
+  <xs:simpleType name="LOCAL.ADDCASEEVENT">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AddCaseEvent"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="Message" block="#all" final="#all">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="CaseID"           type="BASE.REQUIREDPOSINT"            minOccurs="1" maxOccurs="1"/>
+                <xs:group ref="Justice.Event.Common"/>
+            </xs:sequence>
+            <xs:attribute name="MessageType"     type="LOCAL.ADDCASEEVENT"    use="required"/>
+            <xs:attribute name="NodeID"          type="BASE.REQUIREDPOSINT"   use="required" />
+            <xs:attribute name="ReferenceNumber" type="BASE.REQUIREDSTRING50" use="required" />
+            <xs:attribute name="UserID"          type="BASE.REQUIREDPOSINT"   use="required" />
+            <xs:attribute name="Source"		 type="BASE.REQUIREDSTRING50" use="required" />
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

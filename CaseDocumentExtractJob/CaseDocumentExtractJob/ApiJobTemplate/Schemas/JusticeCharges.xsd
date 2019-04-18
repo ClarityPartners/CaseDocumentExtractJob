@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ChargeSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" attributeFormDefault="qualified" elementFormDefault="qualified">
+	<xs:annotation>
+		<xs:documentation>
+    ****************************************************************************************
+    * Copyright (c) 2006 by Tyler Technologies.                                            *
+    *                                                                                      *
+    * This program code is furnished under a license and may be used and copied only in    *
+    * accordance with the terms of such license and with the inclusion of the above        *
+    * copyright notice. This program code or any other copies thereof may not be provided  *
+    * or otherwise made available to any other persons.                                    *
+    ****************************************************************************************
+    * Author: Patrick Pierce Date: 11/05/2007                                              *
+    * Validates charges xml                                                                *
+    *                                                                                      *
+    * ------------------------------------------------------------------------             *
+    * Change Log:                                                                          *
+    * ------------------------------------------------------------------------             *
+    * Date Who Description                                                                 *
+    * ---------- --- -------------------------------------------------------               *
+    * 04/30/2008 KLG Made CaseFiling element optional in ICJ.CHARGE                        *
+    * 04/30/2008 KLG Added optional ArrestFiling element in ICJ.CHARGE                     *
+    * 10/30/2008 KLG Added Warrant Charge elements for AddFreeStandingWarrant API          *
+    * 12/04/2008 PJP Added SplitBond elements for AddFreeStandingWarrant API               *
+    * 01/16/2009 PJP Added elements for AddCriminalCaseChare API                           *
+    * 05/01/2009 BB Proj 4231 - Added CodeID attribute for offense codes                   *
+    * 03/17/2010 BM Proj 4801 - Added ReferenceID attribute to Offense Code element        *
+    ****************************************************************************************
+    </xs:documentation>
+		<xs:documentation/>
+	</xs:annotation>
+	<xs:include schemaLocation="BaseTypes.xsd"/>
+	<xs:element name="Test">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Charges" type="ICJ.CHARGES" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ICJ.CHARGES">
+		<xs:sequence>
+			<xs:element name="Charge" type="ICJ.CHARGE" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE">
+		<xs:sequence>
+			<xs:element name="PartyID" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="OffenseDate" type="BASE.REQUIREDDATE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="OffenseDateTo" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDateOnOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTime" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeTo" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeAtOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProsecutingAgency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackNumber" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackSequence" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseReport" type="ICJ.CHARGE.OFFENSEREPORT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ArrestFiling" type="ICJ.CHARGE.CHARGEHIST.ARRESTFILING" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CaseFiling" type="ICJ.CHARGE.CHARGEHIST.CASEFILING" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.ADDCHARGES.CHARGE">
+		<xs:sequence>
+			<xs:element name="PartyID" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="OffenseDate" type="BASE.REQUIREDDATE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="OffenseDateTo" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDateOnOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTime" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeTo" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeAtOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProsecutingAgency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackNumber" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackSequence" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseReport" type="ICJ.CHARGE.OFFENSEREPORT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ArrestFiling" type="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.ARRESTFILING" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProsecutorFiling" type="ICJ.CHARGE.CHARGEHIST.PROSECUTORFILING" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CaseFiling" type="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.CASEFILING" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.ADDCHARGESSPECIFIED.CHARGE">
+		<xs:sequence>
+			<xs:element name="ChargeID" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="PartyID" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDateTo" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDateOnOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTime" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeTo" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeAtOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProsecutingAgency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackNumber" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackSequence" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseReport" type="ICJ.CHARGE.OFFENSEREPORT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ArrestFiling" type="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.ARRESTFILING" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProsecutorFiling" type="ICJ.CHARGE.CHARGEHIST.PROSECUTORFILING" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CaseFiling" type="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.CASEFILING.OPTIONAL" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.AMENDCHARGES.CHARGE">
+		<xs:sequence>
+			<xs:element name="AmendedFiling" type="ICJ.CHARGE.CHARGEHIST.AMENDEDFILING" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.CHARGES">
+		<xs:sequence>
+			<xs:element name="Charge" type="ICJ.WARRANT.CHARGE" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.CHARGE">
+		<xs:sequence>
+			<xs:element name="OffenseDate" type="BASE.REQUIREDDATE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="OffenseDateTo" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDateOnOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTime" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeTo" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeAtOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProsecutingAgency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackNumber" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackSequence" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseReport" type="ICJ.CHARGE.OFFENSEREPORT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="WarrantFiling" type="ICJ.CHARGE.CHARGEHIST.WARRANTFILING" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGESPECIFIED.CHARGES">
+		<xs:sequence>
+			<xs:element name="Charge" type="ICJ.CHARGESPECIFIED.CHARGE" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGESPECIFIED.BONDCHARGES">
+		<xs:sequence>
+			<xs:element name="Charge" type="ICJ.CHARGESPECIFIED.BONDCHARGE" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGESPECIFIED.CHARGE">
+		<xs:sequence>
+			<xs:element name="ChargeID" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="PartyID" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDateTo" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseDateOnOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTime" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeTo" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseTimeAtOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProsecutingAgency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackNumber" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeTrackSequence" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseReport" type="ICJ.CHARGE.OFFENSEREPORT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ArrestFiling" type="ICJ.CHARGE.CHARGEHIST.ARRESTFILING" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProsecutorFiling" type="ICJ.CHARGE.CHARGEHIST.PROSECUTORFILING" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CaseFiling" type="ICJ.CHARGE.CHARGEHIST.CASEFILING.OPTIONAL" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGESPECIFIED.BONDCHARGE">
+		<xs:sequence>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:sequence minOccurs="1" maxOccurs="1">
+					<xs:element name="ChargeID" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:sequence minOccurs="1" maxOccurs="1">
+					<xs:element name="OffenseDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="OffenseDateTo" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="OffenseDateOnOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="OffenseTime" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="OffenseTimeTo" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="OffenseTimeAtOrAbout" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ProsecutingAgency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ChargeTrackNumber" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ChargeTrackSequence" type="BASE.REQUIREDSTRING20" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="OffenseReport" type="ICJ.CHARGE.OFFENSEREPORT" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="ArrestFiling" type="ICJ.CHARGE.BONDCHARGE.ARRESTFILING" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="BondFiling" type="ICJ.CHARGE.CHARGEHIST.BONDFILING" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.BOND">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Primary" type="ICJ.WARRANT.BOND.PRIMARY" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="Split" type="ICJ.WARRANT.BOND.SPLIT" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:element name="Setting" type="ICJ.WARRANT.BOND.SETTING" minOccurs="0" maxOccurs="1"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.BOND.PRIMARY">
+		<xs:sequence>
+			<xs:element name="Type" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Amount" type="BASE.REQUIREDMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.BOND.SPLIT">
+		<xs:sequence>
+			<xs:element name="Connector" type="ICJ.WARRANT.BOND.SPLIT.CONNECTOR" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Type" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Amount" type="BASE.REQUIREDMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.BOND.SETTING">
+		<xs:sequence>
+			<xs:element name="SettingType" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Primary" type="ICJ.WARRANT.BOND.SETTING.DATA" minOccurs="0" maxOccurs="1"/>
+			<xs:sequence minOccurs="0" maxOccurs="1">
+				<xs:element name="Connector" type="ICJ.WARRANT.BOND.SPLIT.CONNECTOR" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Split" type="ICJ.WARRANT.BOND.SETTING.DATA" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.BOND.SETTING.DATA">
+		<xs:sequence>
+			<xs:element name="SettingBondType" type="ICJ.WARRANT.BOND.SETTING.BOND.TYPE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Amount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Percent" type="ICJ.WARRANT.BOND.SETTING.PERCENT" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.BOND.SETTING.BOND.TYPE">
+		<xs:choice>
+			<xs:element name="Any" type="ICJ.WARRANT.BOND.SETTING.ANY" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Specified" type="ICJ.WARRANT.BOND.SETTING.SPECIFIED" minOccurs="1" maxOccurs="1"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.BOND.SETTING.ANY">
+		<xs:sequence>
+			<xs:element name="ExclusionType" type="BASE.USERCODE" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.WARRANT.BOND.SETTING.SPECIFIED">
+		<xs:sequence>
+			<xs:element name="SpecifiedType" type="BASE.USERCODE" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ICJ.WARRANT.BOND.SPLIT.CONNECTOR">
+		<xs:restriction base="BASE.REQUIREDNORMALIZEDSTRING">
+			<xs:enumeration value="And"/>
+			<xs:enumeration value="Or"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ICJ.WARRANT.BOND.SETTING.PERCENT">
+		<xs:restriction base="BASE.REQUIREDNONNEGMONEYCENTS">
+			<xs:minInclusive value="0.00"/>
+			<xs:maxInclusive value="100.00"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ICJ.CHARGE.OFFENSEREPORT">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="OffenseReportControlNumber" type="BASE.REQUIREDSTRING30" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Agency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="Agency" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.OFFICER">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="OfficerParty" type="ICJ.CHARGE.OFFICER.OFFICERPARTY"/>
+				<xs:element name="OfficerFreeText" type="ICJ.CHARGE.OFFICER.OFFICERFREETEXT"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.OFFICER.OFFICERPARTY">
+		<xs:sequence>
+			<xs:element name="OfficerID" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.OFFICER.OFFICERFREETEXT">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="BadgeNumber" type="BASE.REQUIREDSTRING20" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Name" type="BASE.REQUIREDSTRING160" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="Name" type="BASE.REQUIREDSTRING160" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ARRESTFILING">
+		<xs:sequence>
+			<xs:element name="Date" type="BASE.REQUIREDDATE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Time" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ArrestControlNumber" type="BASE.REQUIREDSTRING30" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Agency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.BONDCHARGE.ARRESTFILING">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Date" type="BASE.REQUIREDDATE" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Time" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="ArrestControlNumber" type="BASE.REQUIREDSTRING30" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="Agency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="Time" type="BASE.REQUIREDTIME" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="ArrestControlNumber" type="BASE.REQUIREDSTRING30" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="Agency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="ArrestControlNumber" type="BASE.REQUIREDSTRING30" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Agency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="Agency" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.ARRESTFILING">
+		<xs:sequence>
+			<xs:element name="Date" type="BASE.REQUIREDDATE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Time" type="BASE.REQUIREDTIME" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ArrestControlNumber" type="BASE.REQUIREDSTRING30" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Agency" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Officer" type="ICJ.CHARGE.OFFICER" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.BONDFILING">
+		<xs:sequence>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE.OPTIONALDEGREE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.CASEFILING">
+		<xs:sequence>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FilingDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.CASEFILING.OPTIONAL">
+		<xs:sequence>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FilingDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.CASEFILING">
+		<xs:sequence>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FilingDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.CASEFILING.OPTIONAL">
+		<xs:sequence>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FilingDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.AMENDEDFILING">
+		<xs:sequence>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FilingDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.PROSECUTORFILING">
+		<xs:sequence>
+			<xs:element name="Decision" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ProsecutorFilingDate" type="BASE.REQUIREDDATE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FilingDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.WARRANTFILING">
+		<xs:sequence>
+			<xs:element name="Number" type="BASE.REQUIREDPOSINT5" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Jurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="FineAmount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Bond" type="ICJ.CHARGE.CHARGEHIST.BOND" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.CHARGEHIST.OFFENSE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Additional" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.BOND">
+		<xs:sequence>
+			<xs:element name="Type" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Amount" type="BASE.REQUIREDNONNEGMONEYCENTS" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.OFFENSE">
+		<xs:sequence>
+			<xs:element name="Code" type="BASE.USERCODE.WITHIDANDREFERENCEID" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Description" type="BASE.REQUIREDSTRING100" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Degree" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Statute" type="BASE.REQUIREDSTRING40" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="GOC" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="AdditionalStatutes" type="ICJ.CHARGE.ADDLSTATUTES" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.OFFENSE.OPTIONALDEGREE">
+		<xs:sequence>
+			<xs:element name="Code" type="BASE.USERCODE.WITHIDANDREFERENCEID" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Description" type="BASE.REQUIREDSTRING100" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Degree" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Statute" type="BASE.REQUIREDSTRING40" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="GOC" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="AdditionalStatutes" type="ICJ.CHARGE.ADDLSTATUTES" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.ADDLSTATUTES">
+		<xs:sequence>
+			<xs:element name="AdditionalStatute" type="ICJ.CHARGE.ADDLSTATUTE" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.ADDLSTATUTE">
+		<xs:sequence>
+			<xs:element name="Type" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Offense" type="ICJ.CHARGE.ADDLSTATUTE.OFFENSE" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.ADDLSTATUTE.OFFENSE">
+		<xs:sequence>
+			<xs:element name="Code" type="BASE.USERCODE.WITHIDANDREFERENCEID" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Description" type="BASE.REQUIREDSTRING100" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Degree" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Statute" type="BASE.REQUIREDSTRING40" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS">
+		<xs:all>
+			<xs:element name="FineCalculation" type="ICJ.CHARGE.CHARGEHIST.FINECALCS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="WildlifeRestitution" type="ICJ.MNWILDLIFERESTITUTION" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="BACGroup" type="ICJ.CHARGE.CHARGEHIST.BACGROUP" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CAExcludeChargeFTA" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CAExcludeChargeFTP" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseGroup" type="ICJ.CHARGE.CHARGEHIST.OFFENSEGROUP" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="PriorCaseInfo" type="ICJ.CHARGE.CHARGEHIST.PRIORCASEINFO" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SpeedGroup" type="ICJ.CHARGE.CHARGEHIST.SPEEDGROUP" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Speed" type="ICJ.CHARGE.CHARGEHIST.SPEED" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CCIChargeComponents" type="TYLER.INTEGRATION.CCI.TYPES.CHARGECOMPONENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CAPriorCount" type="ICJ.CHARGE.CHARGEHIST.CAPRIORCOUNT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProbableCause" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SDDrugOffense" type="ICJ.CHARGE.CHARGEHIST.DRUGTYPESD" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SDViolentCrime" type="ICJ.CHARGE.CHARGEHIST.VIOLENTCRIMEMETHODSD" minOccurs="0" maxOccurs="1"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.CAPRIORCOUNT">
+		<xs:sequence>
+			<xs:element name="PriorCount" type="BASE.REQUIREDNONNEGINT" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.SPEED">
+		<xs:sequence>
+			<xs:element name="SpeedApproximation" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SafeSpeed" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="VehicleLimit" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="MaxSpeed" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Special" type="BASE.REQUIREDSTRING50" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.CASPEEDINGFINECALC">
+		<xs:sequence>
+			<xs:element name="SpeedApproximation" type="BASE.OPTIONALPOSINT3" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SafeSpeed" type="BASE.OPTIONALPOSINT3" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="VehicleLimit" type="BASE.OPTIONALPOSINT3" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="MaxSpeed" type="BASE.OPTIONALPOSINT3" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Special" type="BASE.REQUIREDSTRING50" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Zone" type="ICJ.CASPEEDINGMPHFINECALC.ZONE" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ICJ.CASPEEDINGMPHFINECALC.ZONE">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="School"/>
+			<xs:enumeration value="Construction"/>
+			<xs:enumeration value="Safety"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.SPEEDGROUP">
+		<xs:sequence>
+			<xs:element name="SpeedLimit" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SafeSpeed" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="RadarSpeed" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.PRIORCASEINFO">
+		<xs:sequence>
+			<xs:element name="PriorCaseNbr" type="BASE.REQUIREDSTRING120" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="PriorJurisdiction" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="PriorConvictionDate" type="BASE.REQUIREDDATE" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.OFFENSEGROUP">
+		<xs:sequence>
+			<xs:element name="Correctable" type="ICJ.CHARGE.CHARGEHIST.OFFENSEGROUPCORRECTABLE.CODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="HabitualOffender" type="BASE.REQUIREDMIXEDBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.BACGROUP">
+		<xs:sequence>
+			<xs:element name="OffenseType" type="ICJ.CHARGE.CHARGEHIST.BACGROUPOFFENSETYPE.CODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="TestOne" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="LevelOne" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="TestTwo" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="LevelTwo" type="BASE.REQUIREDPOSINT" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.ADDCRIMCASECHARGE.CHARGE.CHARGEHIST.ADDLCHRGCOMPS">
+		<xs:all>
+			<xs:element name="FineCalculation" type="ICJ.CHARGE.CHARGEHIST.FINECALCS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DUIGroups" type="ICJ.CHARGE.CHARGECOMPS.DUIGROUPS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DrugType" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeQualifierWeapon" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ChargeQualifierAmount" type="ICJ.CHARGE.CHARGECOMPS.CHARGEQUALIFIERAMOUNT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="WildlifeRestitution" type="ICJ.MNWILDLIFERESTITUTION" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="BACGroup" type="ICJ.CHARGE.CHARGEHIST.BACGROUP" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CAExcludeChargeFTA" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CAExcludeChargeFTP" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OffenseGroup" type="ICJ.CHARGE.CHARGEHIST.OFFENSEGROUP" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="PriorCaseInfo" type="ICJ.CHARGE.CHARGEHIST.PRIORCASEINFO" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SpeedGroup" type="ICJ.CHARGE.CHARGEHIST.SPEEDGROUP" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Speed" type="ICJ.CHARGE.CHARGEHIST.SPEED" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CCIChargeComponents" type="TYLER.INTEGRATION.CCI.TYPES.CHARGECOMPONENTS" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="CAPriorCount" type="ICJ.CHARGE.CHARGEHIST.CAPRIORCOUNT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ProbableCause" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SDDrugOffense" type="ICJ.CHARGE.CHARGEHIST.DRUGTYPESD" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="SDViolentCrime" type="ICJ.CHARGE.CHARGEHIST.VIOLENTCRIMEMETHODSD" minOccurs="0" maxOccurs="1"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.VIOLENTCRIMEMETHODSD">
+		<xs:sequence>
+			<xs:element name="SDViolentCrimeMethod" type="ICJ.CHARGE.CHARGEHIST.VIOLENTCRIMEMETHODSD.CODE" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.DRUGTYPESD">
+		<xs:sequence>
+			<xs:element name="SDDrugType" type="BASE.USERCODE" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ICJ.CHARGE.CHARGEHIST.BACGROUPOFFENSETYPE.CODE">
+		<xs:restriction base="BASE.REQUIREDSTRING10">
+			<xs:enumeration value="AO"/>
+			<xs:enumeration value="DO"/>
+			<xs:enumeration value="DA"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ICJ.CHARGE.CHARGEHIST.OFFENSEGROUPCORRECTABLE.CODE">
+		<xs:restriction base="BASE.REQUIREDSTRING10">
+			<xs:enumeration value="Y"/>
+			<xs:enumeration value="N"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- SD Violent Crime Methods Enumeration -->
+	<xs:simpleType name="ICJ.CHARGE.CHARGEHIST.VIOLENTCRIMEMETHODSD.CODE">
+		<xs:restriction base="BASE.REQUIREDSTRING10">
+			<xs:enumeration value="F"/>
+			<xs:enumeration value="DW"/>
+			<xs:enumeration value="ED"/>
+			<xs:enumeration value="DD"/>
+			<xs:enumeration value="U"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.FINECALCS">
+		<xs:sequence>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="SpeedingFineCalculation" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.SPEEDINGFINECALC"/>
+				<xs:element name="SpeedingFineCalculationMPH" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.SPEEDINGMPHFINECALC"/>
+				<xs:element name="OverweightFineCalculation" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.OVERWEIGHTFINECALC"/>
+				<xs:element name="OverweightFineCalculationRatedActual" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.OVERWEIGHTFINECALCRATEDACTUAL"/>
+				<xs:element name="WildlifeFineCalculation" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.WILDLIFEFINECALC"/>
+				<xs:element name="CASpeedingFineCalculation" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.CASPEEDINGFINECALC"/>
+				<xs:element name="FineRulesCalculationMD" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.FINERULESCALCULATIONMD"/>
+				<xs:element name="OverweightFineCalculationID" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.IDOWVEHGRP"/>
+				<xs:element name="OverweightFineCalculationMD" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.OVERWEIGHTFINECALCMD"/>
+				<xs:element name="SpeedingFineCalculationMD" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.SPEEDINGFINECALCMD"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.SPEEDINGFINECALC">
+		<xs:sequence>
+			<xs:element name="SpeedActual" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SpeedLimit" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.SPEEDINGMPHFINECALC">
+		<xs:sequence>
+			<xs:element name="SpeedActual" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SpeedLimit" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Zone" type="ICJ.SPEEDINGMPHFINECALC.ZONE" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.OVERWEIGHTFINECALC">
+		<xs:sequence>
+			<xs:element name="PoundsOver" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.OVERWEIGHTFINECALCRATEDACTUAL">
+		<xs:sequence>
+			<xs:element name="RatedWeight" type="BASE.REQUIREDNONNEGINT9" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ActualWeight" type="BASE.REQUIREDNONNEGINT9" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.WILDLIFEFINECALC">
+		<xs:sequence>
+			<xs:element name="NumberOfAnimals" type="BASE.REQUIREDPOSINT3" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.SPEEDINGFINECALCMD">
+		<xs:sequence>
+			<xs:element name="SpeedActual" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="SpeedLimit" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="ContributedToAccident" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="PersonalInjury" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.OVERWEIGHTFINECALCMD">
+		<xs:sequence>
+			<xs:element name="PoundsOver" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PermittedWeight" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="ContributedToAccident" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="PersonalInjury" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.IDOWVEHGRP">
+		<xs:sequence>
+			<xs:element name="PoundsOver" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.FINERULESCALCULATIONMD">
+		<xs:sequence>
+			<xs:element ref="ContributedToAccident" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="PersonalInjury" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.PERSONALINJURY">
+		<xs:restriction base="BASE.REQUIREDPOSINT">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ContributedToAccident" type="BASE.REQUIREDTEXTBOOLMIXEDCASE"/>
+	<xs:element name="PersonalInjury" type="ICJ.CHARGE.CHARGEHIST.ADDLCHRGCOMPS.PERSONALINJURY"/>
+	<xs:complexType name="ICJ.CHARGE.CHARGECOMPS.DUIGROUPS">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="AlcoholLevelOne" type="BASE.REQUIREDBAC" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="AlcoholLevelTwo" type="BASE.REQUIREDBAC" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="RefusedTest" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="PassengerUnder18" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="LicenseSurrendered" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="LicenseNotSurrendered" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="EligibleForPermit" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="NotEligibleReason" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="AlcoholLevelTwo" type="BASE.REQUIREDBAC" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="RefusedTest" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="PassengerUnder18" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="LicenseSurrendered" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="LicenseNotSurrendered" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="EligibleForPermit" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="NotEligibleReason" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="RefusedTest" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="PassengerUnder18" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="LicenseSurrendered" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="LicenseNotSurrendered" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="EligibleForPermit" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="NotEligibleReason" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="PassengerUnder18" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="LicenseSurrendered" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="LicenseNotSurrendered" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="EligibleForPermit" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="NotEligibleReason" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="LicenseSurrendered" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="LicenseNotSurrendered" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="EligibleForPermit" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="NotEligibleReason" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="LicenseNotSurrendered" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="EligibleForPermit" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="NotEligibleReason" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="EligibleForPermit" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="NotEligibleReason" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="NotEligibleReason" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ICJ.CHARGE.CHARGECOMPS.CHARGEQUALIFIERAMOUNT">
+		<xs:sequence>
+			<xs:element name="Range" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Amount" type="ICJ.CHARGEQUALIFIERAMOUNT" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="Unit" type="BASE.USERCODE" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ICJ.SPEEDINGMPHFINECALC.ZONE">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="School"/>
+			<xs:enumeration value="Construction"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ICJ.CHARGEQUALIFIERAMOUNT">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-99999"/>
+			<xs:maxInclusive value="999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ICJ.MNWILDLIFERESTITUTION">
+		<xs:restriction base="xs:decimal">
+			<xs:pattern value="\d*\.\d?\d?"/>
+			<xs:minInclusive value="0.00"/>
+			<xs:maxInclusive value="9999999999.99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TYLER.INTEGRATION.CCI.TYPES.CHARGECOMPONENTS">
+		<xs:sequence>
+			<xs:element name="CCIChargeComponent" type="TYLER.INTEGRATION.CCI.TYPES.CHARGECOMPONENT" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TYLER.INTEGRATION.CCI.TYPES.CHARGECOMPONENT">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="TypeID" type="BASE.REQUIREDNONNEGINT" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="TypeGUID" type="BASE.REQUIREDGUID" minOccurs="1" maxOccurs="1"/>
+			</xs:choice>
+			<xs:element name="Fields" type="TYLER.INTEGRATION.CCI.TYPES.CHARGECOMPONENT.FIELDS" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TYLER.INTEGRATION.CCI.TYPES.CHARGECOMPONENT.FIELDS">
+		<xs:sequence>
+			<xs:element name="Field" type="TYLER.INTEGRATION.CCI.TYPES.CHARGECOMPONENT.FIELD" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TYLER.INTEGRATION.CCI.TYPES.CHARGECOMPONENT.FIELD">
+		<xs:sequence>
+			<xs:element name="FieldName" type="BASE.REQUIREDSTRING10" minOccurs="1" maxOccurs="1"/>
+			<!-- allow null -->
+			<xs:element name="FieldValue" type="xs:string" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

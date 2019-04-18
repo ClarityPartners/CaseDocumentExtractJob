@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ************************************************************************************* -->
+<!-- Copyright (c) 2007 by Tyler Technologies.                                             -->
+<!--                                                                                       -->
+<!-- This program code is furnished under a license and may be used and copied only in     -->
+<!-- accordance with the terms of such license and with the inclusion of the above         -->
+<!-- copyright notice.  This program code or any other copies thereof may not be provided  -->
+<!-- or otherwise made available to any other persons.                                     -->
+<!-- ************************************************************************************* -->
+<!--                                                                                       -->
+<!-- HISTORY                                                                               -->
+<!--                                                                                       -->
+<!-- 08/10/2007 - Bhavya Malhotra                                                          -->
+<!--   *  Initial Creation                                                                 -->
+<!--   *  This is the schema definition for the api Justice party elements.                -->
+<!--                                                                                       -->
+<!-- ************************************************************************************* -->
+<xs:schema  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+            elementFormDefault="qualified">
+  <xs:include schemaLocation="BaseTypes.xsd"/>
+  <!-- *********************************************************************** -->
+  <!-- *  Party Name                                                           -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.Name">
+    <xs:sequence>
+      <xs:choice    minOccurs="1" maxOccurs="1">
+        <xs:element name="Person"   type="Justice.Party.Person"   />
+        <xs:element name="Nickname" type="Justice.Party.Nickname" />
+        <xs:element name="Business" type="Justice.Party.Business" />
+      </xs:choice>
+      <xs:element name="CurrentKnown" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <!-- *********************************************************************** -->
+  <!-- *  Party Name Person                                                    -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.Person">
+    <xs:sequence>
+      <xs:element name="Title"  type="BASE.NAMETITLE.CODE"   minOccurs="0" maxOccurs="1"/>
+      <xs:element name="First"  type="BASE.REQUIREDSTRING40" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Middle" type="BASE.REQUIREDSTRING40" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Last"   type="BASE.REQUIREDSTRING40" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Suffix" type="BASE.USERCODE"         minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- *********************************************************************** -->
+  <!-- *  Party Business Name                                                  -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.Business">
+    <xs:sequence>
+      <xs:element name="BusinessName" type="BASE.REQUIREDSTRING800" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- *********************************************************************** -->
+  <!-- *  Party NickName                                                       -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.Nickname">
+    <xs:sequence>
+      <xs:element name="PartyNickname" type="BASE.REQUIREDSTRING40" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- *********************************************************************** -->
+  <!-- *  Party Address                                                        -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.Address">
+    <xs:sequence>
+      <xs:choice    minOccurs="1" maxOccurs="1">
+        <xs:element name="StandardUS"         type="BASE.STANDARDUS" />
+        <xs:element name="StandardUSwithAttn" type="BASE.STANDARDUSWITHATTN" />
+        <xs:element name="NonStandardUS"      type="BASE.NONSTANDARDUS" />
+        <xs:element name="Foreign"            type="BASE.FOREIGN" />
+      </xs:choice>
+      <xs:element name="AddressFlags"         type="Justice.Party.Address.AddressFlags" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- ********************************************************************* -->
+  <!-- *  Address Type                                                       -->
+  <!-- ********************************************************************* -->
+  <xs:complexType name="Justice.Party.Address.AddressFlags">
+    <xs:sequence>
+      <xs:element name="Correspondence"  type="BASE.REQUIREDTEXTBOOL" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Undeliverable"   type="BASE.REQUIREDTEXTBOOL" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Confidential"    type="BASE.REQUIREDTEXTBOOL" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- *********************************************************************** -->
+  <!-- * Other Agency Numbers                                                  -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.OtherAgencyNumbers">
+    <xs:sequence>
+      <xs:element name="OtherAgencyNumber" type="Justice.Party.OtherAgencyNumber" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- *********************************************************************** -->
+  <!-- * Other Agency Number                                                   -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.OtherAgencyNumber">
+    <xs:sequence>
+      <xs:element name="AgencyNumber" type="BASE.REQUIREDSTRING20"   minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AgencyType"   type="BASE.USERCODE"           minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- *********************************************************************** -->
+  <!-- * Phone Numbers                                                         -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.Phones">
+    <xs:sequence>
+      <xs:element name="Phone" type="BASE.PHONE" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- *********************************************************************** -->
+  <!-- *  Delete Party Name                                                    -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.DeleteName">
+    <xs:sequence>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element name="Person"   type="Justice.Party.DeletePerson"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- *********************************************************************** -->
+  <!-- *  Delete Party Name Person                                             -->
+  <!-- *********************************************************************** -->
+  <xs:complexType name="Justice.Party.DeletePerson">
+    <xs:sequence>
+      <xs:choice minOccurs="1" maxOccurs="3">
+        <xs:element name="Title"  type="BASE.REQUIREDSTRING0" maxOccurs="1"/>
+        <xs:element name="Middle" type="BASE.REQUIREDSTRING0" maxOccurs="1"/>
+        <xs:element name="Suffix" type="BASE.REQUIREDSTRING0" maxOccurs="1"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
