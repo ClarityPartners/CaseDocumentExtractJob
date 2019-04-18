@@ -15,7 +15,6 @@ namespace CaseDocumentExtractJob.Helpers
       logger.WriteToLog("taskNode: " + taskNode.OuterXml, LogLevel.Verbose);
 
       CaseNumber = taskNode.GetAttribute("CaseNumber");
-      NodeID = taskNode.GetAttribute("NodeID");
       DocumentPath = taskNode.GetAttribute("DocumentPath");
 
       logger.WriteToLog("Instantiated Parameters", LogLevel.Verbose);

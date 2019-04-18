@@ -9,7 +9,7 @@ set prompt= $g
 :: *****************************************************************************************
 
 set ProjectNumber="TODO:UniqueValue"
-set ConsoleLabel="TODO:ReplaceMe"
+set ConsoleLabel="CaseDocumentExportJob"
 set ConsoleGroup="Integration/Job Processing"
 
 

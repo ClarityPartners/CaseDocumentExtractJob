@@ -13,7 +13,7 @@
 
   <!-- Web Files -->
   <asset source="Webs\JobParameterDialog.htm"
-         target="\CustomExtensions\Webs\Infrastructure\JobProcessing\ParamModals\APITransformTemplate.htm"
-         name="APITransformTemplate"
+         target="\CustomExtensions\Webs\Infrastructure\JobProcessing\ParamModals\JobParameterDialog.htm"
+         name="CaseDocumentExportJob"
          version="1.0.0.0"/>
 </package>

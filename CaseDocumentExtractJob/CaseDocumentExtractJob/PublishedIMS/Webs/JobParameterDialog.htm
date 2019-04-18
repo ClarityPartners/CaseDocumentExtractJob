@@ -89,14 +89,12 @@ Sub PopulateControls()
 
   If Not oNode Is Nothing Then
     txtCaseNumber.value = oNode.GetAttribute("CaseNumber") & vbNullString
-    txtNodeID.value = oNode.GetAttribute("NodeID") & vbNullString
     txtDocumentPath.value = oNode.GetAttribute("DocumentPath") & vbNullString
   End If
 End Sub
 
 Sub DisablePage()
   txtCaseNumber.disabled = True
-  txtNodeID.disabled = True
   txtDocumentPath.disabled = True
 End Sub
 
@@ -159,7 +157,6 @@ Function IsDirty()
   IsDirty = False
 
   If Len(txtCaseNumber.value) > 0     Or _
-     Len(txtNodeID.value) > 0 Or _
      Len(txtDocumentPath.value) > 0    Then
      IsDirty = True
   End If
@@ -167,7 +164,6 @@ End Function
 
 Function ValidateRequiredFields()
   Call txtCaseNumber.Validate(True)
-  Call txtNodeID.Validate(True)
   Call txtDocumentPath.Validate(True)
 
   'Show errors if they exist
@@ -211,7 +207,6 @@ Sub PopulateControlsFromRegistry()
 
   If Not oNode Is Nothing Then
     txtCaseNumber.value = oNode.GetAttribute("CaseNumber") & vbNullString
-    txtNodeID.value = oNode.GetAttribute("NodeID") & vbNullString
     txtDocumentPath.value = oNode.GetAttribute("EventCode") & vbNullString
   End If
 End Sub
@@ -228,7 +223,6 @@ Sub UpdateTaskXML(oTaskXML)
 
   If Not oNode is Nothing Then
     Call oNode.SetAttribute("CaseNumber", txtCaseNumber.value)
-    Call oNode.SetAttribute("NodeID", txtNodeID.value)
     Call oNode.SetAttribute("DocumentPath", txtDocumentPath.value)
     Call oTaskXML.AppendChild( oNode )
   End If
@@ -323,13 +317,6 @@ End Function
         <td class="ssLabel" style="padding-left: 25px;">Case Number</td>
         <td>
           <tyl:textbox id="txtCaseNumber" required="true" style="width: 290px" errorlabel="Case Number" errortag="txtCaseNumber" />
-        </td>
-      </tr>
-
-      <tr style="padding-bottom: 1px;">
-        <td class="ssLabel" style="padding-left: 25px;">Node ID</td>
-        <td>
-          <tyl:textbox id="txtNodeID" required="true" style="width: 290px" errorlabel="Node ID" errortag="txtNodeID" />
         </td>
       </tr>
 
