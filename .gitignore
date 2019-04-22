@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs
+/CaseDocumentExtractJob/.vs/CaseDocumentExtractJob/v15/Server/sqlite3
+/CaseDocumentExtractJob/CaseDocumentExtractJob/ApiJobTemplate/obj
+/CaseDocumentExtractJob/CaseDocumentExtractJob/_TestHarness
+/CaseDocumentExtractJob/CaseDocumentExtractJob/PublishedIMS

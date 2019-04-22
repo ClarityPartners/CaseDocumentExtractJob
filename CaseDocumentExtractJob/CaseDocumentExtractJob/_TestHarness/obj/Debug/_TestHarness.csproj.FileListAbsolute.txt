@@ -14,3 +14,17 @@ C:\GitProjects\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtract
 C:\GitProjects\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\ActiveReports.dll
 C:\GitProjects\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\ActiveReports.Viewer.dll
 C:\GitProjects\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\CaseDocumentExtractJob.pdb
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\_TestHarness.exe.config
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\_TestHarness.exe
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\_TestHarness.pdb
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\CaseDocumentExtractJob.dll
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\Tyler.Integration.Framework.dll
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\Tyler.Integration.General.dll
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\Tyler.Odyssey.API.Shared.APIEntities.dll
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\ADODB.dll
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\bin\Debug\CaseDocumentExtractJob.pdb
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\obj\Debug\_TestHarness.csprojAssemblyReference.cache
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\obj\Debug\_TestHarness.csproj.CoreCompileInputs.cache
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\obj\Debug\_TestHarness.csproj.CopyComplete
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\obj\Debug\_TestHarness.exe
+C:\Users\a.carpio\Source\Repos\CaseDocumentExtractJob\CaseDocumentExtractJob\CaseDocumentExtractJob\_TestHarness\obj\Debug\_TestHarness.pdb

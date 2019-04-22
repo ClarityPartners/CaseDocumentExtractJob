@@ -166,13 +166,6 @@ namespace CaseDocumentExtractJob
 
     }
 
-
-
-
-
-
-
-
     // Process Transaction
     public string ProcessTransaction(string transXml)
     {
