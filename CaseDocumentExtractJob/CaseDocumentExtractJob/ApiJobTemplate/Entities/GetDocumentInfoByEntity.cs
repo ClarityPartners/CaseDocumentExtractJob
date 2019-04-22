@@ -23,7 +23,7 @@ namespace Tyler.Odyssey.API.JobTemplate
   [System.Diagnostics.DebuggerStepThroughAttribute()]
   [System.ComponentModel.DesignerCategoryAttribute("code")]
   [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-  [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+  [System.Xml.Serialization.XmlRootAttribute(Namespace = "", ElementName = "Message", IsNullable = false)]
   public partial class GetDocumentInfoByEntity : BaseGeneratedAPIEntity
   {
 

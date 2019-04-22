@@ -12,8 +12,8 @@
   </com:server>
 
   <!-- Web Files -->
-  <asset source="Webs\JobParameterDialog.htm"
-         target="\CustomExtensions\Webs\Infrastructure\JobProcessing\ParamModals\JobParameterDialog.htm"
+  <asset source="Webs\CaseDocumentExtractParams.htm"
+         target="\CustomExtensions\Webs\Infrastructure\JobProcessing\ParamModals\CaseDocumentExtractParams.htm"
          name="CaseDocumentExportJob"
          version="1.0.0.0"/>
 </package>

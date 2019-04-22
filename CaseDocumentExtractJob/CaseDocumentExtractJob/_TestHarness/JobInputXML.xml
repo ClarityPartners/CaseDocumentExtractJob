@@ -1,11 +1,12 @@
-﻿<Job JobProcessID="5859" JobID="100118" Pri="1" Descr="Tyler API Transform" UserID="1" ProductID='1' TSQ='2013-11-27 18:28:19' TSST='2013-11-27 18:28:20' NumOfTasks='1'>
+﻿<Job JobProcessID="5859" JobID="100118" Pri="1" Descr="CaseDocumentExtractJob" UserID="945" ProductID='1' TSQ='2013-11-27 18:28:19' 
+     TSST='2013-11-27 18:28:20' NumOfTasks='1'>
   <Tasks>
     <Task ID="100118"/>
   </Tasks>
   <Params>
     <Input>
       <Task ID="100118">
-        <Params CaseNumber="DC-101-CA-18-002" NodeID="1" EventCode="CF"/>
+        <Params CaseNumber="18CR1432501" NodeID="1" DocumentPath="\\CCCIS01-TEST\Inbound Files\CaseImageFileDrop"/>
       </Task>
     </Input>
     <Output>

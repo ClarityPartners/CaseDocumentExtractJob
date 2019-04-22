@@ -3,21 +3,22 @@ using Tyler.Odyssey.Utils;
 
 namespace CaseDocumentExtractJob.Helpers
 {
-  public class Parameters
-  {
-    public string CaseNumber { get; private set; }
-    public string NodeID { get; private set; }
-    public string DocumentPath { get; private set; }
-
-    public Parameters(XmlElement taskNode, UtilsLogger logger)
+    public class Parameters
     {
-      logger.WriteToLog("Beginning Parameters() constructor", LogLevel.Verbose);
-      logger.WriteToLog("taskNode: " + taskNode.OuterXml, LogLevel.Verbose);
+        public string CaseNumber { get; private set; }
+        public string NodeID { get; private set; }
+        public string DocumentPath { get; private set; }
 
-      CaseNumber = taskNode.GetAttribute("CaseNumber");
-      DocumentPath = taskNode.GetAttribute("DocumentPath");
+        public Parameters(XmlElement taskNode, UtilsLogger logger)
+        {
+            logger.WriteToLog("Beginning Parameters() constructor", LogLevel.Verbose);
+            logger.WriteToLog("taskNode: " + taskNode.OuterXml, LogLevel.Verbose);
 
-      logger.WriteToLog("Instantiated Parameters", LogLevel.Verbose);
+            CaseNumber = taskNode.GetAttribute("CaseNumber");
+            DocumentPath = taskNode.GetAttribute("DocumentPath");
+            NodeID = taskNode.GetAttribute("NodeID");
+
+            logger.WriteToLog("Instantiated Parameters", LogLevel.Verbose);
+        }
     }
-  }
 }

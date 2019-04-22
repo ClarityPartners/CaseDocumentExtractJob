@@ -13,7 +13,7 @@
                    desc="CaseDocumentExportJob"
                    jobtaskcategorykey="DATA"
                    programid="CaseDocumentExtractJob.JobTask"
-                   parametersurl="/CustomExtensions/Infrastructure/JobProcessing/ParamModals/JobParameterDialog.htm"
+                   parametersurl="/CustomExtensions/Infrastructure/JobProcessing/ParamModals/CaseDocumentExtractParams.htm"
                    parameterswidth="480"
                    parametersheight="160"
                    publicaccess="true"

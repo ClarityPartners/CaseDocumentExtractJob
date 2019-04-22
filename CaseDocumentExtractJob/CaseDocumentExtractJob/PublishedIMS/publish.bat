@@ -8,7 +8,7 @@ set prompt= $g
 :: When using this PUBLISH.BAT for a new feature, you MUST update the following definitions!
 :: *****************************************************************************************
 
-set ProjectNumber="TODO:UniqueValue"
+set ProjectNumber="12753"
 set ConsoleLabel="CaseDocumentExportJob"
 set ConsoleGroup="Integration/Job Processing"
 

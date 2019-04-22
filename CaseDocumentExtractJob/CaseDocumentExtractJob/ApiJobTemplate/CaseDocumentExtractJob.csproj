@@ -90,6 +90,7 @@
     <Compile Include="Entities\GetDocumentInfoByEntity.cs" />
     <Compile Include="Entities\GetDocumentInfoByEntityResult.cs" />
     <Compile Include="Entities\GetDocumentResult.cs" />
+    <Compile Include="Entities\TransactionResultEntity.cs" />
     <Compile Include="Exceptions\BaseCustomException.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\Context.cs" />
