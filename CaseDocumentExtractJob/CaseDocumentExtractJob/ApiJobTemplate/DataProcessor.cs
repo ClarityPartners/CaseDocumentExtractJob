@@ -82,11 +82,6 @@ namespace CaseDocumentExtractJob
                 // Find all Documents Tied to the Case
                 string transactionResponse = ProcessCaseDocumentIDSearchTransaction();
 
-                // Extract Node ID from response xml                
-                XmlDocument nodeXML = new XmlDocument();                
-                nodeXML.LoadXml(transactionResponse);
-                XmlNode nodeIDNode = nodeXML.SelectSingleNode("/TxnResponse/Result[@MessageType='FindCaseByCaseNumber']/NodeID");                
-                
                 // Extract documentIDs from response xml
                 List<string> caseDocumentIDList = ExtractCurrentDocumentVersionIDs(transactionResponse);                
 
@@ -118,43 +113,6 @@ namespace CaseDocumentExtractJob
             }
 
             ContinueWithProcessing("Job Completed Successfully");
-        }
-
-        // Call with a single API
-        private string FindCase()
-        {
-            Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity entity = new Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity();
-            entity.SetStandardAttributes(int.Parse(Context.Parameters.NodeID), "CaseDocumentExtractJob", Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
-            entity.CaseNumber = Context.Parameters.CaseNumber;
-
-            OdysseyMessage msg = new OdysseyMessage(entity.ToOdysseyMessageXml(), Context.SiteID);
-            MessageHandlerFactory.Instance.ProcessMessage(msg);
-
-            StringReader reader = new StringReader(msg.ResponseDocument.OuterXml);
-            XmlSerializer serializer = new XmlSerializer(typeof(Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberResultEntity));
-            Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberResultEntity result = (Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberResultEntity)serializer.Deserialize(reader);
-
-            return result.CaseID;
-        }
-
-        private GetDocumentInfoByEntityResultEntity GetDocumentInfo(string caseID)
-        {
-            GetDocumentInfoByEntity entity = new GetDocumentInfoByEntity();
-            entity.SetStandardAttributes(int.Parse("215"), "CaseDocumentExtractJob", Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
-            entity.ReferenceNumber = "CaseDocumentExtractJob";
-            entity.Source = "CaseDocumentExtractJob";
-            entity.UserID = Constants.systemUserID;
-            entity.EntityID = caseID;
-            entity.EntityType = DocumentByEntityEntityType.Case;
-            
-            OdysseyMessage msg = new OdysseyMessage(entity.ToOdysseyMessageXml(), Context.SiteID);
-            MessageHandlerFactory.Instance.ProcessMessage(msg);
-
-            StringReader reader = new StringReader(msg.ResponseDocument.OuterXml);
-            XmlSerializer serializer = new XmlSerializer(typeof(Tyler.Odyssey.API.JobTemplate.GetDocumentInfoByEntityResultEntity));
-            Tyler.Odyssey.API.JobTemplate.GetDocumentInfoByEntityResultEntity result = (Tyler.Odyssey.API.JobTemplate.GetDocumentInfoByEntityResultEntity)serializer.Deserialize(reader);
-
-            return result;
         }
 
         private string ProcessCaseDocumentIDSearchTransaction()
@@ -194,17 +152,14 @@ namespace CaseDocumentExtractJob
                 getDocumentInfoByEntity.EntityID = "#|CaseID|#";
                 getDocumentInfoByEntity.EntityType = DocumentByEntityEntityType.Case;
                 txn.Messages.Add(getDocumentInfoByEntity);
-                Logger.WriteToLog("Transaction XML: " + txn.ToOdysseyTransactionXML(), LogLevel.Verbose);
                 
                 // 3. Process Transaction
-                string response = ProcessTransaction(txn.ToOdysseyTransactionXML());                
-                Logger.WriteToLog("Response XML: " + response, LogLevel.Verbose);
-
+                string response = ProcessTransaction(txn.ToOdysseyTransactionXML()); 
                 return response;       
             }
             catch (Exception e)
             {
-                Logger.WriteToLog("Hey, you hit an error: " + e, LogLevel.Verbose);
+                Logger.WriteToLog("Error forming Document Transaction XML: " + e, LogLevel.Verbose);
                 return null;
             }           
         }
@@ -249,6 +204,7 @@ namespace CaseDocumentExtractJob
             {
                 Logger.WriteToLog("There was an error extracting current document version ID: " 
                     + CurrentDocumentVersionID + ". Error: " + e, LogLevel.Verbose);
+                Context.Errors.Add(new BaseCustomException(e.Message));
                 return null;
             }
         }
@@ -309,7 +265,7 @@ namespace CaseDocumentExtractJob
 
                 ITYLJobTaskUtility taskUtility = (JobProcessingInterface.ITYLJobTaskUtility)Activator.CreateInstance(Type.GetTypeFromProgID("Tyler.Odyssey.JobProcessing.TYLJobTaskUtility.cTask"));
 
-                taskUtility.AddTextMessage(Context.SiteID, jobProcessID, jobTaskID, "The job completed successfully, but some cases were not processed. Please see the attached error file for a list of those cases and the errors associated with each. A list manager list containing the cases in error was also created.", ref Parms);
+                taskUtility.AddTextMessage(Context.SiteID, jobProcessID, jobTaskID, "The job completed successfully, but errors occurred. Please see the log file for the errors associated with the job.", ref Parms);
             }
         }
 
