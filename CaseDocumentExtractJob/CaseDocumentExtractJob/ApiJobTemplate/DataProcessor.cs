@@ -79,18 +79,28 @@ namespace CaseDocumentExtractJob
             // TODO: Update API Processing Logic
             try
             {
-                //string caseID = FindCase();
-                string caseID = "11358100";
-                GetDocumentInfoByEntityResultEntity result = GetDocumentInfo(caseID);
-
                 // Find all Documents Tied to the Case
-                List<string> caseDocumentIDList = ProcessDocumentSearchTransaction();
+                string transactionResponse = ProcessCaseDocumentIDSearchTransaction();
 
-                foreach (var documentID in caseDocumentIDList)
-                {
-                    GetDocument(documentID);
+                // Extract Node ID from response xml                
+                XmlDocument nodeXML = new XmlDocument();                
+                nodeXML.LoadXml(transactionResponse);
+                XmlNode nodeIDNode = nodeXML.SelectSingleNode("/TxnResponse/Result[@MessageType='FindCaseByCaseNumber']/NodeID");                
+                
+                // Extract documentIDs from response xml
+                List<string> caseDocumentIDList = ExtractCurrentDocumentVersionIDs(transactionResponse);                
+
+                if (caseDocumentIDList != null)
+                    {
+                    foreach (var documentID in caseDocumentIDList)
+                    {
+                        GetDocument(documentID);
+                    }
                 }
-
+                else
+                {
+                    Logger.WriteToLog("No documents are found for case number: " + Context.Parameters.CaseNumber, LogLevel.Verbose);
+                }
             }
             catch (Exception e)
             {
@@ -133,12 +143,10 @@ namespace CaseDocumentExtractJob
             entity.SetStandardAttributes(int.Parse("215"), "CaseDocumentExtractJob", Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
             entity.ReferenceNumber = "CaseDocumentExtractJob";
             entity.Source = "CaseDocumentExtractJob";
-            entity.UserID = "945";
+            entity.UserID = Constants.systemUserID;
             entity.EntityID = caseID;
             entity.EntityType = DocumentByEntityEntityType.Case;
-
-            string teststring = entity.ToOdysseyMessageXml();
-
+            
             OdysseyMessage msg = new OdysseyMessage(entity.ToOdysseyMessageXml(), Context.SiteID);
             MessageHandlerFactory.Instance.ProcessMessage(msg);
 
@@ -149,26 +157,7 @@ namespace CaseDocumentExtractJob
             return result;
         }
 
-        private GetDocumentResultEntity GetDocument(string DocumentID)
-        {
-            Tyler.Odyssey.API.JobTemplate.GetDocumentEntity entity = new Tyler.Odyssey.API.JobTemplate.GetDocumentEntity();
-            entity.SetStandardAttributes(int.Parse("200"), "GetDocument", Context.UserID, "GetDocument", Context.SiteID);
-            entity.UserID = "1";
-            entity.ItemElementName = Tyler.Odyssey.API.JobTemplate.ItemChoiceType.FilePath;
-            entity.Item = Context.Parameters.DocumentPath;
-            entity.VersionID = DocumentID;
-
-            OdysseyMessage msg = new OdysseyMessage(entity.ToOdysseyMessageXml(), Context.SiteID);
-            MessageHandlerFactory.Instance.ProcessMessage(msg);
-
-            StringReader reader = new StringReader(msg.ResponseDocument.OuterXml);
-            XmlSerializer serializer = new XmlSerializer(typeof(Tyler.Odyssey.API.JobTemplate.GetDocumentResultEntity));
-            Tyler.Odyssey.API.JobTemplate.GetDocumentResultEntity result = (Tyler.Odyssey.API.JobTemplate.GetDocumentResultEntity)serializer.Deserialize(reader);
-            return result;
-        }
-
-
-        public List<string> ProcessDocumentSearchTransaction()
+        private string ProcessCaseDocumentIDSearchTransaction()
         {
             TransactionEntity txn = new TransactionEntity();
             txn.TransactionType = "CaseDocumentExtractJob";
@@ -179,41 +168,89 @@ namespace CaseDocumentExtractJob
             AddDataPropagationEntity dataPropagationEntity = new AddDataPropagationEntity();
 
             // 1. Adding CaseID
-            txn.DataPropagation.AddIntraTxnDataPropagationEntry("#|CaseID|#", @"/TxnResponse/Result[@MessageType=""FindCaseByCaseNumber""]/CaseID");
 
-            // 2. Adding Messages
-            // a. Find Case By Case Number
-            Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity findCaseByCaseNumberEntity = new Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity();
-            findCaseByCaseNumberEntity.SetStandardAttributes(int.Parse(Context.Parameters.NodeID), "CaseDocumentExtractJob", 
-                Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
-            findCaseByCaseNumberEntity.CaseNumber = Context.Parameters.CaseNumber;
-            txn.Messages.Add(findCaseByCaseNumberEntity);
+            txn.DataPropagation.AddIntraTxnDataPropagationEntry("#|CaseID|#", @"//TxnResponse/Result[@MessageType='FindCaseByCaseNumber']/CaseID");            
 
-            // b. Get Case Documents
-            GetDocumentInfoByEntity getDocumentInfoByEntity = new GetDocumentInfoByEntity();
-            getDocumentInfoByEntity.SetStandardAttributes(int.Parse("215"), "CaseDocumentExtractJob", Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
-            getDocumentInfoByEntity.ReferenceNumber = "CaseDocumentExtractJob";
-            getDocumentInfoByEntity.Source = "CaseDocumentExtractJob";
-            getDocumentInfoByEntity.UserID = "945";
-            getDocumentInfoByEntity.EntityID = "#|CaseID|#";
-            getDocumentInfoByEntity.EntityType = DocumentByEntityEntityType.Case;
-            txn.Messages.Add(getDocumentInfoByEntity);
+            // 2. Adding Messages            
+            Logger.WriteToLog("Building FindCaseByCaseNumber", LogLevel.Verbose);
+            
+            try
+            {
+                // a. Find Case By Case Number
+                Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity findCaseByCaseNumberEntity = new Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity();                
+                findCaseByCaseNumberEntity.SetStandardAttributes(1, "CaseDocumentExtractJob", 
+                    Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
+                findCaseByCaseNumberEntity.NodeID = "1";
+                findCaseByCaseNumberEntity.CaseNumber = Context.Parameters.CaseNumber;
+                txn.Messages.Add(findCaseByCaseNumberEntity);            
 
-            string response = ProcessTransaction(txn.ToOdysseyTransactionXML());
-            Logger.WriteToLog(response, LogLevel.Verbose);
+                // b. Get Case Documents
+                Logger.WriteToLog("Building GetDocumentInfoByEntity", LogLevel.Verbose);
+                GetDocumentInfoByEntity getDocumentInfoByEntity = new GetDocumentInfoByEntity();
+                getDocumentInfoByEntity.SetStandardAttributes(0, "CaseDocumentExtractJob", Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
+                getDocumentInfoByEntity.ReferenceNumber = "CaseDocumentExtractJob";
+                getDocumentInfoByEntity.Source = "CaseDocumentExtractJob";
+                getDocumentInfoByEntity.UserID = Constants.systemUserID;
+                getDocumentInfoByEntity.EntityID = "#|CaseID|#";
+                getDocumentInfoByEntity.EntityType = DocumentByEntityEntityType.Case;
+                txn.Messages.Add(getDocumentInfoByEntity);
+                Logger.WriteToLog("Transaction XML: " + txn.ToOdysseyTransactionXML(), LogLevel.Verbose);
+                
+                // 3. Process Transaction
+                string response = ProcessTransaction(txn.ToOdysseyTransactionXML());                
+                Logger.WriteToLog("Response XML: " + response, LogLevel.Verbose);
 
-            // 3. Deserialize string to XML object            
-            //StringReader reader = new StringReader(response);
-            //XmlSerializer serializer = new XmlSerializer(typeof(TransactionResultEntity));
-            //TransactionResultEntity transactionResultEntity = (TransactionResultEntity)serializer.Deserialize(reader);
+                return response;       
+            }
+            catch (Exception e)
+            {
+                Logger.WriteToLog("Hey, you hit an error: " + e, LogLevel.Verbose);
+                return null;
+            }           
+        }
 
+        private List<string> ExtractCurrentDocumentVersionIDs(string response)
+        {            
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(response);
+            XmlNodeList documentIdNodes = doc.SelectNodes("/TxnResponse/Result[@MessageType='GetDocumentInfoByEntity']/Documents/Document/CurrentDocumentVersionID");
 
-            // 4. Turn result into a list of document ids.
+            var documentIDList = documentIdNodes.Cast<XmlNode>()
+                .Select(node => node.InnerText)
+                .ToList();
+            
+            return documentIDList;
+        }
 
-            //foreach var documentID in transactionResultEntity.ResultList.
-            List<string> tempVar = new List<string>();
-            tempVar.Add("Hello");
-            return tempVar;
+        private GetDocumentResultEntity GetDocument(string CurrentDocumentVersionID)
+        {
+            try
+            {
+                // Create GetDocument API
+                Tyler.Odyssey.API.JobTemplate.GetDocumentEntity entity = new Tyler.Odyssey.API.JobTemplate.GetDocumentEntity();
+                entity.SetStandardAttributes(0, "GetDocument", Context.UserID, "GetDocument", Context.SiteID);
+                entity.ReferenceNumber = "CaseDocumentExtractJob";
+                entity.Source = "CaseDocumentExtractJob";
+                entity.UserID = Constants.systemUserID;
+                entity.ItemElementName = Tyler.Odyssey.API.JobTemplate.ItemChoiceType.FilePath;
+                entity.Item = Context.Parameters.DocumentPath;
+                entity.VersionID = CurrentDocumentVersionID;                
+                OdysseyMessage msg = new OdysseyMessage(entity.ToOdysseyMessageXml(), Context.SiteID);
+
+                // Process GetDocument API
+                MessageHandlerFactory.Instance.ProcessMessage(msg);
+                StringReader reader = new StringReader(msg.ResponseDocument.OuterXml);
+                XmlSerializer serializer = new XmlSerializer(typeof(GetDocumentResultEntity));
+                GetDocumentResultEntity result = (GetDocumentResultEntity)serializer.Deserialize(reader);
+                Logger.WriteToLog("Current Document Version ID " + CurrentDocumentVersionID + " was successfully dropped to specified folder.", LogLevel.Verbose);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Logger.WriteToLog("There was an error extracting current document version ID: " 
+                    + CurrentDocumentVersionID + ". Error: " + e, LogLevel.Verbose);
+                return null;
+            }
         }
 
         // Process Transaction

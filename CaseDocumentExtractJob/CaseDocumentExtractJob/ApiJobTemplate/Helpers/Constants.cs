@@ -19,5 +19,6 @@ namespace CaseDocumentExtractJob.Helpers
     // LogLevel:  1 - Basic, 2 - Intermediate, 3 - Verbose.  3 is recommended.
     // LogPath:  The path to which log files will be saved on the server.  "C:\Logs\<JobName>" is recommended.
     internal const string LOG_REGISTRY_KEY = "CaseDocumentExtractJob";
+    public const string systemUserID = "945";
   }
 }
