@@ -6,7 +6,9 @@
   <Params>
     <Input>
       <Task ID="100118">
-        <Params CaseNumber="18CR1432501" NodeID="1" DocumentPath="\\CCCIS01-TEST\Inbound Files\CaseImageFileDrop"/>
+        <Params CaseNumber="2018COTO000006" NodeID="1" 
+                BaseDocumentPath="\\CCCIS01-TEST\Inbound Files\CaseImageFileDrop"
+                ReportFolderName="OdysseyReport" InputFolderName="Input"/>
       </Task>
     </Input>
     <Output>

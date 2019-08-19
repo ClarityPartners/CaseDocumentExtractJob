@@ -16,6 +16,8 @@ using System.Xml.Serialization;
 using Tyler.Odyssey.API.Shared;
 using Tyler.Integration.General;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace CaseDocumentExtractJob
 {
@@ -75,31 +77,56 @@ namespace CaseDocumentExtractJob
         public override void Run()
         {
             Logger.WriteToLog("Beginning Run Method", LogLevel.Basic);
-
+            string fullNodePath = "";
             // TODO: Update API Processing Logic
             try
-            {
+            {   
                 // Find all Documents Tied to the Case
                 string transactionResponse = ProcessCaseDocumentIDSearchTransaction();
+                if (transactionResponse == null)
+                {
+                    WriteToCaseManifest(Context.Parameters.CaseNumber
+                        + ",,,,,,There was an error with the job.  Please speak to a system admin to view the error log.", fullNodePath);
+                }
+                else
+                {
+                    // Extract documentIDs from response xml
+                    string nodeID = ExtractNodeID(transactionResponse);
+                    fullNodePath = GetFilePath(nodeID);
+                    Logger.WriteToLog("Full Node Path: " + fullNodePath, LogLevel.Verbose);
+                }
 
-                // Extract documentIDs from response xml
-                List<string> caseDocumentIDList = ExtractCurrentDocumentVersionIDs(transactionResponse);                
-
+                // Extract data points from document response xml
+                List<Entities.FileNameInfo> caseDocumentIDList = ExtractTransactionElements(transactionResponse);                
                 if (caseDocumentIDList != null)
+                {
+                    int count = 0;
+                    foreach (var fileData in caseDocumentIDList)
                     {
-                    foreach (var documentID in caseDocumentIDList)
-                    {
-                        GetDocument(documentID);
+                        string newFileName = "";
+                        Logger.WriteToLog("-------------------------- Iteration " + count + " --------------------------", LogLevel.Verbose);
+                        GetDocumentResultEntity getDocumentResultEntity = GetDocument(fileData.DocumentID, fileData.DocumentEffectiveDate,fullNodePath);
+                        if (getDocumentResultEntity != null)
+                        {
+                            newFileName = RenameFile(getDocumentResultEntity.FilePath[0], fileData);
+                            WriteToCaseManifest(Context.Parameters.CaseNumber + "," + fileData.DocumentEffectiveDate + ","
+                            + fileData.DocumentID + "," + newFileName + "," + "SUCCESS" + "," + "Document extracted successfully."
+                            , fullNodePath);
+                        }
+                        count++;
                     }
                 }
                 else
                 {
-                    Logger.WriteToLog("No documents are found for case number: " + Context.Parameters.CaseNumber, LogLevel.Verbose);
+                    Logger.WriteToLog("No documents are found for case number: " + Context.Parameters.CaseNumber, LogLevel.Verbose);                    
+                    WriteToCaseManifest(Context.Parameters.CaseNumber + ",,,,,,No documents are found for the provided case number.", fullNodePath);
                 }
             }
             catch (Exception e)
             {
-                Context.Errors.Add(new BaseCustomException(e.Message));
+                Logger.WriteToLog("Main Program Error: " + e, LogLevel.Verbose);
+                Context.Errors.Add(new BaseCustomException(e.Message));                
+                WriteToCaseManifest(Context.Parameters.CaseNumber + ",,,,,There was an error: " + e.Message, fullNodePath);
             }
 
             // TODO: Handle errors we've collected during the job run.
@@ -111,7 +138,8 @@ namespace CaseDocumentExtractJob
                 // Collect errors, write them to a file, and attach the file to the job.
                 LogErrors();
             }
-
+            Logger.WriteToLog("Trying to attach case manifest to Job Output. FilePath: " + fullNodePath + @"\" + Context.Parameters.ReportFolderName, LogLevel.Verbose);
+            AttachCaseManifestFileToJobOutput(fullNodePath + @"\" + Context.Parameters.ReportFolderName);
             ContinueWithProcessing("Job Completed Successfully");
         }
 
@@ -126,24 +154,20 @@ namespace CaseDocumentExtractJob
             AddDataPropagationEntity dataPropagationEntity = new AddDataPropagationEntity();
 
             // 1. Adding CaseID
+            txn.DataPropagation.AddIntraTxnDataPropagationEntry("#|CaseID|#", @"//TxnResponse/Result[@MessageType='FindCaseByCaseNumber']/CaseID");
 
-            txn.DataPropagation.AddIntraTxnDataPropagationEntry("#|CaseID|#", @"//TxnResponse/Result[@MessageType='FindCaseByCaseNumber']/CaseID");            
+            // 2. Adding Messages      
 
-            // 2. Adding Messages            
-            Logger.WriteToLog("Building FindCaseByCaseNumber", LogLevel.Verbose);
-            
             try
             {
                 // a. Find Case By Case Number
-                Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity findCaseByCaseNumberEntity = new Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity();                
-                findCaseByCaseNumberEntity.SetStandardAttributes(1, "CaseDocumentExtractJob", 
-                    Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
+                Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity findCaseByCaseNumberEntity = new Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity();
+                findCaseByCaseNumberEntity.SetStandardAttributes(1, "CaseDocumentExtractJob", Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
                 findCaseByCaseNumberEntity.NodeID = "1";
                 findCaseByCaseNumberEntity.CaseNumber = Context.Parameters.CaseNumber;
-                txn.Messages.Add(findCaseByCaseNumberEntity);            
+                txn.Messages.Add(findCaseByCaseNumberEntity);
 
-                // b. Get Case Documents
-                Logger.WriteToLog("Building GetDocumentInfoByEntity", LogLevel.Verbose);
+                // b. Get Case Documents                
                 GetDocumentInfoByEntity getDocumentInfoByEntity = new GetDocumentInfoByEntity();
                 getDocumentInfoByEntity.SetStandardAttributes(0, "CaseDocumentExtractJob", Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
                 getDocumentInfoByEntity.ReferenceNumber = "CaseDocumentExtractJob";
@@ -152,33 +176,171 @@ namespace CaseDocumentExtractJob
                 getDocumentInfoByEntity.EntityID = "#|CaseID|#";
                 getDocumentInfoByEntity.EntityType = DocumentByEntityEntityType.Case;
                 txn.Messages.Add(getDocumentInfoByEntity);
-                
-                // 3. Process Transaction
-                string response = ProcessTransaction(txn.ToOdysseyTransactionXML()); 
-                return response;       
+
+                Logger.WriteToLog("GetDocID Transaction String: " + txn.ToOdysseyTransactionXML(), LogLevel.Verbose);
+
+                // 3. Process Transaction   
+                var blah = txn.ToOdysseyTransactionXML();
+                string response = ProcessTransaction(txn.ToOdysseyTransactionXML());
+                return response;
             }
             catch (Exception e)
             {
                 Logger.WriteToLog("Error forming Document Transaction XML: " + e, LogLevel.Verbose);
                 return null;
-            }           
+            }
         }
 
-        private List<string> ExtractCurrentDocumentVersionIDs(string response)
-        {            
+        private List<Entities.FileNameInfo> ExtractTransactionElements(string response)
+        {
+
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(response);
-            XmlNodeList documentIdNodes = doc.SelectNodes("/TxnResponse/Result[@MessageType='GetDocumentInfoByEntity']/Documents/Document/CurrentDocumentVersionID");
+            //XmlNodeList documentIdNodes = doc.SelectNodes("/TxnResponse/Result[@MessageType='GetDocumentInfoByEntity']/Documents/Document/CurrentDocumentVersionID");
+            XmlNodeList documentNodes = doc.SelectNodes("/TxnResponse/Result[@MessageType='GetDocumentInfoByEntity']/Documents/Document");
 
-            var documentIDList = documentIdNodes.Cast<XmlNode>()
-                .Select(node => node.InnerText)
-                .ToList();
+            List<Entities.FileNameInfo> fileNameInfoList = new List<Entities.FileNameInfo>();
             
-            return documentIDList;
+            foreach (XmlNode node in documentNodes)
+            {
+                Entities.FileNameInfo fileNameInfo = new Entities.FileNameInfo();
+                // Get DocumentID
+                fileNameInfo.DocumentID = node.SelectSingleNode("CurrentDocumentVersionID").InnerText;
+                // Get Document Effective Date
+                fileNameInfo.DocumentEffectiveDate = node.SelectSingleNode("DocumentVersions/DocumentVersion[DocumentVersionID=" 
+                    + fileNameInfo.DocumentID + "]/EffectiveDate").InnerText;
+
+                fileNameInfoList.Add(fileNameInfo);
+            }
+            return fileNameInfoList;
         }
 
-        private GetDocumentResultEntity GetDocument(string CurrentDocumentVersionID)
+        private string ExtractNodeID(string response)
         {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(response);
+            XmlNode nodeNode = doc.SelectSingleNode("/TxnResponse/Result[@MessageType='FindCaseByCaseNumber']/NodeID");
+
+            return nodeNode.InnerText;
+        }
+
+        private string GetFilePath(string nodeID)
+        {
+            string filePath = Context.Parameters.BaseDocumentPath + @"\" + GetNodePath(nodeID);
+            Logger.WriteToLog("GetFilePath: " + filePath, LogLevel.Verbose);
+            return Context.Parameters.BaseDocumentPath + @"\" + GetNodePath(nodeID);             
+        }
+
+        private string GetNodePath(string nodeID)
+        {
+            //05072019 - Updated to only use the parent
+            string finalNodeFilePath = "";
+
+            // Initial Node Call
+            string firstQuery = "SELECT TOP 1 NodeID, NodeIDParent, OrgUnitName, NodeLevel, OrgUnitTypeDescription"
+                + " FROM Operations.dbo.fnGetNodeList('" + Context.SiteID + "')"
+                + " WHERE NodeID = " + nodeID;
+
+            //DataSet dataSet = GetSqlDataSet(nodeID, firstQuery);
+            DataSet dataSet = GetSqlDataSet(firstQuery);
+            DataTable dataTable = dataSet.Tables[0];
+
+            Logger.WriteToLog($"DataTable Count: {dataTable.Rows.Count}", LogLevel.Verbose);
+
+            if (dataTable.Rows.Count > 0)
+            {
+                
+                DataRow row = dataTable.Rows[0];
+                string nodeIDParent = row[1]?.ToString();
+                var fileFolder = row[2]?.ToString();
+                int nodeLevel = int.Parse(row[3]?.ToString());
+
+                if (nodeLevel == 2)
+                    finalNodeFilePath = fileFolder.Replace(" ", "_");
+                else
+                {
+                    //finalNodeFilePath = fileFolder;
+                    Logger.WriteToLog("Initial Node Level: " + nodeLevel, LogLevel.Verbose);
+                    for (int i = nodeLevel; i >= 2; i--)
+                    {
+                        Logger.WriteToLog("Iteration: " + i, LogLevel.Verbose);
+                        string subsequentQuery = "SELECT TOP 1 NodeID, NodeIDParent, OrgUnitName, NodeLevel, OrgUnitTypeDescription"
+                            + " FROM Operations.dbo.fnGetNodeList('" + Context.SiteID + "')"
+                            + " WHERE NodeID = " + nodeIDParent;
+                        dataSet = GetSqlDataSet(subsequentQuery);
+                        dataTable = dataSet.Tables[0];
+                        row = dataTable.Rows[0];
+                        fileFolder = row[2]?.ToString();
+                        int childNodeLevel = int.Parse(row[3]?.ToString());
+
+                        //finalNodeFilePath = fileFolder + @"\" + finalNodeFilePath;
+                        if (childNodeLevel == 2)
+                            finalNodeFilePath = fileFolder.Replace(" ", "_");
+
+                        nodeIDParent = row[1]?.ToString();
+                    }
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+            Logger.WriteToLog("GetNodePath Node Path: " + finalNodeFilePath, LogLevel.Verbose);
+
+            return finalNodeFilePath;
+        }
+
+        private DataSet GetSqlDataSet(string query)
+        {
+            Logger.WriteToLog("Get SQL Data Set", LogLevel.Verbose);
+            //string QUERY = createSQL(query);
+            Logger.WriteToLog("Return from Create SQL.", LogLevel.Verbose);
+
+            CDBBroker broker = new CDBBroker(Context.SiteID);
+            var brokerConnection = broker.GetConnection("Justice");
+            DataSet ret = null;
+            //SqlCommand cmd = new SqlCommand(string.Format(QUERY), brokerConnection as SqlConnection);
+            SqlCommand cmd = new SqlCommand(string.Format(query), brokerConnection as SqlConnection);
+
+            try
+            {
+                Logger.WriteToLog("Trying SQL.", LogLevel.Verbose);
+                cmd.Connection.Open();
+                ret = CDBBroker.LoadDataSet(Context.SiteID, cmd, true);
+            }
+            finally
+            {
+                if (cmd != null)
+                {
+                    cmd.Connection.Close();
+                }
+            }
+
+            return ret;
+        }
+
+        /*
+        private string createSQL(string query)
+        {
+            Logger.WriteToLog("Create SQL", LogLevel.Verbose);
+            
+            string sql = 
+                "SELECT TOP 1 NodeID, NodeIDParent, OrgUnitName, NodeLevel, OrgUnitTypeDescription"
+                + " FROM Operations.dbo.fnGetNodeList('" + Context.SiteID + "')"
+                + " WHERE NodeID = " + nodeID;
+             
+            string sql = query;
+
+            return sql;
+        }
+        */
+
+        private GetDocumentResultEntity GetDocument(string CurrentDocumentVersionID, string DocumentDate, string fullNodePath)
+        {
+
+            Logger.WriteToLog("GetDocument - FullNodePath: " + fullNodePath, LogLevel.Verbose);
+
             try
             {
                 // Create GetDocument API
@@ -188,8 +350,12 @@ namespace CaseDocumentExtractJob
                 entity.Source = "CaseDocumentExtractJob";
                 entity.UserID = Constants.systemUserID;
                 entity.ItemElementName = Tyler.Odyssey.API.JobTemplate.ItemChoiceType.FilePath;
-                entity.Item = Context.Parameters.DocumentPath;
-                entity.VersionID = CurrentDocumentVersionID;                
+
+                // UPDATE THIS
+                entity.Item = fullNodePath + @"\" + Context.Parameters.InputFolderName;
+
+                entity.VersionID = CurrentDocumentVersionID;
+                Logger.WriteToLog("GetDocumentXML String: " + entity.ToOdysseyMessageXml(), LogLevel.Verbose);
                 OdysseyMessage msg = new OdysseyMessage(entity.ToOdysseyMessageXml(), Context.SiteID);
 
                 // Process GetDocument API
@@ -197,16 +363,90 @@ namespace CaseDocumentExtractJob
                 StringReader reader = new StringReader(msg.ResponseDocument.OuterXml);
                 XmlSerializer serializer = new XmlSerializer(typeof(GetDocumentResultEntity));
                 GetDocumentResultEntity result = (GetDocumentResultEntity)serializer.Deserialize(reader);
-                Logger.WriteToLog("Current Document Version ID " + CurrentDocumentVersionID + " was successfully dropped to specified folder.", LogLevel.Verbose);
+                
                 return result;
             }
             catch (Exception e)
             {
-                Logger.WriteToLog("There was an error extracting current document version ID: " 
-                    + CurrentDocumentVersionID + ". Error: " + e, LogLevel.Verbose);
+                Logger.WriteToLog("There was an error extracting current document version ID: " + CurrentDocumentVersionID + ". Error: " + e, LogLevel.Verbose);
                 Context.Errors.Add(new BaseCustomException(e.Message));
+                WriteToCaseManifest(
+                    Context.Parameters.CaseNumber + "," 
+                    + DocumentDate + "," 
+                    + CurrentDocumentVersionID + ","
+                    + ","
+                    + "FAILED" + "," 
+                    + "There was an error extracting document: " + e.Message
+                    , fullNodePath);
                 return null;
             }
+        }
+
+        private string RenameFile(string fullFilePath, Entities.FileNameInfo fileData)
+        {
+            Logger.WriteToLog("Rename File." + fullFilePath, LogLevel.Verbose);
+            try
+            {
+                string fileLocation = Path.GetDirectoryName(fullFilePath);
+                string fileExtension = Path.GetExtension(fullFilePath);
+
+                //mmddyyyy_case#_docId              
+                DateTime docEffectiveDate = DateTime.ParseExact(fileData.DocumentEffectiveDate, "MM/dd/yyyy", null);
+
+                //string eventDate = docEffectiveDate.ToString("MMddyyyy"); //Old
+
+                Logger.WriteToLog("This is the Document ID: " + fileData.DocumentID, LogLevel.Verbose);
+                
+                string eventDate = GetDocumentEventDate(fileData.DocumentID);
+
+                string newFileName = eventDate + "_" + Context.Parameters.CaseNumber
+                    + "_" + fileData.DocumentID.ToString();
+                Logger.WriteToLog("Current File Name: " + fullFilePath, LogLevel.Verbose);
+
+                if (!File.Exists(fileLocation + @"\" + newFileName + fileExtension))
+                {
+                    File.Move(fullFilePath, fileLocation + @"\" + newFileName + fileExtension);
+                    Logger.WriteToLog("New File Name: " + fileLocation + @"\" + newFileName + fileExtension, LogLevel.Verbose);
+                    return newFileName + fileExtension;
+                }
+                else
+                {
+                    string timestamp = DateTime.Now.ToString("MMddyyyyHHmmssFFF");
+                    File.Move(fullFilePath, fileLocation + @"\" + newFileName + "_" + timestamp + fileExtension);
+                    Logger.WriteToLog("New File Name: " + fileLocation + @"\" + newFileName + "_" + timestamp + fileExtension, LogLevel.Verbose);
+                    return newFileName + "_" + timestamp + fileExtension;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.WriteToLog("There was an error trying to rename the file: " + e, LogLevel.Verbose);
+                return null;
+            }
+        }
+
+        private string GetDocumentEventDate(string documentID)
+        {
+            string eventDate;
+            Logger.WriteToLog("Creating query", LogLevel.Verbose);
+            string query = @"SELECT TOP 1 FORMAT(CE.EventDate, 'MMddyyyy') as [CaseEvent]"
+                + " FROM Operations.dbo.DocVersion DV WITH(NOLOCK)"
+                + " JOIN Operations.dbo.ParentLink PL WITH(NOLOCK) ON PL.DocumentID = DV.DocumentID AND PL.ParentTypeID IN(2,10)"
+                + " JOIN Justice.dbo.CaseEvent CE WITH(NOLOCK) ON CE.EventID = PL.ParentID"
+                + " WHERE DV.DocumentVersionID = " + documentID;
+            try
+            {
+                DataSet eventDateDS = GetSqlDataSet(query);                
+                DataTable dataTable = eventDateDS.Tables[0];
+                DataRow row = dataTable.Rows[0].IsNull(0) ? null : dataTable.Rows[0];
+                eventDate = row[0].ToString();
+            }
+            catch (Exception e)
+            {
+                Logger.WriteToLog(e.ToString(), LogLevel.Verbose);
+                eventDate = "NoEvent";
+            }
+            Logger.WriteToLog("EventDate: " + eventDate, LogLevel.Verbose);
+            return eventDate;
         }
 
         // Process Transaction
@@ -350,6 +590,88 @@ namespace CaseDocumentExtractJob
             }
 
             DataProcessor.Logger.WriteToLog("End Attach()", Tyler.Odyssey.Utils.LogLevel.Intermediate);
+        }
+
+        // Casemanifest logging logic.
+        private void AttachFileDontDeleteTemp(string fullNodePath)
+        {
+            DataProcessor.Logger.WriteToLog("Begin AttachFile()", Tyler.Odyssey.Utils.LogLevel.Intermediate);
+            int nodeID = 0;
+            int taskIDInt = 0;
+            int jobProcessIDInt = 0;
+            string fileName = Path.GetFileName(fullNodePath);
+
+            if (TaskUtility != null)
+            {
+                if (Int32.TryParse(Context.taskID, out taskIDInt) && Int32.TryParse(Context.jobProcessID, out jobProcessIDInt))
+                {
+                    int documentID = TaskUtility.AddOutputDocument(this.siteKey, taskIDInt, jobProcessIDInt, -1, fullNodePath, Context.UserID, nodeID, ref taskParms);
+
+                    if (documentID > 0)
+                    {
+                        TaskUtility.AddOutputParams(this.siteKey, taskIDInt, "TEXT", documentID, fileName, TaskDocument, ref taskParms);
+                        //TaskUtility.DeleteTempFile(filepath);
+                        // File Created
+                        DataProcessor.Logger.WriteToLog("File attached to job.", Tyler.Odyssey.Utils.LogLevel.Intermediate);
+
+                        this.OutputJobTaskXML = TaskDocument.documentElement.xml;
+                    }
+                }
+            }
+
+            DataProcessor.Logger.WriteToLog("End Attach()", Tyler.Odyssey.Utils.LogLevel.Intermediate);
+        }
+
+        private void WriteToCaseManifest(string text, string fullNodePath)
+        {
+            string pathWithReportFolder = fullNodePath + @"\Report\" + "CaseImageExtractReport_" 
+                + DateTime.Now.ToString("yyyyMMdd") + ".csv";
+            
+            if (!File.Exists(pathWithReportFolder))
+            {
+                Logger.WriteToLog("New Case Manifest. Path: " + pathWithReportFolder, LogLevel.Verbose);
+                using (var tw = new StreamWriter(pathWithReportFolder, true))
+                {
+                    // This should always be the header.
+                    var header = "Timestamp,Case Number,Document Date,Document Version ID,File Name,Status,Message";
+                    tw.WriteLine(header);
+
+                    var newLine = text;
+                    tw.WriteLine(DateTime.Now.ToString("HH:mm:ss") + "," + newLine);
+                }
+            }
+            else
+            {
+                Logger.WriteToLog("Existing Case Manifest. Path: " + pathWithReportFolder, LogLevel.Verbose);
+                var newLine = string.Format("{0},{1}", DateTime.Now.ToString("HH:mm:ss"), text);
+                File.AppendAllText(pathWithReportFolder, newLine + Environment.NewLine);
+            }
+        }
+
+        private void AttachCaseManifestFileToJobOutput(string fullNodePath)
+        {
+            string fileName = Path.GetFileName(fullNodePath);
+            Logger.WriteToLog("AttachCaseManifestFileToJobOutput. fullNodePath: " + fullNodePath, LogLevel.Verbose);
+            Logger.WriteToLog("AttachCaseManifestFileToJobOutput. fileName: " + fileName, LogLevel.Verbose);
+
+            if (fileName.Length > 0)
+                AttachFileDontDeleteTemp(fullNodePath + @"\" + "CaseImageExtractReport_" + DateTime.Now.ToString("yyyyMMdd") + ".csv");
+        }
+
+        private void AddCaseManifestInfoToJobOutput()
+        {
+            int jobTaskID = 0;
+            int jobProcessID = 0;
+            Logger.WriteToLog("Task ID: " + Context.taskID + "; Job ProcessID: " + Context.jobProcessID, LogLevel.Basic);
+
+            if (Int32.TryParse(Context.taskID, out jobTaskID) && Int32.TryParse(Context.jobProcessID, out jobProcessID))
+            {
+                object Parms = new object[,] { { "SEVERITY" }, { "1" } };
+
+                ITYLJobTaskUtility taskUtility = (JobProcessingInterface.ITYLJobTaskUtility)Activator.CreateInstance(Type.GetTypeFromProgID("Tyler.Odyssey.JobProcessing.TYLJobTaskUtility.cTask"));
+
+                taskUtility.AddTextMessage(Context.SiteID, jobProcessID, jobTaskID, "The job completed successfully.  Case log file is attached.", ref Parms);
+            }
         }
     }
 }

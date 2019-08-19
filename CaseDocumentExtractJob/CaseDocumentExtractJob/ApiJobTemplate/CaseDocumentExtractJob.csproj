@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Entities\AddCaseEventEntity.cs" />
     <Compile Include="Entities\AddCaseEventResultEntity.cs" />
+    <Compile Include="Entities\FileNameInfo.cs" />
     <Compile Include="Entities\FindCaseByCaseNumber.cs" />
     <Compile Include="Entities\FindCaseByCaseNumberEntity.cs" />
     <Compile Include="Entities\FindCaseByCaseNumberResultEntity.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Entities\GetDocumentInfoByEntity.cs" />
     <Compile Include="Entities\GetDocumentInfoByEntityResult.cs" />
     <Compile Include="Entities\GetDocumentResult.cs" />
+    <Compile Include="Entities\LoadCaseEntity.cs" />
+    <Compile Include="Entities\LoadCaseResultEntity.cs" />
     <Compile Include="Entities\TransactionResultEntity.cs" />
     <Compile Include="Exceptions\BaseCustomException.cs" />
     <Compile Include="Helpers\Constants.cs" />
@@ -130,6 +133,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Schemas\JusticeParty.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\LoadCase.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Schemas\LoadCaseResult.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Classification: Case Manager -->
+<!-- ************************************************************************************* -->
+<!-- Copyright (c) 2007 by Tyler Technologies.                                             -->
+<!--                                                                                       -->
+<!-- This program code is furnished under a license and may be used and copied only in     -->
+<!-- accordance with the terms of such license and with the inclusion of the above         -->
+<!-- copyright notice.  This program code or any other copies thereof may not be provided  -->
+<!-- or otherwise made available to any other persons.                                     -->
+<!-- ************************************************************************************* -->
+<!--                                                                                       -->
+<!-- HISTORY                                                                               -->
+<!--                                                                                       -->
+<!-- 11/05/2007 - Jeff Greeson                                                             -->
+<!--   *  Initial Creation                                                                 -->
+<!--   *  This is the schema definition for the Load Case API Message.                     -->
+<!--                                                                                       -->
+<!-- 11/20/2007 - Nathan Jones                                                             -->
+<!--   *  Added CaseEvent element                                                          -->
+<!--                                                                                       -->
+<!-- 08/20/2008 - Patrick Pierce                                                           -->
+<!--   *  Added Charges element                                                            -->
+<!--                                                                                       -->
+<!-- 08/27/2008 - Patrick Pierce                                                           -->
+<!--   *  Added CausesOfAction element                                                     -->
+<!--                                                                                       -->
+<!-- 10/21/2008 - Scott Ledbetter                                                          -->
+<!--   *  Added CaseCrossReferences element                                                -->
+<!-- ************************************************************************************* -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" elementFormDefault="qualified">
+  <xs:include schemaLocation="BaseTypes.xsd" />
+  <xs:include schemaLocation="JusticeParty.xsd" />
+  <xs:element name="Message">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="CaseID" type="BASE.REQUIREDPOSINT" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="LoadEntities" type="LoadEntitiesCollection" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="MessageType"     type="LOCAL.LOADCASE"        use="required"/>
+      <xs:attribute name="NodeID"          type="BASE.REQUIREDPOSINT"   use="required"/>
+      <xs:attribute name="ReferenceNumber" type="BASE.REQUIREDSTRING50" use="required"/>
+      <xs:attribute name="UserID"          type="BASE.REQUIREDPOSINT"   use="required"/>
+      <xs:attribute name="Source"          type="BASE.REQUIREDSTRING50" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="LOCAL.LOADCASE">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LoadCase"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="LoadEntitiesCollection">
+    <xs:sequence>
+      <xs:element name="CaseParties"         type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1" />
+      <xs:element name="CaseEvents"          type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1" />
+      <xs:element name="CaseStatuses"        type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Charges"             type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1" />
+      <xs:element name="CausesOfAction"      type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1" />
+      <xs:element name="CaseCrossReferences" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1" />
+      <xs:element name="CaseFlags"           type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1" />
+      <xs:element name="CaseInterimPlacements" type="BASE.REQUIREDTEXTBOOLMIXEDCASE" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

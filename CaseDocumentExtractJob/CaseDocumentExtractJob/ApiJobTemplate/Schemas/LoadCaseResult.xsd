@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<!-- ************************************************************************************* -->
+<!-- Copyright (c) 2007 by Tyler Technologies.                                             -->
+<!--                                                                                       -->
+<!-- This program code is furnished under a license and may be used and copied only in     -->
+<!-- accordance with the terms of such license and with the inclusion of the above         -->
+<!-- copyright notice.  This program code or any other copies thereof may not be provided  -->
+<!-- or otherwise made available to any other persons.                                     -->
+<!-- ************************************************************************************* -->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:include schemaLocation="BaseTypes.xsd"/>
+  <xs:include schemaLocation="JusticeParty.xsd"/>
+  
+  <xs:element name="Result" block="#all" final="#all">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Case" type="LoadCase.Case"  minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="LOCAL.LOADCASE">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LoadCase"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="LoadCase.Case">
+    <xs:sequence>
+      <xs:element name="CaseNumber"           type="BASE.REQUIREDSTRING30"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CaseID"               type="BASE.REQUIREDPOSINT"          minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Style"                type="BASE.REQUIREDSTRING1000"      minOccurs="0" maxOccurs="1"/>
+      <xs:element name="NodeID"               type="BASE.REQUIREDPOSINT"          minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Category"             type="BASE.USERCODE"                minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Type"                 type="BASE.USERCODE"                minOccurs="1" maxOccurs="1"/>
+      <xs:element name="SecurityGroup"        type="BASE.USERCODE"                minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Judge"                type="BASE.USERCODE"                minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FileDate"             type="BASE.REQUIREDDATE"            minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CaseStatuses"         type="LoadCase.CaseStatuses"        minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CaseParties"          type="LoadCase.CaseParties"         minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Events"               type="LoadCase.CaseEvents"          minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Charges"              type="LoadCase.Charges"             minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CausesOfAction"       type="LoadCase.CausesOfAction"      minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CaseCrossReferences"  type="LoadCase.CaseCrossReferences" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CaseFlags"            type="LoadCase.CaseFlags"           minOccurs="0" maxOccurs="1"/>
+      <xs:element name="InterimPlacements"    type="LoadCase.InterimPlacements"    minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+  ==========================================
+    Party Types
+  ==========================================
+  -->
+
+  <xs:complexType name="LoadCase.CaseParties">
+    <xs:sequence>
+      <xs:element name="CaseParty" type="LoadCase.CaseParty" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Attorney"  type="LoadCase.Attorney"  minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.CaseParty">
+    <xs:sequence>
+      <xs:element name="PartyID"     type="BASE.REQUIREDPOSINT"     minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Connections" type="LoadCase.Connections"    minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ProSe"       type="LoadCase.ProSe"          minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Names"       type="LoadCase.Names"          minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Addresses"   type="LoadCase.Addresses"      minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Notice"      type="LoadCase.Notice"         minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PartyStyle"  type="BASE.REQUIREDSTRING5000" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.CaseStatuses">
+    <xs:sequence>
+      <xs:element name="CaseStatus" type="LoadCase.CaseStatus"  minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.CaseStatus">
+    <xs:sequence>
+      <xs:element name="StatusType"       type="BASE.USERCODE"            minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Date"             type="BASE.DATE"                minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Comment"          type="BASE.REQUIREDSTRING5000"  minOccurs="0" maxOccurs="1"/>
+      <xs:element name="IsCurrent"        type="BASE.REQUIREDTEXTBOOL"    minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MakesCaseActive"  type="BASE.REQUIREDTEXTBOOL"    minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.ProSe">
+    <xs:sequence>
+      <xs:element name="Lead"         type="BASE.REQUIREDTEXTBOOL"   minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AddDate"      type="BASE.DATE"               minOccurs="1" maxOccurs="1"/>
+      <xs:element name="RemoveDate"   type="BASE.DATE"               minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RemoveReason" type="BASE.USERCODE"           minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Comment"      type="BASE.REQUIREDSTRING5000" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:simpleType name="LoadCase.Notice">
+    <xs:restriction base="BASE.STRING">
+      <xs:enumeration value="Do Not Send"/>
+      <xs:enumeration value="Always Send"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:complexType name="LoadCase.Connections">
+    <xs:sequence>
+      <xs:element name="Connection" type="LoadCase.Connection" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.Connection">
+    <xs:sequence>
+      <xs:element name="ConnectionType"   type="BASE.USERCODE"           minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PartyParticipant" type="BASE.PARTYPARTICIPANT"   minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AddDate"          type="BASE.DATE"               minOccurs="1" maxOccurs="1"/>
+      <xs:element name="RemoveDate"       type="BASE.DATE"               minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RemoveReason"     type="BASE.USERCODE"           minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Comment"          type="BASE.REQUIREDSTRING5000" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.Names">
+    <xs:sequence>
+      <xs:element name="PrimaryName" type="Justice.Party.Name" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Name"        type="LoadCase.Name"      minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.Name">
+    <xs:sequence>
+      <xs:element name="PartyNameType" type="BASE.USERCODE" minOccurs="1" maxOccurs="1"/>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element name="Person"   type="Justice.Party.Person"/>
+        <xs:element name="NickName" type="Justice.Party.Nickname"/>
+        <xs:element name="Business" type="Justice.Party.Business"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCaseResult.Party.Address">
+    <xs:sequence>
+      <xs:choice    minOccurs="1" maxOccurs="1">
+        <xs:element name="StandardUS"         type="LoadCaseResult.StandardUS" />
+        <xs:element name="StandardUSwithAttn" type="LoadCaseResult.StandardUSWithAttn" />
+        <xs:element name="NonStandardUS"      type="BASE.NONSTANDARDUS" />
+        <xs:element name="Foreign"            type="BASE.FOREIGN" />
+      </xs:choice>
+      <xs:element name="AddressFlags"         type="Justice.Party.Address.AddressFlags" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCaseResult.Unit">
+    <xs:sequence>
+      <xs:element name="UnitType"      type="BASE.UNITTYPE.CODE"      minOccurs ="0" maxOccurs ="1"/>
+      <xs:element name="UnitNumber"    type="BASE.REQUIREDSTRING10"   minOccurs ="0" maxOccurs ="1"/>
+    </xs:sequence >
+  </xs:complexType>
+
+  <xs:complexType name="LoadCaseResult.StandardUS">
+    <xs:sequence>
+      <xs:element name="StreetNumber"  type="BASE.REQUIREDSTRING20"   minOccurs ="1" maxOccurs ="1"/>
+      <xs:element name="PreDirection"  type="BASE.DIRECTION.CODE"     minOccurs ="0" maxOccurs ="1"/>
+      <xs:element name="StreetName"    type="BASE.REQUIREDSTRING80"   minOccurs ="1" maxOccurs ="1"/>
+      <xs:element name="StreetType"    type="BASE.RDSUFFIX.CODE"      minOccurs ="0" maxOccurs ="1"/>
+      <xs:element name="PostDirection" type="BASE.DIRECTION.CODE"     minOccurs ="0" maxOccurs ="1" />
+      <xs:element name="Unit"          type="LoadCaseResult.Unit"     minOccurs ="0" maxOccurs ="1"/>
+      <xs:element name="City"          type="BASE.REQUIREDSTRING40"   minOccurs ="1" maxOccurs ="1"/>
+      <xs:element name="State"         type="BASE.STATE.CODE"         minOccurs ="1" maxOccurs ="1" />
+      <xs:element name="Zip"           type="BASE.ZIP"                minOccurs ="1" maxOccurs ="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCaseResult.StandardUSWithAttn">
+    <xs:sequence>
+      <xs:element name="Attention"     type="BASE.REQUIREDSTRING120"	minOccurs ="1" maxOccurs ="1"/>
+      <xs:element name="StreetNumber"  type="BASE.REQUIREDSTRING20"   minOccurs ="1" maxOccurs ="1"/>
+      <xs:element name="PreDirection"  type="BASE.DIRECTION.CODE"     minOccurs ="0" maxOccurs ="1"/>
+      <xs:element name="StreetName"    type="BASE.REQUIREDSTRING80"   minOccurs ="1" maxOccurs ="1"/>
+      <xs:element name="StreetType"    type="BASE.RDSUFFIX.CODE"      minOccurs ="0" maxOccurs ="1"/>
+      <xs:element name="PostDirection" type="BASE.DIRECTION.CODE"     minOccurs ="0" maxOccurs ="1" />
+      <xs:element name="Unit"          type="LoadCaseResult.Unit"     minOccurs ="0" maxOccurs ="1"/>
+      <xs:element name="City"          type="BASE.REQUIREDSTRING40"   minOccurs ="1" maxOccurs ="1"/>
+      <xs:element name="State"         type="BASE.STATE.CODE"         minOccurs ="1" maxOccurs ="1" />
+      <xs:element name="Zip"           type="BASE.ZIP"                minOccurs ="1" maxOccurs ="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.Addresses">
+    <xs:sequence>
+      <xs:element name="CaseCorrespondence"  type="LoadCaseResult.Party.Address" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PartyCorrespondence" type="LoadCaseResult.Party.Address" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.Attorney">
+    <xs:sequence>
+      <xs:element name="AttorneyID"  type="BASE.REQUIREDPOSINT"          minOccurs="1" maxOccurs="1"/>
+      <xs:element name="BarNumber"   type="BASE.REQUIREDSTRING20"        minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Connections" type="LoadCase.AttorneyConnections" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Names"       type="LoadCase.Names"               minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Addresses"   type="LoadCase.Addresses"           minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.AttorneyConnections">
+    <xs:sequence>
+      <xs:element name="Connection" type="LoadCase.AttorneyConnection" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.AttorneyConnection">
+    <xs:sequence>
+      <xs:element name="ConnectionType"   type="BASE.USERCODE"             minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AddDate"          type="BASE.DATE"                 minOccurs="1" maxOccurs="1"/>
+      <xs:element name="RemoveDate"       type="BASE.DATE"                 minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RemoveReason"     type="BASE.USERCODE"             minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Comment"          type="BASE.REQUIREDSTRING5000"   minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RepresentedParty" type="LoadCase.RepresentedParty" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.RepresentedParty">
+    <xs:sequence>
+      <xs:element name="PartyID"         type="BASE.REQUIREDPOSINT"   minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Lead"            type="BASE.REQUIREDTEXTBOOL" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CourtAppointed"  type="BASE.REQUIREDTEXTBOOL" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Judge"           type="BASE.USERCODE"         minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PublicDefender"  type="BASE.REQUIREDTEXTBOOL" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+  ==========================================
+    Event Types
+  ==========================================
+  -->
+
+  <xs:complexType name="LoadCase.CaseEvents">
+    <xs:sequence>
+      <xs:element name="Event" type="LoadCase.CaseEvent" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="LoadCase.CaseEvent">
+    <xs:sequence>
+      <xs:element name="EventID"             type="BASE.REQUIREDPOSINT"     minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Date"                type="BASE.DATE"               minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Type"                type="BASE.USERCODE"           minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Comment"             type="BASE.REQUIREDSTRING5000" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Docketable"          type="BASE.REQUIREDTEXTBOOL"   minOccurs="1" maxOccurs="1"/>
+      <xs:element name="DocumentIndexNumber" type="BASE.REQUIREDDECIMAL"    minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+  ==========================================
+    Charges
+  ==========================================
+  -->
+
+  <xs:complexType name="LoadCase.Charges">
+    <xs:sequence>
+      <xs:element name="Charge"                type="LoadCase.Charge"            minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.Charge">
+    <xs:sequence>
+      <xs:element name="PartyID"               type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ChargeID"              type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="OffenseDate"           type="BASE.DATE"                  minOccurs="1" maxOccurs="1"/>
+      <xs:element name="OffenseDateTo"         type="BASE.DATE"                  minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OffenseDateOnOrAbout"  type="BASE.REQUIREDTEXTBOOL"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="OffenseTime"           type="BASE.REQUIREDTIME"          minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OffenseTimeTo"         type="BASE.REQUIREDTIME"          minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OffenseTimeAtOrAbout"  type="BASE.REQUIREDTEXTBOOL"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ProsecutingAgency"     type="BASE.USERCODE"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ChargeTrackNumber"     type="BASE.REQUIREDSTRING20"      minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ChargeTrackSequence"   type="BASE.REQUIREDSTRING20"      minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Vehicle"               type="LoadCase.Vehicle"           minOccurs="0" maxOccurs="1"/>
+      <xs:group   ref="LoadCase.OffenseHistories" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.Vehicle">
+    <xs:sequence>
+      <xs:element name="LicensePlateNumber"      type="BASE.REQUIREDSTRING10"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="LicensePlateState"       type="BASE.REQUIREDSTRING10"      minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:group name="LoadCase.OffenseHistories">
+    <xs:choice>
+      <xs:element name="ArrestFiling"          type="LoadCase.ArrestFiling"/>
+      <xs:element name="CaseFiling"            type="LoadCase.CaseFiling"/>
+      <xs:element name="AmendedCaseFiling"     type="LoadCase.AmendedCaseFiling"/>
+      <xs:element name="PleaFiling"            type="LoadCase.PleaFiling"/>
+      <xs:element name="DispositionFiling"     type="LoadCase.DispositionFiling"/>
+      <xs:element name="CitiationFiling"       type="LoadCase.CitiationFiling"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:complexType name="LoadCase.ArrestFiling">
+    <xs:sequence>
+      <xs:element name="IsCurrent"             type="BASE.REQUIREDTEXTBOOL"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Date"                  type="BASE.DATE"                  minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Time"                  type="BASE.REQUIREDTIME"          minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ArrestControlNumber"   type="BASE.REQUIREDSTRING30"      minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Agency"                type="BASE.USERCODE"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Officer"               type="LoadCase.Officer"           minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Number"                type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Jurisdiction"          type="BASE.USERCODE"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FineAmount"            type="BASE.REQUIREDDECIMAL"       minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Bond"                  type="LoadCase.Bond"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Offense"               type="LoadCase.Offense"           minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.Officer">
+    <xs:choice>
+      <xs:element name="OfficerParty"          type="LoadCase.OfficerParty"/>
+      <xs:element name="OfficerFreeText"       type="LoadCase.OfficerFreeText"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.OfficerParty">
+    <xs:sequence>
+      <xs:element name="OfficerID"             type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.OfficerFreeText">
+    <xs:sequence>
+      <xs:element name="BadgeNumber"           type="BASE.REQUIREDSTRING30"      minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Name"                  type="BASE.REQUIREDSTRING160"     minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.CaseFiling">
+    <xs:sequence>
+      <xs:element name="IsCurrent"             type="BASE.REQUIREDTEXTBOOL"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Number"                type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Jurisdiction"          type="BASE.USERCODE"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FineAmount"            type="BASE.REQUIREDDECIMAL"       minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Bond"                  type="LoadCase.Bond"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FilingDate"            type="BASE.DATE"                  minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Offense"               type="LoadCase.Offense"           minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.AmendedCaseFiling">
+    <xs:sequence>
+      <xs:element name="IsCurrent"             type="BASE.REQUIREDTEXTBOOL"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Number"                type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Amendment"             type="LoadCase.Amendment"         minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Jurisdiction"          type="BASE.USERCODE"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FineAmount"            type="BASE.REQUIREDDECIMAL"       minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Bond"                  type="LoadCase.Bond"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FilingDate"            type="BASE.DATE"                  minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Offense"               type="LoadCase.Offense"           minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.Amendment">
+    <xs:sequence>
+      <xs:element name="Reasons"               type="LoadCase.Reasons"           minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Date"                  type="BASE.DATE"                  minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Comment"               type="BASE.REQUIREDSTRING7000"    minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.Reasons">
+    <xs:sequence>
+      <xs:element name="Reason"                type="BASE.USERCODE"              minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.PleaFiling">
+    <xs:sequence>
+      <xs:element name="IsCurrent"             type="BASE.REQUIREDTEXTBOOL"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Number"                type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Jurisdiction"          type="BASE.USERCODE"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FineAmount"            type="BASE.REQUIREDDECIMAL"       minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Bond"                  type="LoadCase.Bond"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Offense"               type="LoadCase.Offense"           minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.DispositionFiling">
+    <xs:sequence>
+      <xs:element name="IsCurrent"             type="BASE.REQUIREDTEXTBOOL"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Number"                type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Jurisdiction"          type="BASE.USERCODE"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FineAmount"            type="BASE.REQUIREDDECIMAL"       minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Bond"                  type="LoadCase.Bond"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Offense"               type="LoadCase.Offense"           minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.CitiationFiling">
+    <xs:sequence>
+      <xs:element name="IsCurrent"             type="BASE.REQUIREDTEXTBOOL"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Number"                type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CitationNumber"        type="BASE.REQUIREDSTRING30"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CitationID"            type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Jurisdiction"          type="BASE.USERCODE"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FineAmount"            type="BASE.REQUIREDDECIMAL"       minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Bond"                  type="LoadCase.Bond"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Offense"               type="LoadCase.Offense"           minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.Bond">
+    <xs:sequence>
+      <xs:element name="Type"                  type="BASE.USERCODE"              minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Amount"                type="BASE.REQUIREDDECIMAL"       minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.Offense">
+    <xs:sequence>
+      <xs:element name="Code"                  type="BASE.USERCODE"              minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Description"           type="BASE.REQUIREDSTRING100"     minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Degree"                type="BASE.USERCODE"              minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Statute"               type="BASE.REQUIREDSTRING40"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="GOC"                   type="BASE.USERCODE"              minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <!--
+  ==========================================
+    CausesOfAction
+  ==========================================
+  -->
+
+  <xs:complexType name="LoadCase.CausesOfAction">
+    <xs:sequence>
+      <xs:element name="CauseOfAction"    type="LoadCase.CauseOfAction"     minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.CauseOfAction">
+    <xs:sequence>
+      <xs:element name="CauseOfActionID"  type="BASE.REQUIREDPOSINT"        minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ActionType"       type="BASE.USERCODE"              minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CauseCode"        type="BASE.USERCODE"              minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ParcelNumber"     type="BASE.STRING60"              minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FileDate"         type="BASE.DATE"                  minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Description"      type="BASE.REQUIREDSTRING7000"    minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RemediesSought"   type="LoadCase.RemediesSought"    minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.RemediesSought">
+    <xs:sequence>
+      <xs:element name="RemedySought"     type="LoadCase.RemedySought"      minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.RemedySought">
+    <xs:sequence>
+      <xs:element name="RemedyType"       type="BASE.USERCODE"              minOccurs="1" maxOccurs="1"/>
+      <xs:element name="RemedyAmount"     type="BASE.REQUIREDDECIMAL"       minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RemedyComment"    type="BASE.REQUIREDSTRING"        minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+  ==========================================
+    CaseCrossReferences
+  ==========================================
+  -->
+
+  <xs:complexType name="LoadCase.CaseCrossReferences">
+    <xs:sequence>
+      <xs:element name="CaseCrossReference" type="LoadCase.CaseCrossReference" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.CaseCrossReference">
+    <xs:sequence>
+      <xs:element name="CrossReferenceNumber"     type="BASE.REQUIREDSTRING30" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CrossReferenceNumberType" type="BASE.USERCODE"         minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+  ==========================================
+    CaseFlags
+  ==========================================
+  -->
+
+  <xs:complexType name="LoadCase.CaseFlags">
+    <xs:sequence>
+      <xs:element name="CaseFlag" type="LoadCase.CaseFlag" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.CaseFlag">
+    <xs:sequence>
+      <xs:element name="FlagType" type="BASE.USERCODE"          minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Comment"  type="BASE.REQUIREDSTRING500" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+  ==========================================
+    InterimPlacements
+  ==========================================
+  -->
+  
+  <xs:complexType name="LoadCase.InterimPlacements">
+    <xs:sequence>
+      <xs:element name="InterimPlacement" type="LoadCase.InterimPlacement" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.InterimPlacement">
+    <xs:sequence>
+      <xs:element name="InterimPlacementID"  type="BASE.REQUIREDPOSINT"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PartyID"             type="BASE.REQUIREDPOSINT"      minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PlacementType"       type="BASE.USERCODE"            minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Location"            type="LoadCase.LOCATION"        minOccurs="0" maxOccurs="1" />
+      <xs:element name="OrderDate"           type="BASE.DATE"                minOccurs="1" maxOccurs="1"/>
+      <xs:element name="StartDate"           type="BASE.DATE"                minOccurs="0" maxOccurs="1"/>
+      <xs:element name="EndDate"             type="BASE.DATE"                minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Comment"             type="BASE.REQUIREDSTRING1000"  minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.LOCATION">
+    <xs:sequence>
+      <xs:element name="LocationAgency"       type="LoadCase.LOCATIONAGENCY"       minOccurs="0" maxOccurs="1" />
+      <xs:element name="LocationDescription"  type="LoadCase.LOCATIONDESCRIPTION"  minOccurs="0" maxOccurs="1" />
+      <xs:element name="LocationParty"        type="LoadCase.LOCATIONPARTY"        minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.LOCATIONAGENCY">
+    <xs:sequence>
+      <xs:element name="Agency"  type="BASE.USERCODE"  minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.LOCATIONDESCRIPTION">
+    <xs:sequence>
+      <xs:element name="Description"  type="BASE.STRING255"  minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LoadCase.LOCATIONPARTY">
+    <xs:sequence>
+      <xs:element name="PartyID"  type="BASE.REQUIREDPOSINT"  minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

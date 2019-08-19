@@ -7,7 +7,9 @@ namespace CaseDocumentExtractJob.Helpers
     {
         public string CaseNumber { get; private set; }
         public string NodeID { get; private set; }
-        public string DocumentPath { get; private set; }
+        public string BaseDocumentPath { get; private set; }
+        public string ReportFolderName { get; private set; }
+        public string InputFolderName { get; private set; }
 
         public Parameters(XmlElement taskNode, UtilsLogger logger)
         {
@@ -15,8 +17,10 @@ namespace CaseDocumentExtractJob.Helpers
             logger.WriteToLog("taskNode: " + taskNode.OuterXml, LogLevel.Verbose);
 
             CaseNumber = taskNode.GetAttribute("CaseNumber");
-            DocumentPath = taskNode.GetAttribute("DocumentPath");
+            BaseDocumentPath = taskNode.GetAttribute("BaseDocumentPath");
             NodeID = taskNode.GetAttribute("NodeID");
+            ReportFolderName = taskNode.GetAttribute("ReportFolderName");
+            InputFolderName = taskNode.GetAttribute("InputFolderName");
 
             logger.WriteToLog("Instantiated Parameters", LogLevel.Verbose);
         }
