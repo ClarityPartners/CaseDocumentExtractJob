@@ -1,4 +1,4 @@
-﻿<Job JobProcessID="5859" JobID="100118" Pri="1" Descr="CaseDocumentExtractJob" UserID="945" ProductID='1' TSQ='2013-11-27 18:28:19' 
+﻿<Job JobProcessID="5859" JobID="100118" Pri="1" Descr="CaseDocumentExtractJob" UserID="1" ProductID='1' TSQ='2013-11-27 18:28:19' 
      TSST='2013-11-27 18:28:20' NumOfTasks='1'>
   <Tasks>
     <Task ID="100118"/>
@@ -6,9 +6,12 @@
   <Params>
     <Input>
       <Task ID="100118">
-        <Params CaseNumber="2018COTO000006" NodeID="1" 
-                BaseDocumentPath="\\CCCIS01-TEST\Inbound Files\CaseImageFileDrop"
-                ReportFolderName="OdysseyReport" InputFolderName="Input"/>
+        <Params CaseNumber="20171135720" 
+                NodeID="410,510" 
+                Location="410,510" 
+                BaseDocumentPath="\\CCCIS02-TEST\Integration\CookCounty\CaseDocumentExtract"
+                ReportFolderName="Report" 
+                InputFolderName="Input"/>
       </Task>
     </Input>
     <Output>

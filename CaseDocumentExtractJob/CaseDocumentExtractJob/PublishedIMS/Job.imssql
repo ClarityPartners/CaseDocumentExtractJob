@@ -15,7 +15,7 @@
                    programid="CaseDocumentExtractJob.JobTask"
                    parametersurl="/CustomExtensions/Infrastructure/JobProcessing/ParamModals/CaseDocumentExtractParams.htm"
                    parameterswidth="480"
-                   parametersheight="160"
+                   parametersheight="200"
                    publicaccess="true"
                    taskorder="1"
                    successnextactionkey="E"

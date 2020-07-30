@@ -80,55 +80,68 @@ namespace CaseDocumentExtractJob
             string fullNodePath = "";
             // TODO: Update API Processing Logic
             try
-            {   
-                // Find all Documents Tied to the Case
-                string transactionResponse = ProcessCaseDocumentIDSearchTransaction();
-                if (transactionResponse == null)
-                {
-                    WriteToCaseManifest(Context.Parameters.CaseNumber
-                        + ",,,,,,There was an error with the job.  Please speak to a system admin to view the error log.", fullNodePath);
-                }
+            {
+                string[] location;
+                if (!string.IsNullOrEmpty(Context.Parameters.Location))
+                    location = Context.Parameters.Location.Split(',');
                 else
                 {
-                    // Extract documentIDs from response xml
-                    string nodeID = ExtractNodeID(transactionResponse);
-                    fullNodePath = GetFilePath(nodeID);
-                    Logger.WriteToLog("Full Node Path: " + fullNodePath, LogLevel.Verbose);
+                    string[] defaultLocation = { "" };
+                    location = defaultLocation;
                 }
 
-                // Extract data points from document response xml
-                List<Entities.FileNameInfo> caseDocumentIDList = ExtractTransactionElements(transactionResponse);                
-                if (caseDocumentIDList != null)
+                for (int i = 0; i < location.Length; i++)
                 {
-                    int count = 0;
-                    foreach (var fileData in caseDocumentIDList)
+                    // Find all Documents Tied to the Case
+                    string transactionResponse = ProcessCaseDocumentIDSearchTransaction(location[i]);
+                    if (transactionResponse == null)
                     {
-                        string newFileName = "";
-                        Logger.WriteToLog("-------------------------- Iteration " + count + " --------------------------", LogLevel.Verbose);
-                        GetDocumentResultEntity getDocumentResultEntity = GetDocument(fileData.DocumentID, fileData.DocumentEffectiveDate,fullNodePath);
-                        if (getDocumentResultEntity != null)
-                        {
-                            newFileName = RenameFile(getDocumentResultEntity.FilePath[0], fileData);
-                            WriteToCaseManifest(Context.Parameters.CaseNumber + "," + fileData.DocumentEffectiveDate + ","
-                            + fileData.DocumentID + "," + newFileName + "," + "SUCCESS" + "," + "Document extracted successfully."
-                            , fullNodePath);
-                        }
-                        count++;
+                        WriteToCaseManifest(Context.Parameters.CaseNumber
+                            + ",,,,,,There was an error with the job.  Please speak to a system admin to view the error log.", fullNodePath);
                     }
-                }
-                else
-                {
-                    Logger.WriteToLog("No documents are found for case number: " + Context.Parameters.CaseNumber, LogLevel.Verbose);                    
-                    WriteToCaseManifest(Context.Parameters.CaseNumber + ",,,,,,No documents are found for the provided case number.", fullNodePath);
-                }
-            }
+                    else
+                    {
+                        // Extract documentIDs from response xml
+                        string nodeID = ExtractNodeID(transactionResponse);
+                        string caseType = ExtractCaseType(transactionResponse);
+                        fullNodePath = GetFilePath(nodeID, caseType);
+                        Logger.WriteToLog("Full Node Path: " + fullNodePath, LogLevel.Verbose);
+                    }
+
+                    // Extract data points from document response xml
+                    List<Entities.FileNameInfo> caseDocumentIDList = ExtractTransactionElements(transactionResponse);
+                    if (caseDocumentIDList != null)
+                    {
+                        int count = 0;
+                        foreach (var fileData in caseDocumentIDList)
+                        {
+                            string newFileName = "";
+                            Logger.WriteToLog("-------------------------- Iteration " + count + " --------------------------", LogLevel.Verbose);
+                            GetDocumentResultEntity getDocumentResultEntity = GetDocument(fileData.DocumentID, fileData.DocumentEffectiveDate, fullNodePath);
+                            if (getDocumentResultEntity != null)
+                            {
+                                newFileName = RenameFile(getDocumentResultEntity.FilePath[0], fileData);
+                                WriteToCaseManifest(Context.Parameters.CaseNumber + "," + fileData.DocumentEffectiveDate + ","
+                                + fileData.DocumentID + "," + newFileName + "," + "SUCCESS" + "," + "Document extracted successfully."
+                                , fullNodePath);
+                            }
+                            count++;
+                        }
+                    }
+                    else
+                    {
+                        Logger.WriteToLog("No documents are found for case number: " + Context.Parameters.CaseNumber, LogLevel.Verbose);
+                        WriteToCaseManifest(Context.Parameters.CaseNumber + ",,,,,,No documents are found for the provided case number.", fullNodePath);
+                    }
+                }                
+            }            
             catch (Exception e)
             {
                 Logger.WriteToLog("Main Program Error: " + e, LogLevel.Verbose);
-                Context.Errors.Add(new BaseCustomException(e.Message));                
+                Context.Errors.Add(new BaseCustomException(e.Message));
                 WriteToCaseManifest(Context.Parameters.CaseNumber + ",,,,,There was an error: " + e.Message, fullNodePath);
             }
-
+        
             // TODO: Handle errors we've collected during the job run.
             if (Context.Errors.Count > 0)
             {
@@ -138,12 +151,12 @@ namespace CaseDocumentExtractJob
                 // Collect errors, write them to a file, and attach the file to the job.
                 LogErrors();
             }
-            Logger.WriteToLog("Trying to attach case manifest to Job Output. FilePath: " + fullNodePath + @"\" + Context.Parameters.ReportFolderName, LogLevel.Verbose);
-            AttachCaseManifestFileToJobOutput(fullNodePath + @"\" + Context.Parameters.ReportFolderName);
+            //Logger.WriteToLog("Trying to attach case manifest to Job Output. FilePath: " + fullNodePath + @"\" + Context.Parameters.ReportFolderName, LogLevel.Verbose);
+            //AttachCaseManifestFileToJobOutput(fullNodePath + @"\" + Context.Parameters.ReportFolderName);
             ContinueWithProcessing("Job Completed Successfully");
         }
 
-        private string ProcessCaseDocumentIDSearchTransaction()
+        private string ProcessCaseDocumentIDSearchTransaction(string nodeID)
         {
             TransactionEntity txn = new TransactionEntity();
             txn.TransactionType = "CaseDocumentExtractJob";
@@ -163,8 +176,16 @@ namespace CaseDocumentExtractJob
                 // a. Find Case By Case Number
                 Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity findCaseByCaseNumberEntity = new Tyler.Odyssey.API.JobTemplate.FindCaseByCaseNumberEntity();
                 findCaseByCaseNumberEntity.SetStandardAttributes(1, "CaseDocumentExtractJob", Context.UserID, "CaseDocumentExtractJob", Context.SiteID);
-                findCaseByCaseNumberEntity.NodeID = "1";
+                findCaseByCaseNumberEntity.NodeID = "1";                
+                
                 findCaseByCaseNumberEntity.CaseNumber = Context.Parameters.CaseNumber;
+                if (!string.IsNullOrEmpty(nodeID))
+                {
+                    string[] singleNode = new string[1];
+                    singleNode[0] = nodeID;
+                    findCaseByCaseNumberEntity.SearchNodeID = singleNode;
+                }
+                
                 txn.Messages.Add(findCaseByCaseNumberEntity);
 
                 // b. Get Case Documents                
@@ -224,11 +245,35 @@ namespace CaseDocumentExtractJob
             return nodeNode.InnerText;
         }
 
-        private string GetFilePath(string nodeID)
+        private string ExtractCaseType(string response)
         {
-            string filePath = Context.Parameters.BaseDocumentPath + @"\" + GetNodePath(nodeID);
-            Logger.WriteToLog("GetFilePath: " + filePath, LogLevel.Verbose);
-            return Context.Parameters.BaseDocumentPath + @"\" + GetNodePath(nodeID);             
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(response);
+            XmlNode nodeNode = doc.SelectSingleNode("/TxnResponse/Result[@MessageType='FindCaseByCaseNumber']/CaseType");
+
+            return nodeNode.InnerText;
+        }
+
+        private string GetFilePath(string nodeID, string caseType = null)
+        {
+            if (caseType == "JD")
+            {
+                string filePath = Context.Parameters.BaseDocumentPath + @"\" + "Juvenile_Justice";
+                Logger.WriteToLog("GetFilePath: " + filePath, LogLevel.Verbose);
+                return Context.Parameters.BaseDocumentPath + @"\" + "Juvenile_Justice";
+            }
+            else if (caseType == "JA")
+            {
+                string filePath = Context.Parameters.BaseDocumentPath + @"\" + "Child_Protection";
+                Logger.WriteToLog("GetFilePath: " + filePath, LogLevel.Verbose);
+                return Context.Parameters.BaseDocumentPath + @"\" + "Child_Protection";
+            }
+            else
+            {
+                string filePath = Context.Parameters.BaseDocumentPath + @"\" + GetNodePath(nodeID);
+                Logger.WriteToLog("GetFilePath: " + filePath, LogLevel.Verbose);
+                return Context.Parameters.BaseDocumentPath + @"\" + GetNodePath(nodeID);
+            }
         }
 
         private string GetNodePath(string nodeID)
@@ -469,7 +514,7 @@ namespace CaseDocumentExtractJob
             // if a schema exceptions is thrown, then throw the new exception with the data from the schema error.
             catch (SchemaValidationException svex)
             {
-                throw new Exception(svex.ReplacementStrings[0]);
+                throw new Exception(svex.ReplacementStrings[0]);                
             }
             catch (DataConversionException dcex)
             {
@@ -488,6 +533,8 @@ namespace CaseDocumentExtractJob
             }
             catch (Exception ex)
             {
+                Logger.WriteToLog("ERROR: " + ex.ToString(), LogLevel.Verbose);
+                Context.Errors.Add(new BaseCustomException(ex.ToString()));
                 throw ex;
             }
 

@@ -87,8 +87,10 @@ namespace CaseDocumentExtractJob.Helpers
 
         public void ValidateParameters()
         {
+            // Location shouldn'td be required
+            // ValidateRequiredJobParameter(Parameters.NodeID, "Node ID");
+
             ValidateRequiredJobParameter(Parameters.CaseNumber, "Case Number");
-            ValidateRequiredJobParameter(Parameters.NodeID, "Node ID");
             ValidateRequiredJobParameter(Parameters.BaseDocumentPath, "Base Document Path");
             ValidateRequiredJobParameter(Parameters.InputFolderName, "Input Folder Name");
             ValidateRequiredJobParameter(Parameters.ReportFolderName, "ReportFolderName");
